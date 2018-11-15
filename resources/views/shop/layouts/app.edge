@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link rel="icon" href="/images/favico/penguin.ico">
+        @!section('styles')
+        <title>ZawaDeals</title>
+
+<!-- load CSS -->
+        <link rel="stylesheet" href="{{ mix('/css/app.css') }}">
+    </head>
+    <body>
+        @include('shop.partials.navbar')
+        @!section('content')
+<!-- Load javascript ------------------------- -->
+		<link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+        <script src="{{ mix('/js/app.js') }}"></script>
+        @!section('scripts')
+    </body>
+    <footer class="pt-4 my-md-5 pt-md-5 border-top">
+        @include('shop.partials.footer')
+    </footer>
+</html>

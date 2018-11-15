@@ -1,0 +1,47 @@
+<div class="form-row">
+	<br>
+	<div class="form-group  col-md-12">
+		<label class="control-label">Korte omschrijving op de Webshop (NL)</label>
+		<textarea class="form-control {{ elIf('is-invalid','', hasErrorFor('descr_short_nl')) }}" id="descr_short_nl" name="descr_short_nl">{{ old('descr_short_nl', !product.descr_short_nl? '': product.descr_short_nl ) }}</textarea>
+		{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('descr_short_nl'), hasErrorFor('descr_short_nl')) }}
+	</div>   <!-- form-group -->
+</div>   <!-- row -->
+<div class="form-row">
+	<br>
+	<div class="form-group  col-md-12">
+		<label class="control-label">Uitgebreide omschrijving op de Webshop (NL)</label>
+		<textarea class="form-control {{ elIf('is-invalid','', hasErrorFor('descr_long_nl')) }}" id="descr_long_nl" name="descr_long_nl">{{ old('descr_long_nl', !product.descr_long_nl? '': product.descr_long_nl ) }}</textarea>
+		{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('descr_long_nl'), hasErrorFor('descr_long_nl')) }}
+	</div>   <!-- form-group -->
+</div>   <!-- row -->
+<div class="form-row">
+	<br>
+	<div class="form-group  col-md-12">
+		<label class="control-label">Vriendelijke URL NL</label>
+		<input type="text" 
+		class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('slug_nl')) }}" 
+		name="slug_nl" id="slug_nl" 
+		value="{{ old('slug_nl', !product.slug_nl? '':product.slug_nl ) }}" placeholder="link rewrite..."/>
+		{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('slug_nl'), hasErrorFor('slug_nl')) }}
+
+	</div>   <!-- form-group -->
+</div>   <!-- row -->
+<div class="form-row">
+	<div class="form-group  col-md-12">
+		<label class="control-label">Meta beschrijving</label>
+		<input type="text" class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('meta_descr_nl')) }}" 
+		name="meta_descr_nl" id="meta_descr_nl" 
+		value="{{ old('meta_descr_nl', !product.meta_descr_nl? '': product.meta_descr_nl ) }}" placeholder="Meta beschrijving..."/>
+		{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('meta_descr_nl'), hasErrorFor('meta_descr_nl')) }}
+	</div>   <!-- form-group -->
+</div>   <!-- row -->
+<div class="form-row">
+	<div class="form-group  col-md-12">
+		<label class="control-label">Meta titel</label>
+		<input type="text" class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('meta_title_nl')) }}" 
+		name="meta_title_nl" id="meta_title_nl" 
+		value="{{ old('meta_title_nl', !product.meta_title_nl? '': product.meta_title_nl ) }}" placeholder="Meta titel...">
+		{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('meta_title_nl'), hasErrorFor('meta_title_nl')) }}
+
+	</div>   <!-- form-group -->
+</div>   <!-- row -->

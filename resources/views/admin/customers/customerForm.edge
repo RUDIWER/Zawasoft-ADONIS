@@ -1,0 +1,524 @@
+@layout('admin.layouts.app')
+
+
+@section('content')
+<link href="/vendor/datatables/Responsive-2.2.1/css/responsive.bootstrap4.min.css" rel="stylesheet">
+
+	<div class="row">  
+		<div class="col-lg-12">
+			<div class="card card-primary">
+	<!-- TITLE BAR  -->
+				<div class="card-header text-white bg-primary">
+					<b>	
+						<i class="nav-icon icon-user-follow"></i> Klant toevoegen / wijzigen   		
+					</b>
+				</div>
+	<!-- BUTTON BAR  -->
+				<div class="card-header">                      
+					<b>     
+						<a href="{{ route('admin-customers') }}">
+							<i class="fas fa-fw fa-arrow-circle-left"></i> Terug	
+						</a>
+						&nbsp
+						<a class="float-right" href="javascript:{}" onclick="document.getElementById('customerForm').submit(); return false;">
+							<i class="fas fa-fw fa-check-circle"></i> Opslaan
+						</a> 
+					</b>
+				</div>
+				<div class="card-body"> 
+				@include('partials.notifications')
+		<!-- TAB HEADER -->
+				<ul class="nav nav-tabs" id="customerTab" role="tablist">
+					<li class="nav-item">
+						<a class="nav-link active" id="commonTab" data-toggle="tab" href="#tab-0" role="tab" aria-controls="tab-0" aria-selected="true">Algemeen</a>
+					</li>
+					<li  class="nav-item">
+						<a class="nav-link" id="addressTab" data-toggle="tab" href="#tab-1" role="tab" aria-controls="tab-1" aria-selected="false" >Adressen</a>
+					</li>
+					<li  class="nav-item">
+						<a class="nav-link" id="historyTab" data-toggle="tab" href="#tab-2" role="tab" aria-controls="tab-2" aria-selected="false" >Historiek</a>
+					</li>
+						<li  class="nav-item">
+						<a class="nav-link" id="othersTab" data-toggle="tab" href="#tab-3" role="tab" aria-controls="tab-3" aria-selected="false" >Overige</a>
+					</li>
+				</ul>
+				@if(isNew)
+					<form action="/admin/customer/save/new/0" name="customerForm" id="customerForm" method="post">
+				@else
+					<form action="/admin/customer/save/{{ customer.id }}" name="customerForm" id="customerForm" method="post">
+				@endif
+					{{ csrfField() }}
+					<div class="tab-content" id="customerTabContent">
+						<div class="tab-pane fade show active" id="tab-0" role="tabpanel" aria-labelledby="commonTab">
+							@include('admin.customers.partials.tab0')
+						</div>
+						<div class="tab-pane fade show" id="tab-1" role="tabpanel" aria-labelledby="addressTab">
+							@include('admin.customers.partials.tab1')
+						</div>
+						<div class="tab-pane fade show" id="tab-2" role="tabpanel" aria-labelledby="historyTab">         
+							@include('admin.customers.partials.tab2')		
+						</div> 
+						<div class="tab-pane fade show" id="tab-3" role="tabpanel" aria-labelledby="othersTab">              
+							@include('admin.customers.partials.tab3')
+						</div> 
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	@include('admin.customers.partials.addressModal')	
+	@include('admin.partials.confirmModal')	
+@endsection
+
+@section('scripts')
+	<!-- <script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script> -->
+	<script src="/vendor/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
+	<script src="/vendor/datatables/Responsive-2.2.1/js/responsive.bootstrap4.min.js"></script>
+	<script>
+		$(document).ready(function() {
+			var customerAddressTable = $('#customerAddressTable').DataTable({
+				dom :"<'myfilter'f><'mylength'l>t",
+				ajax: {
+					url: '/admin/customer/address/get/' + {{ customer.id }},
+					dataSrc: ''
+				},
+				columns: [
+					{ data: 'id' },
+					{ data: 'alias' },
+					{ data: 'street' },
+					{ data: 'number' },
+					{ data: 'bus' },
+					{ data: 'postcode' },
+					{ data: 'city' },
+				],
+				info: false,
+				responsive: true,		
+				bSort : true,
+				fixedHeader: true,
+				order : [[ 0, "asc" ]],
+				paging : false,
+				searching : false,
+				language: {
+					zeroRecords: "Geen data gevonden"
+				},			
+			});
+			customerAddressTable.columns.adjust().draw();
+			$('#dataTableWrapper').removeClass('dataTableParentHidden');
+
+		// Responsive setting for datatable on Address tab
+			$('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
+				$.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
+			} );	
+		
+
+		// Add new Address
+			$('#addAddressButton').on('click', function(){
+				$('#addressModal').modal('show');  
+				
+				// Fill fields and clear empty fields
+				const firstName = $('#customerForm input[name=first_name]').val();
+				const lastName = $('#customerForm input[name=last_name]').val();
+				const company = $('#customerForm input[name=company]').val();
+				const email = $('#customerForm input[name=email_1]').val();
+				const phone = $('#customerForm input[name=phone_1]').val();
+				$('#addressForm')
+					.find('[name="id"]').val('Nog niet toegekend...').end()
+					.find('[name="created_at"]').val('').end()
+					.find('[name="updated_at"]').val('').end()
+					.find('[name="alias"]').val('').end()
+					.find('[name="street"]').val('').end()
+					.find('[name="number"]').val('').end()
+					.find('[name="bus"]').val('').end()
+					.find('[name="postcode"]').val('').end()
+					.find('[name="city"]').val('').end()
+					.find('[name="country"]').val('').end()
+					.find('[name="other"]').val('').end()
+					.find('[name="company"]').val(company).end()
+					.find('[name="vat_number"]').val('').end()
+				 	.find('[name="first_name"]').val(firstName).end()
+					.find('[name="last_name"]').val(lastName).end()
+					.find('[name="email"]').val(email).end()
+					.find('[name="phone"]').val(phone).end()
+					.find('[name="mobile"]').val('').end()
+					.find('[name="fax"]').val('').end()
+
+				// Reset all validation rules
+				$('#addressForm input[name=alias]').removeClass("is-invalid");
+				$('#length-alias').addClass("d-none");
+				$('#invalid-alias').addClass("d-none");	
+				$('#addressForm input[name=street]').removeClass("is-invalid");
+				$('#invalid-street').addClass("d-none");
+				$('#length-street').addClass("d-none");
+				$('#addressForm input[name=number]').removeClass("is-invalid");
+				$('#invalid-number').addClass("d-none");
+				$('#length-number').addClass("d-none");
+				$('#addressForm input[name=postcode]').removeClass("is-invalid");
+				$('#invalid-postcode').addClass("d-none");	
+				$('#length-postcode').addClass("d-none");
+				$('#addressForm input[name=city]').removeClass("is-invalid");
+				$('#invalid-city').addClass("d-none");
+				$('#length-city').addClass("d-none");
+				$('#addressForm input[name=country]').removeClass("is-invalid");
+				$('#invalid-country').addClass("d-none");
+				$('#length-country').addClass("d-none");
+				$('#addressForm input[name=first_name]').removeClass("is-invalid");
+				$('#invalid-first_name').addClass("d-none");
+				$('#length-first_name').addClass("d-none");
+				$('#addressForm input[name=last_name]').removeClass("is-invalid");
+				$('#invalid-last_name').addClass("d-none");	
+				$('#length-last_name').addClass("d-none");
+				$('#addressForm input[name=email]').removeClass("is-invalid");
+				$('#validate-email').addClass("d-none");
+				$('#length-email').addClass("d-none");
+				$('#invalid-email').addClass("d-none");
+				$('#addressForm input[name=bus]').removeClass("is-invalid");
+				$('#length-bus').addClass("d-none");
+				$('#addressForm input[name=other]').removeClass("is-invalid");
+				$('#length-other').addClass("d-none");
+				$('#addressForm input[name=company]').removeClass("is-invalid");
+				$('#length-company').addClass("d-none");
+				$('#addressForm input[name=vat_number]').removeClass("is-invalid");
+				$('#length-vat_number').addClass("d-none");	
+				$('#addressForm input[name=phone]').removeClass("is-invalid");
+				$('#length-phone').addClass("d-none");
+				$('#addressForm input[name=mobile]').removeClass("is-invalid");
+				$('#length-mobile').addClass("d-none");
+				$('#addressForm input[name=fax]').removeClass("is-invalid");
+				$('#length-fax').addClass("d-none");
+				$('#addressForm input[name=state]').removeClass("is-invalid");
+				$('#length-state').addClass("d-none");		
+	
+			});
+		
+	
+		// Edit existing Address with modal addressform
+		//	$('#customerAddressTable td').not('.sorting_1').click(function(){
+			$('#customerAddressTable').on('click', 'td:not(.sorting_1)', function () {
+				$('#addressModal').modal('show');
+				var index = customerAddressTable.cell( this ).index();
+				var data = customerAddressTable.row( index.row ).data();
+				var addressId = data.id;
+				$.ajax({
+					url: "/admin/customer/address/edit/" + addressId,
+					method: 'GET'
+				}).done(function(address) {
+					// Populate the form fields with the data returned from server
+					// Open Modal window
+					$('#addressModal').modal('show');
+					// Fill input fields with response (address)	
+					$('#addressForm')
+					.find('[name="id"]').val(address.id).end()
+					.find('[name="created_at"]').val(address.created_at).end()
+					.find('[name="updated_at"]').val(address.updated_at).end()
+					.find('[name="alias"]').val(address.alias).end()
+					.find('[name="street"]').val(address.street).end()
+					.find('[name="number"]').val(address.number).end()
+					.find('[name="bus"]').val(address.bus).end()
+					.find('[name="postcode"]').val(address.postcode).end()
+					.find('[name="city"]').val(address.city).end()
+					.find('[name="state"]').val(address.state).end()
+					.find('[name="country"]').val(address.country).end()
+					.find('[name="other"]').val(address.other).end()
+					.find('[name="company"]').val(address.company).end()
+					.find('[name="vat_number"]').val(address.vat_number).end()
+					.find('[name="first_name"]').val(address.first_name).end()
+					.find('[name="last_name"]').val(address.last_name).end()
+					.find('[name="email"]').val(address.email).end()
+					.find('[name="phone"]').val(address.phone).end()
+					.find('[name="mobile"]').val(address.mobile).end()
+					.find('[name="fax"]').val(address.fax).end()
+				});
+
+				// Reset all Validations
+				$('#addressForm input[name=alias]').removeClass("is-invalid");
+				$('#length-alias').addClass("d-none");
+				$('#invalid-alias').addClass("d-none");	
+				$('#addressForm input[name=street]').removeClass("is-invalid");
+				$('#invalid-street').addClass("d-none");
+				$('#length-street').addClass("d-none");
+				$('#addressForm input[name=number]').removeClass("is-invalid");
+				$('#invalid-number').addClass("d-none");
+				$('#length-number').addClass("d-none");
+				$('#addressForm input[name=postcode]').removeClass("is-invalid");
+				$('#invalid-postcode').addClass("d-none");	
+				$('#length-postcode').addClass("d-none");
+				$('#addressForm input[name=city]').removeClass("is-invalid");
+				$('#invalid-city').addClass("d-none");
+				$('#length-city').addClass("d-none");
+				$('#addressForm input[name=country]').removeClass("is-invalid");
+				$('#invalid-country').addClass("d-none");
+				$('#length-country').addClass("d-none");
+				$('#addressForm input[name=first_name]').removeClass("is-invalid");
+				$('#invalid-first_name').addClass("d-none");
+				$('#length-first_name').addClass("d-none");
+				$('#addressForm input[name=last_name]').removeClass("is-invalid");
+				$('#invalid-last_name').addClass("d-none");	
+				$('#length-last_name').addClass("d-none");
+				$('#addressForm input[name=email]').removeClass("is-invalid");
+				$('#validate-email').addClass("d-none");
+				$('#length-email').addClass("d-none");
+				$('#invalid-email').addClass("d-none");
+				$('#addressForm input[name=bus]').removeClass("is-invalid");
+				$('#length-bus').addClass("d-none");
+				$('#addressForm input[name=other]').removeClass("is-invalid");
+				$('#length-other').addClass("d-none");
+				$('#addressForm input[name=company]').removeClass("is-invalid");
+				$('#length-company').addClass("d-none");
+				$('#addressForm input[name=vat_number]').removeClass("is-invalid");
+				$('#length-vat_number').addClass("d-none");	
+				$('#addressForm input[name=phone]').removeClass("is-invalid");
+				$('#length-phone').addClass("d-none");
+				$('#addressForm input[name=mobile]').removeClass("is-invalid");
+				$('#length-mobile').addClass("d-none");
+				$('#addressForm input[name=fax]').removeClass("is-invalid");
+				$('#length-fax').addClass("d-none");
+				$('#addressForm input[name=state]').removeClass("is-invalid");
+				$('#length-state').addClass("d-none");		
+			});
+
+		// save Address (Same routine for add & change)
+			$('#submitButton').click( 'submit', function(e) {
+				e.preventDefault();
+				var id_address =  $('#addressForm input[name=id]').val();
+				if(!id_address){
+					id_address = 0;
+				}
+				var id_customer = document.getElementById('id').value;
+				const csrf = $('#addressForm input[name=_csrf]').val();
+				var formData = {
+					_csrf: csrf,
+					id: id_address,
+					id_customer: id_customer,
+					id_supplier: '0',
+					company: $('#addressForm input[name=company]').val(),
+					first_name: $('#addressForm input[name=first_name]').val(),
+					last_name: $('#addressForm input[name=last_name]').val(),
+					alias: $('#addressForm input[name=alias]').val(),
+					vat_number: $('#addressForm input[name=vat_number]').val(),
+					street: $('#addressForm input[name=street]').val(),
+					number: $('#addressForm input[name=number]').val(),
+					bus: $('#addressForm input[name=bus]').val(),
+					postcode: $('#addressForm input[name=postcode]').val(),
+					city: $('#addressForm input[name=city]').val(),
+					state: $('#addressForm input[name=state]').val(),
+					country: $('#addressForm input[name=country]').val(),
+					other: $('#addressForm input[name=other]').val(),
+					company: $('#addressForm input[name=company]').val(),
+					email: $('#addressForm input[name=email]').val(),
+					phone: $('#addressForm input[name=phone]').val(),
+					mobile: $('#addressForm input[name=mobile]').val(),
+					fax: $('#addressForm input[name=fax]').val(),
+				}
+
+			// Validate Address Modal formData on client site
+			// Set Validation messages
+
+				if(!formData.alias){
+					$('#addressForm input[name=alias]').addClass("is-invalid");
+					$('#invalid-alias').removeClass("d-none");	
+				}else if(((formData.alias).length) > 30){
+					$('#addressForm input[name=alias]').addClass("is-invalid");
+					$('#length-alias').removeClass("d-none");	
+				}
+				if(!formData.street){
+					$('#addressForm input[name=street]').addClass("is-invalid");
+					$('#invalid-street').removeClass("d-none");		
+				}else if(((formData.street).length) > 50){
+					$('#addressForm input[name=street]').addClass("is-invalid");
+					$('#length-street').removeClass("d-none");
+				}
+				if(!formData.number){
+					$('#addressForm input[name=number]').addClass("is-invalid");
+					$('#invalid-number').removeClass("d-none");		
+				}else if(((formData.number).length) > 10){
+					$('#addressForm input[name=number]').addClass("is-invalid");
+					$('#length-number').removeClass("d-none");
+				}
+				if(!formData.postcode){
+					$('#addressForm input[name=postcode]').addClass("is-invalid");
+					$('#invalid-postcode').removeClass("d-none");		
+				}else if(((formData.postcode).length) > 20){
+					$('#addressForm input[name=postcode]').addClass("is-invalid");
+					$('#length-postcode').removeClass("d-none");
+				}
+				if(!formData.city){
+					$('#addressForm input[name=city]').addClass("is-invalid");
+					$('#invalid-city').removeClass("d-none");		
+				}else if(((formData.city).length) > 50){
+					$('#addressForm input[name=city]').addClass("is-invalid");
+					$('#length-city').removeClass("d-none");
+				}
+				if(!formData.state){
+					$('#addressForm input[name=state]').addClass("is-invalid");
+					$('#invalid-state').removeClass("d-none");		
+				}else if(((formData.state).length) > 50){
+					$('#addressForm input[name=state]').addClass("is-invalid");
+					$('#length-state').removeClass("d-none");
+				}
+				if(!formData.country){
+					$('#addressForm input[name=country]').addClass("is-invalid");
+					$('#invalid-country').removeClass("d-none");		
+				}else if(((formData.country).length) > 50){
+					$('#addressForm input[name=country]').addClass("is-invalid");
+					$('#length-country').removeClass("d-none");
+				}
+				if(!formData.first_name){
+					$('#addressForm input[name=first_name]').addClass("is-invalid");
+					$('#invalid-first_name').removeClass("d-none");		
+				}else if(((formData.first_name).length) > 50){
+					$('#addressForm input[name=first_name]').addClass("is-invalid");
+					$('#length-first_name').removeClass("d-none");
+				}
+				if(!formData.last_name){
+					$('#addressForm input[name=last_name]').addClass("is-invalid");
+					$('#invalid-last_name').removeClass("d-none");		
+				}else if(((formData.last_name).length) > 50){
+					$('#addressForm input[name=last_name]').addClass("is-invalid");
+					$('#length-last_name').removeClass("d-none");
+				}
+				if(!formData.email){
+					$('#addressForm input[name=email]').addClass("is-invalid");
+					$('#invalid-email').removeClass("d-none");		
+				}else if(((formData.email).length) > 60){
+					$('#addressForm input[name=email]').addClass("is-invalid");
+					$('#length-email').removeClass("d-none");
+				}else if(!(validateEmail(formData.email))) {
+					$('#addressForm input[name=email]').addClass("is-invalid");
+					$('#validate-email').removeClass("d-none");
+				}
+				if(((formData.bus).length) > 10){
+					$('#addressForm input[name=bus]').addClass("is-invalid");
+					$('#length-bus').removeClass("d-none");	
+				}
+				if(((formData.other).length) > 50){
+					$('#addressForm input[name=other]').addClass("is-invalid");
+					$('#length-other').removeClass("d-none");	
+				}
+				if(((formData.company).length) > 50){
+					$('#addressForm input[name=company]').addClass("is-invalid");
+					$('#length-company').removeClass("d-none");	
+				}
+				if(((formData.vat_number).length) > 50){
+					$('#addressForm input[name=vat_number]').addClass("is-invalid");
+					$('#length-vat_number').removeClass("d-none");	
+				}
+				if(((formData.phone).length) > 50){
+					$('#addressForm input[name=phone]').addClass("is-invalid");
+					$('#length-phone').removeClass("d-none");	
+				}
+				if(((formData.mobile).length) > 50){
+					$('#addressForm input[name=mobile]').addClass("is-invalid");
+					$('#length-mobile').removeClass("d-none");	
+				}
+				if(((formData.fax).length) > 40){
+					$('#addressForm input[name=fax]').addClass("is-invalid");
+					$('#length-fax').removeClass("d-none");	
+				}
+				if(((formData.state).length) > 50){
+					$('#addressForm input[name=state]').addClass("is-invalid");
+					$('#length-state').removeClass("d-none");	
+				}
+
+			// Check validation rules and if ok Send Data
+
+				if (
+					!formData.alias ||
+					formData.alias.length > 30 ||
+					!formData.street ||
+					formData.street.length > 50 ||
+					!formData.number ||
+					formData.number.length > 10 ||
+					!formData.postcode ||
+					formData.postcode.length > 20 ||
+					!formData.city ||
+					formData.city.length > 50 ||
+					!formData.state ||
+					formData.state.length > 50 ||
+					!formData.country ||
+					formData.country.length > 50 ||
+					!formData.first_name ||
+					formData.first_name.length > 50 ||
+					!formData.last_name ||
+					formData.last_name.length > 50 ||
+					!formData.email ||
+					formData.email.length > 60 ||
+					!validateEmail(formData.email) ||
+					formData.bus.length > 10 ||
+					formData.other.length > 50 ||
+					formData.company.length > 50 ||
+					formData.vat_number.length > 50 ||
+					formData.phone.length > 50 ||
+					formData.mobile.length > 50 ||
+					formData.fax.length > 40 ||
+					formData.state.length > 50
+				) {
+				}else{
+					// Send addressData to the server with Ajax if validation is ok	
+					$.ajax({
+						type: "post",
+						url: "/admin/customer/address/save",
+						data: formData,
+						cache: false,
+						error:function(xhr, ajaxOptions, thrownError,data){
+							console.log(ajaxOptions);
+							console.log(xhr.status);
+							console.log(thrownError);
+						}
+					}).done(function(data){
+						// Adres succesvol opgeslagen scherm refreshen & close modal
+						$('#addressModal').modal('hide');
+						$('#customerAddressTable').DataTable().ajax.reload();
+					});
+				}
+
+			});
+
+	// DELETE ADDRESS
+			$('#deleteButton').click(function(){ 
+				const id_address =  $('#addressForm input[name=id]').val();
+				const csrf = $('#addressForm input[name=_csrf]').val();
+				const formData = {
+					_csrf: csrf,
+					id: id_address,
+				}
+				$('#confirmModal').modal('show');
+				$('#confirmDelButton').click(function(){ 
+					$.ajax({
+						type: "post",
+						url: "/admin/customer/address/delete",
+						data: formData,
+						cache: false,
+						error:function(xhr, ajaxOptions, thrownError,data){
+							console.log(ajaxOptions);
+							console.log(xhr.status);
+							console.log(thrownError);
+						}
+					}).done(function(data){
+						// Adres succesvol verwijderd refreshen & close modal
+						$('#confirmModal').modal('hide');
+						$('#addressModal').modal('hide');
+						$('#customerAddressTable').DataTable().ajax.reload();
+					});
+				})	
+			})
+
+	// Function to validate email
+
+		function validateEmail(email) {
+			var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+			if (!filter.test(email)) {
+				return false;
+			}else{
+				return true;
+			}
+		};
+
+	//(RW) Slide UP  alert success messages
+			$(".alert-success").fadeTo(2000, 500).slideUp(500, function(){
+				$(".alert-success").alert('close');
+			});
+		});
+	</script>
+@endsection
+
+

@@ -1,0 +1,242 @@
+
+@layout('admin.layouts.app')
+
+@section('content')
+	<div class="row">  
+		<div class="col-lg-12">
+			<div class="card card-primary">
+	<!-- TITLE BAR  -->
+				<div class="card-header text-white bg-primary">
+					<b>  			  
+						<i class="nav-icon icon-settings"></i> Parameters	
+					</b>
+				</div>
+	<!-- BUTTON BAR  -->
+				<div class="card-header">                      
+					<b>     
+						<a href="{{ route('admin') }}">
+							<i class="fas fa-fw fa-arrow-circle-left"></i> Terug	
+						</a>
+						&nbsp
+						<a class="float-right" href="javascript:{}" onclick="document.getElementById('paramForm').submit(); return false;">
+							<i class="fas fa-fw fa-check-circle"></i> Opslaan
+						</a> 
+					</b>
+				</div>
+				<div class="card-body"> 
+				@include('partials.notifications')
+		<!-- TAB -->
+					<ul class="nav nav-tabs" id="paramTab" role="tablist">
+						<li class="nav-item">
+							<a class="nav-link active" id="costTab" data-toggle="tab" href="#tab-1" role="tab" aria-controls="tab-1" aria-selected="true">Kosten</a>
+						</li>
+						<li  class="nav-item">
+							<a class="nav-link" id="otherTab" data-toggle="tab" href="#tab-2" role="tab" aria-controls="tab-2" aria-selected="false" >Stand. Waarden</a>
+						</li>
+						<li  class="nav-item">
+							<a class="nav-link" id="numbersTab" data-toggle="tab" href="#tab-3" role="tab" aria-controls="tab-3" aria-selected="false" >Nummering</a>
+						</li>
+					</ul>
+					<form action="/admin/param/save" name="paramForm" id="paramForm" method="post">
+						{{ csrfField() }}
+						<div class="tab-content" id="paramTabContent">  
+		<!-- TAB-1   KOSTEN -->
+							<div class="tab-pane fade show active" id="tab-1" role="tabpanel" aria-labelledby="costTab">
+								<div class="row">
+									<div class="col-lg-6">  
+										<br>				
+										<h5>Kosten CZ</h5>
+										<div class="form-row">
+											<div class="form-group col-md-8">
+												<label class="control-label">Verzend Kost CZ Belgie ex. BTW</label>
+												<input type="number" min="0" step="0.01" 
+													class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('shipping_cost_ex_vat_cz_be')) }}"  required name="shipping_cost_ex_vat_cz_be" id="shipping_cost_ex_vat_cz_be" 
+													value="{{ old('shipping_cost_ex_vat_cz_be', !param.shipping_cost_ex_vat_cz_be? '':param.shipping_cost_ex_vat_cz_be ) }}"/> 
+												{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('shipping_cost_ex_vat_cz_be'), hasErrorFor('shipping_cost_ex_vat_cz_be')) }} 
+											</div>
+										</div>
+										<div class="form-row">
+											<div class="form-group col-md-8">
+												<label class="control-label">Verzend Kost CZ NL ex. BTW</label>
+												<input type="number" step="0.01" class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('shipping_cost_ex_vat_cz_nl')) }}" required name="shipping_cost_ex_vat_cz_nl" id="shipping_cost_ex_vat_cz_nl" 
+												value="{{ old('shipping_cost_ex_vat_cz_nl', !param.shipping_cost_ex_vat_cz_nl ? '':param.shipping_cost_ex_vat_cz_nl ) }}"/>
+											{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('shipping_cost_ex_vat_cz_nl'), hasErrorFor('shipping_cost_ex_vat_cz_nl')) }} 
+
+											</div>
+										</div>
+										<br>						
+										<h5>Verzending</h5>
+										<div class="form-row">
+											<div class="form-group col-md-8">
+												<label class="control-label">Min. bedrag voor gratis verzending CZ (Incl. BTW)</label>
+												<input type="number" step="0.01" class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('min_order_amount_in_vat_free_shipping'))}}" name="min_order_amount_in_vat_free_shipping" id="min_order_amount_in_vat_free_shipping" 
+												value="{{ old('min_order_amount_in_vat_free_shipping', !param.min_order_amount_in_vat_free_shipping? '':param.min_order_amount_in_vat_free_shipping ) }}"/>
+											{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('min_order_amount_in_vat_free_shipping'), hasErrorFor('min_order_amount_in_vat_free_shipping')) }} 
+											</div>
+										</div>
+										<div class="form-row">
+											<div class="form-group col-md-8">
+												<label class="control-label">Stand. aangerekend verzend bedrag via CZ - Belgie (ex. BTW)</label>
+												<input type="number" step="0.01" class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('shipping_amount_ex_vat_cz_be'))}}" required name="shipping_amount_ex_vat_cz_be" id="shipping_amount_ex_vat_cz_be" 
+												value="{{ old('shipping_amount_ex_vat_cz_be', !param.shipping_amount_ex_vat_cz_be? '':param.shipping_amount_ex_vat_cz_be) }}"/> 
+											</div>
+										</div>
+										<div class="form-row">
+											<div class="form-group col-md-8">
+												<label class="control-label">Stand. aangerekend verzend bedrag via CZ - NL(ex. BTW)</label>
+												<input type="number" step="0.01" class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('shipping_amount_ex_vat_cz_nl'))}}" required name="shipping_amount_ex_vat_cz_nl" id="shipping_amount_ex_vat_cz_nl" 
+												value="{{ old('shipping_amount_ex_vat_cz_nl', !param.shipping_amount_ex_vat_cz_nl? '':param.shipping_amount_ex_vat_cz_nl ) }}"/> 
+											{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('shipping_amount_ex_vat_cz_nl'), hasErrorFor('shipping_amount_ex_vat_cz_nl')) }} 
+											</div>
+										</div>
+										<div class="form-row">
+											<div class="form-group col-md-8">
+												<label class="control-label">Stand. aangerekend verzend bedrag via Dropshipping - BE(ex. BTW)</label>
+												<input type="number" step="0.01" class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('shipping_amount_ex_vat_dropshipping_be'))}}" required name="shipping_amount_ex_vat_dropshipping_be" id="shipping_amount_ex_vat_dropshipping_be" 
+												value="{{ old('shipping_amount_ex_vat_dropshipping_be', !param.shipping_amount_ex_vat_dropshipping_be? '':param.shipping_amount_ex_vat_dropshipping_be ) }}"/> 
+											{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('shipping_amount_ex_vat_dropshipping_be'), hasErrorFor('shipping_amount_ex_vat_dropshipping_be')) }} 
+											</div>
+										</div>
+										<div class="form-row">
+											<div class="form-group col-md-8">
+												<label class="control-label">Stand. aangerekend verzend bedrag via Dropshipping - NL(ex. BTW)</label>
+												<input type="number" step="0.01" class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('shipping_amount_ex_vat_dropshipping_nl'))}}" required name="shipping_amount_ex_vat_dropshipping_nl" id="shipping_amount_ex_vat_dropshipping_nl" 
+												value="{{ old('shipping_amount_ex_vat_dropshipping_nl', !param.shipping_amount_ex_vat_dropshipping_nl? '':param.shipping_amount_ex_vat_dropshipping_nl ) }}"/> 
+											{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('shipping_amount_ex_vat_dropshipping_nl'), hasErrorFor('shipping_amount_ex_vat_dropshipping_nl')) }} 
+											</div>
+										</div>
+										<div class="form-row">
+											<div class="form-group col-md-8">
+												<label class="control-label">Stand. aangerekend verzend bedrag via Groothandel - BE(ex. BTW)</label>
+												<input type="number" step="0.01" class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('shipping_amount_ex_vat_wholesale_be'))}}" required name="shipping_amount_ex_vat_wholesale_be" id="shipping_amount_ex_vat_wholesale_be" 
+												value="{{ old('shipping_amount_ex_vat_wholesale_be', !param.shipping_amount_ex_vat_wholesale_be? '':param.shipping_amount_ex_vat_wholesale_be ) }}"/> 
+											{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('shipping_amount_ex_vat_wholesale_be'), hasErrorFor('shipping_amount_ex_vat_wholesale_be')) }} 
+											</div>
+										</div>
+										<div class="form-row">
+											<div class="form-group col-md-8">
+												<label class="control-label">Stand. aangerekend verzend bedrag via Groothandel - NL(ex. BTW)</label>
+												<input type="number" step="0.01" class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('shipping_amount_ex_vat_wholesale_nl'))}}" required name="shipping_amount_ex_vat_wholesale_nl" id="shipping_amount_ex_vat_wholesale_nl" 
+												value="{{ old('shipping_amount_ex_vat_wholesale_nl', !param.shipping_amount_ex_vat_wholesale_nl? '':param.shipping_amount_ex_vat_wholesale_nl ) }}"/> 
+											{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('shipping_amount_ex_vat_wholesale_nl'), hasErrorFor('shipping_amount_ex_vat_wholesale_nl')) }} 
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-6"> 
+										<br>				
+										<h5>Kosten BOL.com</h5>
+										<div class="form-row">
+											<div class="form-group col-md-8">
+												<label class="control-label">Verzend Kost BOL Belgie ex. BTW</label>
+												<input type="number" step="0.01" class="form-control form-control-sm input-required {{ elIf('is-invalid',getErrorFor('shipping_cost_ex_vat_bol_be'), hasErrorFor('shipping_cost_ex_vat_bol_be'))}}" required name="shipping_cost_ex_vat_bol_be" id="shipping_cost_ex_vat_bol_be" 
+												value="{{ old('shipping_cost_ex_vat_bol_be', !param.shipping_cost_ex_vat_bol_be? '':param.shipping_cost_ex_vat_bol_be ) }}"/> 
+											{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('shipping_cost_ex_vat_bol_be'), hasErrorFor('shipping_cost_ex_vat_bol_be')) }} 	
+											</div>											
+										</div>
+										<div class="form-row">
+											<div class="form-group col-md-8">
+												<label class="control-label">Verzend Kost BOL NL ex. BTW</label>
+												<input type="number" step="0.01" class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('shipping_cost_ex_vat_bol_nl'))}}" required name="shipping_cost_ex_vat_bol_nl" id="shipping_cost_ex_vat_bol_nl" 
+												value="{{ old('shipping_cost_ex_vat_bol_nl ', !param.shipping_cost_ex_vat_bol_nl ? '':param.shipping_cost_ex_vat_bol_nl  ) }}"/> 
+											{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('shipping_cost_ex_vat_bol_nl'), hasErrorFor('shipping_cost_ex_vat_bol_nl')) }} 
+											</div>
+										</div>
+										<br>
+										<div class="form-row">
+											<div class="form-group col-md-8">
+												<label class="control-label">Fix Kost BOL / Product ex. BTW</label>
+												<input type="number" step="0.01" class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('fix_cost_ex_vat_bol'))}}" required name="fix_cost_ex_vat_bol" id="fix_cost_ex_vat_bol" 
+												value="{{ old('fix_cost_ex_vat_bol', !param.fix_cost_ex_vat_bol? '':param.fix_cost_ex_vat_bol ) }}"/> 
+											{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('fix_cost_ex_vat_bol'), hasErrorFor('fix_cost_ex_vat_bol')) }} 
+											</div>
+										</div>
+										<div class="form-row">
+											<div class="form-group col-md-8">
+												<label class="control-label">Stand. Kost % BOL</label>
+												<input type="number" step="0.01" class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('stand_cost_procent_bol'))}}" required name="stand_cost_procent_bol" id="stand_cost_procent_bol" 
+												value="{{ old('stand_cost_procent_bol', !param.stand_cost_procent_bol? '':param.stand_cost_procent_bol ) }}"/>
+											{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('stand_cost_procent_bol'), hasErrorFor('stand_cost_procent_bol')) }} 
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+			<!-- TAB-2  ANDERE -->	
+							<div class="tab-pane fade show" id="tab-2" role="tabpanel" aria-labelledby="otherTab">
+								<div class="row">
+									<div class="col-lg-6">  
+										<br>				
+										<h5>Stand. Waarden</h5>
+										<div class="form-row">
+											<div class="form-group col-md-8">
+												<label class="control-label">Stand BTW procent op Producten</label>
+												<input type="number" step="0.01" class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('stand_vat_procent'))}}" required name="stand_vat_procent" id="stand_vat_procent" 
+												value="{{ old('stand_vat_procent', !param.stand_vat_procent? '':param.stand_vat_procent) }}"/>
+											{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('stand_vat_procent'), hasErrorFor('stand_vat_procent')) }}
+											</div>
+										</div>
+										<div class="form-row">
+											<div class="form-group col-md-8">
+												<label class="control-label">Stand BTW procent op Aangerekende verzendingskosten</label>
+												<input type="number" step="0.01" class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('stand_shipping_vat_procent'))}}" required name="stand_shipping_vat_procent" id="stand_shipping_vat_procent" 
+												value="{{ old('stand_shipping_vat_procent', !param.stand_shipping_vat_procent? '':param.stand_shipping_vat_procent) }}"/>
+											{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('stand_shipping_vat_procent'), hasErrorFor('stand_shipping_vat_procent')) }}
+											</div>
+										</div>
+										<div class="form-row">
+											<div class="form-group col-md-8">
+												<label class="control-label">Stand Marge voor Dropshipping</label>
+												<input type="number" step="0.01" class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('stand_margin_dropshipping'))}}" required name="stand_margin_dropshipping" id="stand_margin_dropshipping" 
+												value="{{ old('stand_margin_dropshipping', !param.stand_margin_dropshipping? '':param.stand_margin_dropshipping) }}"/>
+											{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('stand_margin_dropshipping'), hasErrorFor('stand_margin_dropshipping')) }}										
+											</div>
+										</div>
+										<div class="form-row">
+											<div class="form-group col-md-8">
+												<label class="control-label">Stand Marge voor Groothandel</label>
+												<input type="number" step="0.01" class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('stand_margin_wholesale'))}}" required name="stand_margin_wholesale" id="stand_margin_wholesale" 
+												value="{{ old('stand_margin_wholesale', !param.stand_margin_wholesale? '':param.stand_margin_wholesale) }}"/>
+											{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('stand_margin_wholesale'), hasErrorFor('stand_margin_wholesale')) }}																				
+											</div>
+										</div>
+									</div>
+								</div>
+							</div> <!-- tab-2 -->
+							<div class="tab-pane fade show" id="tab-3" role="tabpanel" aria-labelledby="numberTab">
+								<div class="row">
+									<div class="col-lg-6">  
+										<br>				
+										<h5>Nummering Documenten</h5>
+										<div class="form-row">
+											<div class="form-group col-md-8">
+												<label class="control-label">Laatste verkoopfact.Nr.</label>
+												<input type="number" min="0" step="1" 
+													class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('last_sales_invoice_nr')) }}"  required name="last_sales_invoice_nr" id="last_sales_invoice_nr" 
+													value="{{ old('last_sales_invoice_nr', !param.last_sales_invoice_nr? '':param.last_sales_invoice_nr ) }}"/> 
+												{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('last_sales_invoice_nr'), hasErrorFor('last_sales_invoice_nr')) }} 
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div> <!-- tab content -->	
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>	
+@endsection
+@section('scripts')
+	<script type="text/javascript" charset="utf-8">
+		$(document).ready(function() {
+    //(RW) Slide UP  alert success messages
+			$(".alert-success").fadeTo(2000, 500).slideUp(500, function(){
+				$(".alert-success").alert('close');
+			});
+        });
+</script>
+
+@endsection
+
+

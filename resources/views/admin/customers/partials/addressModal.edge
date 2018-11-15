@@ -1,0 +1,208 @@
+<!-- Modal -->
+<div class="modal fade" id="addressModal" tabindex="-1" role="dialog" aria-labelledby="addressModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addressModalLabel">Adres</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+			@if(!address.id)
+				<form action="/admin/customer/save/0" name="addressForm" id="addressForm" method="post">
+			@else
+				<form action="/admin/customer/save/{{ customer.id }}" name="addressForm" id="addressForm" method="post">
+			@endif
+			{{csrfField()}}
+				<div class="form-row">
+					<div class="form-group col-md-2">
+						<label class="control-label">Adres ID</label><br>
+						<input type="number" name="id" id="id" class="form-control form-control-sm" 
+						placeholder="Nog niet toegekend..." readonly tabindex="-1"/>
+					</div>
+					<div class="ml-auto form-group col-md-2">	
+						<label class="control-label">Creatie Datum</label>
+						<input type="text" class="form-control form-control-sm float-right" name="created_at" id="created_at" 
+						readonly tabindex="-1"/>
+							
+					</div>
+					<div class="form-group col-md-2">
+						<label class="control-label">Laatste wijziging</label>
+						<input type="text" class="form-control form-control-sm float-right" name="updated_at" id="updated_at" 
+						readonly tabindex="-1"/>
+					</div>
+				</div> <!-- form-row -->
+				<hr>
+				<div class="form-row">
+					<div class="form-group col-md-5">
+						<label class="control-label">Omschr.</label>
+						<input type="text" 
+						class="form-control form-control-sm input-required"
+						required name="alias" id="alias"/>
+						<div class="d-none small text-danger" id="invalid-alias">Dit veld is verplicht !</div>
+						<div class="d-none small text-danger" id="length-alias">Omschr. mag max. 30 kar. lang zijn</div>
+
+
+					</div> <!-- form-group -->
+					
+				</div> <!-- form row -->
+
+				<div class="form-row">
+					<div class="form-group col-md-8">
+						<label class="control-label">Straat</label>
+						<input type="text" 
+						class="form-control form-control-sm input-required"
+						required name="street" id="street"/>
+						<div class="d-none small text-danger" id="invalid-street">Dit veld is verplicht !</div>
+						<div class="d-none small text-danger" id="length-street">Straatnaam mag max. 50 kar. lang zijn</div>
+					</div> <!-- form-group -->
+					<div class="form-group col-md-2">
+						<label class="control-label">Huisnr.</label>
+						<input type="text" 
+						class="form-control form-control-sm input-required"
+						required name="number" id="number"/>
+						<div class="d-none small text-danger" id="invalid-number">Dit veld is verplicht !</div>
+						<div class="d-none small text-danger" id="length-number">Huisnr. mag max. 10 kar. lang zijn</div>
+					</div> <!-- form-group -->
+					<div class="form-group col-md-2">
+						<label class="control-label">Bus</label>
+						<input type="text" 
+						class="form-control form-control-sm"
+						name="bus" id="bus"/>
+						<div class="d-none small text-danger" id="length-bus">Busnr. mag max. 10 kar. lang zijn</div>
+					</div> <!-- form-group -->
+				</div> <!-- form row -->	
+
+				<div class="form-row">
+					<div class="form-group col-md-2">
+						<label class="control-label">Postcode</label>
+						<input type="text" 
+						class="form-control form-control-sm input-required"
+						required name="postcode" id="postcode"/>
+						<div class="d-none small text-danger" id="invalid-postcode">Dit veld is verplicht !</div>
+						<div class="d-none small text-danger" id="length-postcode">Postcode mag max. 20 kar. lang zijn</div>
+					</div> <!-- form-group -->
+					<div class="form-group col-md-4">
+						<label class="control-label">Gemeente</label>
+						<input type="text" 
+						class="form-control form-control-sm input-required"
+						required name="city" id="city"/>
+						<div class="d-none small text-danger" id="invalid-city">Dit veld is verplicht !</div>
+						<div class="d-none small text-danger" id="length-city">Gemeente mag max. 50 kar. lang zijn</div>
+					</div> <!-- form-group -->
+					<div class="form-group col-md-3">
+						<label class="control-label">Provincie</label>
+						<input type="text" 
+						class="form-control form-control-sm input-required"
+						name="state" id="state"/>
+						<div class="d-none small text-danger" id="invalid-state">Dit veld is verplicht !</div>
+						<div class="d-none small text-danger" id="length-state">Provincie mag max. 50 kar. lang zijn</div>
+					</div> <!-- form-group -->
+					<div class="form-group col-md-3">
+						<label class="control-label">Land</label>
+						<input type="text" 
+						class="form-control form-control-sm input-required"
+						required name="country" id="country"/>
+						<div class="d-none small text-danger" id="invalid-country">Dit veld is verplicht !</div>
+						<div class="d-none small text-danger" id="length-country">Land mag max. 50 kar. lang zijn</div>
+					</div> <!-- form-group -->
+				</div> <!-- form row -->
+
+				<div class="form-row">
+					<div class="form-group col-md-8">
+						<label class="control-label">Opmerking</label>
+						<input type="text" 
+						class="form-control form-control-sm"
+						placeholder="bv. Mijn Privé Adres"
+						name="other" id="other"/>
+						<div class="d-none small text-danger" id="length-other">Opmerking mag max. 50 kar. lang zijn</div>
+					</div> <!-- form-group -->
+				</div>
+				<hr>
+				<div class="form-row">
+					<div class="form-group col-md-8">
+						<label class="control-label">Bedrijfsnaam</label>
+						<input type="text" 
+						class="form-control form-control-sm"
+						name="company" id="company"/>
+						<div class="d-none small text-danger" id="length-company">Bedrijfsnaam mag max. 50 kar. lang zijn</div>
+					</div> <!-- form-group -->
+					<div class="invalid-feedback">test</div>
+
+					<div class="form-group col-md-4">
+						<label class="control-label">Ondernemingsnr.</label>
+						<input type="text" 
+						class="form-control form-control-sm"
+						name="vat_number" id="vat_number"/>
+						<div class="d-none small text-danger" id="length-vat_number">BTW nummer mag max. 50 kar. lang zijn</div>
+					</div> <!-- form-group -->
+				</div>
+
+				<div class="form-row">
+					<div class="form-group col-md-6">
+						<label class="control-label">Voornaam</label>
+						<input type="text" 
+						class="form-control form-control-sm input-required"
+						required name="first_name" id="first_name"/>
+						<div class="d-none small text-danger" id="invalid-first_name">Dit veld is verplicht !</div>
+						<div class="d-none small text-danger" id="length-first_name">Voornaam mag max. 50 kar. lang zijn</div>
+					</div> <!-- form-group -->
+					<div class="form-group col-md-6">
+						<label class="control-label">Familienaam</label>
+						<input type="text" 
+						class="form-control form-control-sm input-required"
+						required name="last_name" id="last_name"/>
+						<div class="d-none small text-danger" id="invalid-last_name">Dit veld is verplicht !</div>
+						<div class="d-none small text-danger" id="length-last_name">Familienaam mag max. 50 kar. lang zijn</div>
+					</div> <!-- form-group -->
+				</div>
+
+				<div class="form-row">
+					<div class="form-group col-md-8">
+						<label class="control-label">E mail</label>
+						<input type="email" 
+						class="form-control form-control-sm input-required"
+						required name="email" id="email"/>
+						<div class="d-none small text-danger" id="invalid-email">Dit veld is verplicht !</div>
+						<div class="d-none small text-danger" id="length-email">E-mail mag max. 60 kar. lang zijn</div>
+						<div class="d-none small text-danger" id="validate-email">Dit is geen correct e-mail adres !</div>
+
+					</div> <!-- form-group -->
+				</div>
+
+				<div class="form-row">
+					<div class="form-group col-md-5">
+						<label class="control-label">Telefoonnr.</label>
+						<input type="text" 
+						class="form-control form-control-sm"
+						name="phone" id="phone"/>
+						<div class="d-none small text-danger" id="length-phone">Telnr. mag max. 40 kar. lang zijn</div>
+
+					</div> <!-- form-group -->
+					<div class="form-group col-md-5">
+						<label class="control-label">Mobiel nr.</label>
+						<input type="text" 
+						class="form-control form-control-sm"
+						name="mobile" id="mobile"/>
+						<div class="d-none small text-danger" id="length-mobile">Mobiel nr. mag max. 40 kar. lang zijn</div>
+					</div> <!-- form-group -->
+					<div class="form-group col-md-5">
+						<label class="control-label">Fax nr.</label>
+						<input type="text" 
+						class="form-control form-control-sm"
+						name="fax" id="fax"/>
+						<div class="d-none small text-danger" id="length-fax">Fax nr. mag max. 40 kar. lang zijn</div>
+					</div> <!-- form-group -->
+				</div> <!-- form row -->
+		
+			</div>
+			<div class="modal-footer">
+				<button type="button" name="deleteButton" id="deleteButton" class="btn btn-danger mr-auto">Verwijder Adres</button>
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Terug</button>
+				<button type="submit" name="submitButton" id="submitButton" class="btn btn-primary">Opslaan</button>
+			</div>
+		</form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,104 @@
+@layout('admin.layouts.app')
+@section('styles')
+ 	<link rel="stylesheet" type="text/css" href="/vendor/datatables/custom.css"> 
+@endsection
+
+@section('content')
+	<div class="row">  
+		<div class="col-lg-12">
+			<div class="card card-primary">
+	<!-- TITLE BAR -->
+				<div class="card-header text-white bg-primary">
+					<b>	
+						<i class="fas fa-fw fa-gift"></i> Oude Producten   		
+					</b>
+				</div>
+	<!-- BUTTON BAR  -->
+				<div class="card-header">                      
+					<b>     
+						<a href="{{ route('admin') }}">
+							<i class="fas fa-fw fa-arrow-circle-left"></i>Terug	
+						</a>
+						&nbsp
+						<a class="float-right" href="{{route('admin-product-create')}}">
+							<i class="fas fa-fw fa-plus-circle"></i>Nieuw
+						</a> 
+					</b>
+				</div>
+				<div class="card-body"> 
+					@include('partials.notifications')
+					<div id="dataTableWrapper" style="width:100%" class="dataTableParentHidden">
+						<table id="productTable" class="dn table table-bordered table-hover table-responsive" cellspacing="0" width="100%">
+							<thead class="thead-default">
+								<tr>
+									<th scope="col">Id Product</th>
+									<th scope="col">Omschr.</th>
+									<th scope="col">EAN 13</th>
+									<th scope="col">Purchase Price</th>
+									<th scope="col">CZ Price</th>
+									<th scope="col">Voorraad</th>
+									<th scope="col">Supplier</th>
+									<th scope="col">Acties</th>
+								</tr>
+							</thead>
+							<tbody>
+								@each(oldProduct in oldProducts)
+									<tr>
+										<td>
+											{{ oldProduct.id_product }}
+										</td>
+										<td>{{ oldProduct.name }}</td>
+										<td>{{ oldProduct.ean13 }}</td>
+										<td>{{ oldProduct.ikp_ex_cz }}</td>
+										<td>{{ oldProduct.vkp_cz_in_vat }}</td>
+										<td>{{ oldProduct.quantity_in_stock }}</td>
+										<td>{{ oldProduct.id_supplier }}</td>
+										<td>
+											<a class="float-right" href="/admin/old-products/copy/{{ oldProduct.id_product }}">Copy</a> 
+											<a class="float-right" href="/admin/old-products/del/{{ oldProduct.id_product }}">Del</a> 
+
+										</td>
+									</tr>
+								@endeach
+							</tbody> 
+						</table>
+					</div>	
+				</div>
+			</div>
+		</div>
+	</div>
+@endsection
+@section('scripts')
+    <script type="text/javascript" charset="utf-8">
+      	$(document).ready( function () {
+    // DataTables initialization         
+			var productTable = $('#productTable').DataTable({
+				dom :"<'myfilter'f><'mylength'l>t",
+				info: false,
+				responsive: true,
+				bSort : true,
+				fixedHeader: true,
+				order : [[ 0, "asc" ]],
+				paging : false,
+				language: {
+					search: "",
+					searchPlaceholder: "Zoeken...",
+					zeroRecords: "Geen data gevonden"
+				},
+				
+			});
+			$('#dataTableWrapper').removeClass('dataTableParentHidden');
+			$('div.dataTables_filter input').focus();
+
+
+	//(RW) Slide UP  alert success messages
+			$(".alert-success").fadeTo(2000, 500).slideUp(500, function(){
+				$(".alert-success").alert('close');
+			});
+
+		});
+    </script>
+@endsection
+
+
+

@@ -1,0 +1,148 @@
+
+<div class="form-row">
+	<div class="form-group col-md-2">
+		<label class="control-label">Product ID</label><br>
+		@if(!isNew)
+			<input type="number" class="form-control form-control-sm" name="id" id="id" value="{{ product.id }}" required readonly tabindex="-1"/>
+		@else
+			<input type="text" class="form-control form-control-sm" placeholder="Nog niet toegekend..." readonly tabindex="-1"/>
+		@endif
+	</div>
+	<div class="form-group col-md-2">
+		<label class="control-label">EAN-13</label>
+		<input type="number" autofocus 
+		class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('ean13')) }}"
+		name="ean13" id="ean13" style="text-align:right;"
+		value="{{ old('ean13', !product.ean13? '':product.ean13 ) }}"/>
+		<div class="eanError"></div>
+		{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('ean13'), hasErrorFor('ean13')) }}
+		(5901234123457)
+	</div>
+	<div class="form-group col-md-2">
+		<label class="control-label">Referentie Lev.</label>
+		<input type="text" 
+		class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('id_product_supplier')) }}" 
+		name="id_product_supplier" id="id_product_supplier"
+		value="{{ old('id_product_supplier', !product.id_product_supplier? '':product.id_product_supplier) }}"/>
+		{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('id_product_supplier'), hasErrorFor('id_product_supplier')) }}
+	</div>
+	<div class="ml-auto form-group col-md-2">	
+		<label class="control-label">Creatie Datum</label>
+		<input type="text" class="form-control form-control-sm float-right" name="created_at" id="created_at" 
+		value="{{ old('created_at', !product.created_at? 'Nog niet toegekend...':product.created_at) }}" readonly tabindex="-1"/>
+			
+	</div>
+	<div class="form-group col-md-2">
+		<label class="control-label">Laatste wijziging</label>
+		<input type="text" class="form-control form-control-sm float-right" name="updated_at" id="updated_at" 
+		value="{{ old('updated_at', !product.updated_at? 'Nog niet toegekend...':product.updated_at) }}" readonly tabindex="-1"/>
+	</div>
+</div> <!-- form-row -->
+<hr>
+<div class="form-row">	
+	<div class="form-group col-md-12">
+		<label class="control-label">Omschrijving Nederlands</label>
+		<input type="text" 
+		class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('name_nl')) }}"
+		required name="name_nl" id="name_nl"
+		value="{{ old('name_nl', !product.name_nl? '':product.name_nl ) }}"/>
+		{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('name_nl'), hasErrorFor('name_nl')) }}
+	</div> <!-- form-group -->
+</div> <!-- form-row -->
+
+<div class="form-row">	
+	<div class="form-group col-md-12">
+		<label class="control-label">Omschrijving Frans</label>
+		<input type="text" class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('name_fr')) }}" 
+		name="name_fr" id="name_fr"
+		value="{{ old('name_fr', !product.name_fr? '':product.name_fr ) }}"/>
+		{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('name_fr'), hasErrorFor('name_fr')) }}
+	</div> <!-- form-group -->
+</div> <!-- form-row -->
+<div class="form-row">	
+	<div class="form-group col-md-12">
+		<label class="control-label">Omschrijving Engels</label>
+		<input type="text" class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('name_en')) }}" 
+		name="name_en" id="name_en"
+		value="{{ old('name_en', !product.name_en? '':product.name_en) }}"/>
+		{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('name_en'), hasErrorFor('name_en')) }}
+
+	</div> <!-- form-group -->
+</div> <!-- form-row -->
+<br>
+<div class="row">
+	<div class="col-md-6">
+		<div class="form-row">		
+			<div class="form-group col-md-8">
+				<label class="control-label">Leverancier</label>
+				<select 
+				class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('id_supplier')) }}" 
+				title="Kies een Leverancier..." name="id_supplier" id="id_supplier">
+					<option value="0" selected="selected disabled">Selecteer...</option>
+					@each(supplier in suppliers)
+						@if(supplier.id === product.id_supplier || supplier.id == old('id_supplier') )
+							<option value="{{ supplier.id }}" selected="selected">{{ supplier.company }}</option>
+						@else
+							<option value="{{ supplier.id }}">{{ supplier.company }}</option> 
+						@endif
+					@endeach 
+				</select>
+				{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('id_supplier'), hasErrorFor('id_supplier')) }}
+			</div>
+		</div>	
+		<div class="form-row">		
+			<div class="form-group col-md-8">
+				<label class="control-label">Merk</label>
+				<select 
+				class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('id_brand')) }}" 
+				title="Kies een Merknaam..." name="id_brand" id="id_brand">
+					<option value="0" selected="selected disabled">Selecteer...</option>
+					@each(brand in brands)
+						@if(brand.id === product.id_brand || brand.id == old('id_brand') )
+							<option value="{{ brand.id }}" selected="selected">{{ brand.name_nl }}</option>
+						@else
+							<option value="{{ brand.id }}">{{ brand.name_nl }}</option> 
+						@endif
+					@endeach 
+				</select>
+				{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('id_supplier'), hasErrorFor('id_supplier')) }}
+			</div>
+		</div>	
+	</div>
+	<div class="col-md-6">
+		<div class="form-row">
+			<div class="form-group col-md-8 ml-auto">
+				<div class="checkbox">
+					<label> 
+						<input type="checkbox" id="active" name="active"  
+						value="{{ old('active', !product.active? '':product.active ) }}">
+						Actief in webshop? 
+					</label>
+				</div>
+			</div>
+		</div>
+		<div class="form-row">
+			<div class="form-group col-md-8 ml-auto">
+				<div class="checkbox ml-auto">
+					<label> 
+						<input type="checkbox" id="active_bol_be" name="active_bol_be" 
+						value="{{ old('active_bol_be', !product.active_bol_be? '':product.active_bol_be ) }}">
+						Actief op Bol.BE? 
+					</label>
+				</div>
+			</div>
+		</div>
+		<div class="form-row">
+			<div class="form-group col-md-8 ml-auto">
+				<div class="checkbox ml-auto">
+					<label>
+						<input type="checkbox" id="active_bol_nl" name="active_bol_nl" 
+						value="{{ old('active_bol_nl', !product.active_bol_nl? '':product.active_bol_nl ) }}">
+						Actief op Bol.NL? 
+					</label> 
+				</div>
+			</div>	
+		</div>		
+	</div>
+</div>
+

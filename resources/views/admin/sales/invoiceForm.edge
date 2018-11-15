@@ -1,0 +1,839 @@
+@layout('admin.layouts.app')
+
+@section('content')
+	<div id="salesInvoiceApp" class="row">  
+		<div class="col-lg-12">
+			<div class="card card-primary">
+	<!-- TITLE BAR  -->
+				<div class="card-header text-white bg-primary">
+					<b>	
+						<i class="fas fa-fw fa-file-invoice-dollar"></i> VerkoopFactuur toevoegen / wijzigen   		
+					</b>
+				</div>
+	<!-- BUTTON BAR  -->
+				<div class="card-header">                      
+					<b>     
+						<a href="{{ route('admin-sales-invoices') }}">
+							<i class="fas fa-fw fa-arrow-circle-left"></i> Terug	
+						</a>
+						&nbsp
+						<a class="float-right" href="javascript:{}" @click="checkForm">
+							<i class="fas fa-fw fa-check-circle"></i> Opslaan
+						</a> 
+					</b>
+				</div>
+				<div class="card-body"> 
+				@include('partials.notifications')
+				@if(isNew)
+					<form action="/admin/sales/invoice/save/0" name="salesInvoiceForm" id="salesInvoiceForm" method="post">
+				@else
+					<form action="/admin/sales/invoice/save/{{ invoice.id }}" name="salesInvoiceForm" id="salesInvoiceForm" method="post">
+				@endif
+			
+				<!-- HIDDEN FORM INPUT FIELDS -->
+					<input type="hidden" name="stand_vat_procent" id="stand_vat_procent" data-field-id="{{ param.stand_vat_procent }}">	
+					{{ csrfField() }}
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-row">
+								<div class="form-group col-md-8">
+									<label class="control-label">Factuurnr.</label><br>
+									@if(!isNew)
+										<input type="number" class="form-control form-control-sm" name="id" id="id" value="{{ invoice.invoice_number}}" required readonly tabindex="-1"/>
+									@else
+										<input type="text" class="form-control form-control-sm" placeholder="Nog niet toegekend..." readonly tabindex="-1"/>
+									@endif
+								</div>	
+							</div>	
+							<div class="form-row">
+								<div class="form-group col-md-8">
+									<label class="control-label">Klant</label>
+									<select name="id_customer" id="id_customer" 
+										@change="changeCustomer($event)"
+										v-model="selectedCustomer"
+										class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('id_customer')) }}" 
+										title="Kies een klant...">
+											<option value="0" selected="selected disabled">Selecteer...</option>
+											@each(customer in customers)
+												@if(customer.id === invoice.id_customer || customer.id == old('id_customer') )
+													<option value="{{ customer.id }}" selected="selected">{{ customer.first_name }} {{ customer.last_name }}</option>
+												@else
+													<option value="{{ customer.id }}">{{ customer.first_name }} {{ customer.last_name }}</option> 
+												@endif
+											@endeach 
+									</select>
+									{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('id_customer'), hasErrorFor('id_customer')) }}
+									<div class="d-none small text-danger" id="invalid-id-customer">Dit veld is verplicht !</div>
+
+								</div>
+							</div>
+							<div class="form-row">
+							
+								<div class="form-group col-md-12"  v-cloak>
+									<label class="control-label">Adres</label>
+									<select
+										@change="changeInvoiceAddress"
+										v-model="selectedAddress"
+										class="form-control form-control-sm" 
+										title="Adres..." name="id_invoice_address" id="id_invoice_address">
+											<option v-for="(address, index) in addresses" :value="address.id">
+												@{{ address.street }} @{{address.number}}  @{{address.bus}}, @{{address.postcode}} @{{address.state}}-@{{address.city}} (@{{address.country}})	
+											</option>		
+									</select> 
+								</div>
+						
+								<div class="form-group col-md-10">
+									<input type="text" name="street" id="street" type="text"
+										v-model="street"
+										class="form-control form-control-sm"
+										placeholder="Straat"
+									/>
+								</div>
+								<div class="form-group col-md-2">
+									<input type="number" name="number" id="number" type="text"
+										v-model="number"
+										class="form-control form-control-sm"
+										placeholder="Huisnr."
+									/>
+								</div>
+								<div class="form-group col-md-2">
+									<input type="postcode" name="postcode" id="postcode" typr="text"
+										v-model="postcode"
+										class="form-control form-control-sm"
+										placeholder="Postcode"
+									/>
+								</div>
+								<div class="form-group col-md-2">
+									<input type="state" name="state" id="state" type="text"
+										v-model="state"
+										class="form-control form-control-sm"
+										placeholder="Provincie"
+									/>
+								</div>
+								<div class="form-group col-md-4">
+									<input type="city" name="city" id="city" type="text"
+										v-model="city"
+										class="form-control form-control-sm"
+										placeholder="Gemeente"
+									/>
+								</div>
+								<div class="form-group col-md-4">
+									<input type="country" name="country" id="country" type="text"
+										v-model="country"
+										class="form-control form-control-sm"
+										placeholder = "Land"
+									/>
+								</div>
+								<input type="hidden" v-model="alias" name="alias"/>
+								<input type="hidden" v-model="customer_first_name" name="customer_first_name"/>
+								<input type="hidden" v-model="customer_last_name" name="customer_last_name"/>
+								<input type="hidden" v-model="company" name="company"/>
+								<input type="hidden" v-model="vat_number" name="vat_number"/>
+								<input type="hidden" v-model="email" name="email"/>
+								<input type="hidden" v-model="phone" name="phone"/>
+							</div>											
+						</div>
+						<div class="col-md-3">
+							<div class="form-row">	
+								<div class="form-group col-md-10">
+									<label class="control-label">Factuur datum</label>
+									@if(isNew)
+										<input type="date" name="invoice_date" id="invoice_date"
+											v-model='invoice_date'
+											class="form-control form-control-sm"
+										/>
+									@else
+										<input type="date" name="invoice_date" id="invoice_date" value="{{invoice.invoice_date}}" 
+											readonly tabindex="-1"
+											class="form-control form-control-sm"
+										/>
+									@endif		
+								</div> <!-- form-group -->	
+							</div>
+							<div class="form-row">
+								<div class="form-group col-md-10">
+									<label class="control-label">Type</label>
+									<select 
+										v-model='selectedType'
+										@change="changeInvoiceType"
+										class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('id_invoice_type')) }}" 
+										title="Type factuur..." name="id_invoice_type" id="id_invoice_type">
+											<option value="0" selected="selected disabled">Selecteer...</option>
+											@each(customerType in customerTypes)
+												@if(customerType.id === product.id_customer || customertype.id == old('id_invoice_type') )
+													<option value="{{ customerType.id }}" selected="selected">{{ customerType.title }}</option>
+												@else
+													<option value="{{ customerType.id }}">{{ customerType.title }}</option> 
+												@endif
+											@endeach 
+									</select> 
+									{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('id_invoice_type'), hasErrorFor('id_invoice_type')) }}
+									<div class="d-none small text-danger" id="invalid-id-type">Dit veld is verplicht !</div>
+								</div>
+							</div>	
+
+
+						</div>
+						<div class="col-md-3">
+							<div class="form-row">
+								<div class="ml-auto form-group col-md-10">
+									<label class="control-label">Order nr.</label>
+									<input type="number" name="id_sales_order" id="id_sales_order" style="text-align:right;" readonly tabindex= "-1"
+										class="form-control form-control-sm"
+										value="{{invoice.id_sales_order? invoice.id_sales_order : 0 }}"
+									/>
+								</div>
+							</div>
+							<div class="form-row">
+								<div class="ml-auto form-group col-md-10">
+									<label class="control-label">Order Ref.</label>
+									<input type="text" name="order_reference" id="order_reference" readonly tabindex= "-1"
+										class="form-control form-control-sm"
+										value = "{{ invoice.order_reference? invoice.order_reference : '' }}"
+									/>
+								</div>
+							</div>
+							<div class="form-row">
+								<div class="ml-auto form-group col-md-10">
+									<label class="control-label">Order Datum.</label>
+									<input type="date" name="order_date" id="order_date" readonly tabindex="-1"
+										v-model='order_date'
+										class="form-control form-control-sm"		
+									/>	
+								</div>
+							</div>
+						</div>
+					</div>
+		<!-- INVOICE DETAIL -->	
+					<div class="form-row">
+						<table name="invoiceTable" id="invoiceTable"  class="table table-striped table-sm">
+							<thead>
+								<tr class="d-flex"> 
+									<th class="col-1">
+										<button type="button" @click="addRow"  id="addRow"  name="addRow" class="table-add btn btn-sm btn-primary">+</button> Ref.
+									</th>
+									<th class="col-4">Omschr.</th>
+									<th class="col-1">Aantal</th>
+									<th class="col-2">Eenh.Pr.</th>
+									<th class="col-1">Btw %</th>
+									<th class="col-1">Tot. Ex.</th>
+									<th class="col-2">Tot. In.</th>
+								</tr>
+							</thead>
+							<tbody>
+		<!-- Invoice ROW -->
+								<tr class="d-flex" v-for="(row, index) in rows">
+									<td class="col-1">
+										<input type="text" class="form-control form-control-sm product"  name="id_product[]" 
+											@keyup.insert="addRow()"
+											@blur="changeProduct(index, $event)"
+											v-model ="row.id_product"
+										/>
+									</td>
+									<td class="col-4">
+										<input class="form-control form-control-sm" name="description[]"
+											@change="changeProduct(index, $event)"
+											autocomplete="off"
+											v-model ="row.description"
+											list="products"
+										/>
+										<datalist id="products">
+											<option v-for="product in products"  :value="product.id">@{{ product.name_nl  }}</option>
+										</datalist>
+									</td>
+									<td class="col-1"><input type="number" class="form-control form-control-sm" name="quantity[]"
+										@keyup.insert="addRow()"
+										@change="changeQuantity(index, $event)"
+										v-model.number="row.quantity">
+									</td>
+									<td class="col-2">
+										<input type="number" class="form-control form-control-sm" name="product_sp_ex_vat[]"
+											@keyup.insert="addRow()"
+											@change="changePrice(index, $event)"
+											v-model.number="row.product_sp_ex_vat"
+										/>
+									</td>
+									<td class="col-1">
+										<input type="number" class="form-control form-control-sm" name="vat_procent[]"
+											@keyup.insert="addRow()"
+											@change="changeVatProcent(index, $event)"
+											v-model.number="row.vat_procent"
+										/>
+									</td>
+									<td class="col-1">
+										<input type="number" class="form-control form-control-sm" readonly tabindex="-1" name="row_total_sp_ex_vat[]"
+											v-model.number="row.row_total_sp_ex_vat" 
+										/>
+									</td>
+									<td class="col-2">
+										<div class="input-group">
+											<input type="number" class="form-control form-control-sm" readonly tabindex="-1" name="row_total_sp_in_vat[]"
+											v-model.number="row.row_total_sp_in_vat">
+											<button type="button" @click="delRow(index, $event)" class="table-remove btn btn-sm btn-danger" style="margin-left:0.5em">-</button>
+										</div>
+									</td>
+							<!-- HIDDEN ROW INPUT FIELDS -->
+									<input type="hidden" v-model.number="row.product_pp_ex_vat" name="product_pp_ex_vat[]"/>
+									<input type="hidden" v-model.number="row.row_total_pp_ex_vat" name="row_total_pp_ex_vat[]"/>
+									<input type="hidden" v-model.number="row.cost_ex_vat_bol_be" name="cost_ex_vat_bol_be[]"/>
+									<input type="hidden" v-model.number="row.row_total_cost_ex_vat_bol_be" name="row_total_cost_ex_vat_bol_be[]"/>
+									<input type="hidden" v-model.number="row.cost_ex_vat_bol_nl" name="cost_ex_vat_bol_nl[]"/>
+									<input type="hidden" v-model.number="row.row_total_cost_ex_vat_bol_nl" name="row_total_cost_ex_vat_bol_nl[]"/>
+								</tr>
+							</tbody>
+						</table>		
+					</div>
+		<!-- INVOICE FOOTER -->
+					<hr>
+					<div class="row">	
+						<div class="col-md-4">
+							<div class="form-row">
+								<div class="form-group col-md-6">
+									<label class="control-label">BTW % Verz / Verp.</label>
+									<input type="number" 
+										@change="changeShippingVatProcent()"
+										v-model.number = "shipping_vat_procent"
+										class="form-control form-control-sm"
+										name="shipping_vat_procent" id="shipping_vat_procent"
+									/>
+								</div> <!-- form-group -->
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-row">
+								<div class="form-group col-md-6">					
+									<label class="control-label">Totaal IKP ex. BTW</label>
+									<input type="number" 
+										v-model.number = "total_pp_ex_vat"
+										class="form-control input-sm" name="total_pp_ex_vat" id="total_pp_ex_vat" 
+										value="" readonly tabindex="-1"
+									/>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-row">
+								<div class="form-group col-md-6  ml-auto">						
+									<label class="control-label">Tot. Producten ex. BTW</label>
+									<input type="number"
+										v-model.number="total_products_ex_vat"
+										class="form-control input-sm" name="total_products_ex_vat" 
+										id="total_products_ex_vat" readonly tabindex="-1">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<div class="form-row">
+								<div class="form-group col-md-6">
+									<label class="control-label">Verzending Ex. BTW</label>
+									<input type="number" class="form-control input-sm" 
+										@change="changeShippingAmountExVat()"								
+										v-model.number="total_shipping_amount_ex_vat"
+										name="total_shipping_amount_ex_vat" id="total_shipping_amount_ex_vat"
+									/>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-row">
+								<div class="form-group col-md-6">
+									<label class="control-label">Kost. Verzending Ex. BTW</label>
+									<input type="number" class="form-control input-sm" 
+										v-model.number="total_shipping_cost_ex_vat"
+										name="total_shipping_cost_ex_vat" id="total_shipping_cost_ex_vat" 
+									/>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-row">
+								<div class="form-group col-md-6 ml-auto">
+									<label class="control-label">Tot. Producten Incl. BTW</label>
+									<input type="number" 
+										v-model.number="total_products_in_vat"
+										class="form-control input-sm" name="total_products_in_vat" id="total_products_in_vat" 
+										readonly tabindex="-1"
+									/>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<div class="form-row">
+								<div class="form-group col-md-6">
+									<label class="control-label">Verzending Incl. BTW</label>
+									<input type="number" 
+										v-model.number="total_shipping_amount_in_vat"
+										class="form-control input-sm" name="total_shipping_amount_in_vat" id="total_shipping_amount_in_vat" 
+										readonly tabindex="-1"
+									/>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-row">
+								<div class="form-group col-md-6">
+									<label class="control-label">Kost. Bol Ex. BTW</label>
+									<input type="number" name="total_cost_ex_vat_bol" id="total_cost_ex_vat_bol" 
+										v-model.number="total_cost_ex_vat_bol"
+										class="form-control input-sm" 
+										readonly tabindex="-1"
+									/>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-row">
+								<div class="form-group col-md-6 ml-auto">
+									<label class="control-label">Tot. Factuur Ex. BTW</label>
+									<input type="number" class="form-control input-sm" name="total_invoice_ex_vat" id="total_invoice_ex_vat" 
+										v-model.number="total_invoice_ex_vat"
+										readonly tabindex="-1"
+									/>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<div class="form-row">
+								<div class="form-group col-md-6">
+									<label class="control-label">Geschenkverp. Ex. BTW</label>
+									<input type="number" class="form-control input-sm" name="total_wrapping_cost_ex_vat" id="total_wrapping_cost_ex_vat" value="" readonly tabindex="-1">
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-row">
+								<div class="form-group col-md-6">
+									<label class="control-label">Marge %</label>
+									<input type="number" class="form-control input-sm" name="margin_procent" id="margin_procent" 
+										v-model.number="margin_procent"
+										readonly tabindex="-1"
+									/>
+								</div>
+							</div>
+						</div>
+					
+						<div class="col-md-4">
+							<div class="form-row">
+								<div class="form-group col-md-6 ml-auto">
+									<b><label class="control-label">Tot. Factuur Incl. BTW</label></b>	
+									<input type="number" class="form-control input-sm" name="total_invoice_in_vat" id="total_invoice_in_vat" 
+										v-model.number="total_invoice_in_vat"
+										readonly tabindex="-1"
+									/>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<div class="form-row">
+								<div class="form-group col-md-6">
+									<label class="control-label">Geschenkverp. Incl. BTW</label>
+									<input type="number" class="form-control input-sm" name="total_wrapping_cost_in_vat" id="total_wrapping_cost_in_vat" value="" readonly tabindex="-1">
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-row">
+								<div class="form-group col-md-6">
+									<label class="control-label">Netto Marge Ex. BTW</label>
+									<input type="number" class="form-control input-sm" name="netto_margin_ex_vat" id="netto_margin_ex_vat" 
+										v-model.number="netto_margin_ex_vat"
+										readonly tabindex="-1"
+									/>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-row">
+								<div class="form-group col-md-6 ml-auto">
+									<label class="control-label">Totaal Betaald</label>
+									<input type="number" class="form-control input-sm" name="amount_paid" id="amount_paid" value="" readonly tabindex="-1">
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+@endsection
+@section('scripts')
+	<script src="/vendor/vue/vue.js"></script>	
+	<script src="/vendor/dateFormat/dateFormat.js"></script>	
+	<script type="text/javascript" charset="utf-8">
+
+		$(document).ready(function() {
+			//(RW) Slide UP  alert success messages
+			$(".alert-success").fadeTo(2000, 500).slideUp(500, function(){
+				$(".alert-success").alert('close');
+			});
+
+			// Reset Validations
+			$('#id_customer').removeClass("is-invalid");
+			$('#invalid-id-customer').addClass("d-none");
+			$('#invalid-id-product').addClass("d-none");
+		});
+	
+		var productApp = new Vue({	
+			el: '#salesInvoiceApp',
+			data: 
+			{ 	
+				invoice_date: new Date().format("yyyy-m-dd"),
+				order_date: new Date().format("yyyy-m-dd"),
+				selectedCustomer: {{{ old('id_customer', !invoice.id_customer? 0 : invoice.id_customer ) }}},
+				selectedAddress: {{ old('id_invoice_address', !invoice.id_invoice_address? 0 : invoice.id_invoice_address )}},
+				selectedType:  {{{ old('id_invoice_type', !invoice.id_invoice_type? 0 : invoice.id_invoice_type ) }}},
+				customer_first_name : {{{ old('"' + 'customer_first_name' + '"', !invoice.customer_first_name? '""' : '"' + invoice.customer_first_name + '"'  ) }}},
+				customer_last_name : {{{ old('"' + 'customer_last_name' + '"', !invoice.customer_last_name? '""' : '"' + invoice.customer_last_name + '"'  ) }}},
+				company : {{{ old('"' + 'company' + '"', !invoice.company? '""' : '"' + invoice.company + '"' ) }}},
+				vat_number: {{{ old('"' + 'vat_number' + '"' , !invoice.vat_number? '""' : '"' + invoice.vat_number + '"') }}},
+				street: {{{ old('"' + 'street' + '"', !invoice.street? '""' : '"'+ invoice.street + '"') }}},
+				number: {{{ old('"' + 'number' + '"', !invoice.number? '""': '"' + invoice.number + '"') }}},
+				postcode: {{{ old('"' + 'postcode' + '"', !invoice.postcode? '""':  '"' + invoice.postcode + '"') }}},
+				state: {{{ old('"' + 'state' + '"', !invoice.state? '""' : '"' + invoice.state + '"') }}},
+				city: {{{ old('"' + 'city' + '"', !invoice.city? '""' : '"' + invoice.city + '"') }}},
+				country: {{{ old('"' + 'country' + '"', !invoice.country? '""' : '"' + invoice.country + '"') }}},
+				email: {{{ old('"' + 'email' + '"', !invoice.email? '""' : '"' + invoice.email + '"') }}},
+				phone:  {{{ old('"' + 'phone' + '"', !invoice.phone? '""' : '"'+ invoice.phone + '"') }}},
+				alias:  {{{ old('"' + 'alias' + '"', !invoice.alias? '""' : '"'+ invoice.alias + '"') }}},
+				shipping_vat_procent: {{{ old('shipping_vat_procent', !invoice.shipping_vat_procent? param.stand_shipping_vat_procent : invoice.shipping_vat_procent )}}},
+				total_products_ex_vat: {{{ old('total_products_ex_vat', !invoice.products_ex_vat? 0 : invoice.products_ex_vat )}}},
+				total_products_in_vat: {{{ old('total_products_in_vat', !invoice.products_in_vat? 0 : invoice.products_in_vat )}}},
+				total_shipping_amount_ex_vat: {{{ old('total_shipping_amount_ex_vat', !invoice.shipping_amount_ex_vat? 0 : invoice.shipping_amount_ex_vat )}}},
+				total_shipping_amount_in_vat: {{{ old('total_shipping_amount_in_vat', !invoice.shipping_amount_in_vat? 0 : invoice.shipping_amount_in_vat )}}},
+				total_shipping_cost_ex_vat: {{{ old('total_shipping_cost_ex_vat', !invoice.shipping_cost_ex_vat? 0 : invoice.shipping_cost_ex_vat )}}},
+				total_pp_ex_vat:  {{{ old('total_pp_ex_vat', !invoice.pp_ex_vat_cz? 0 : invoice.pp_ex_vat_cz )}}},
+				total_cost_ex_vat_bol_be: 0,
+				total_cost_ex_vat_bol_nl: 0,
+				total_cost_ex_vat_bol:  {{{ old('total_cost_ex_vat_bol', !invoice.cost_ex_vat_bol? 0 : invoice.cost_ex_vat_bol )}}},
+				rows: {{{old('invoiceRows', toJSON(invoiceRows))}}},
+				products: {{{ toJSON(products) }}},
+				customers: {{{ toJSON(customers) }}},
+				param: {{{ toJSON(param) }}},
+				addresses : {{{ toJSON(addresses) }}},
+				errors: []
+			},
+
+			methods: 
+			{
+				addRow: function()
+				{
+					const index = (this.rows.push({}))-1;  // cuureent index is length of array -1 (nul based) / push returns current length of array
+					this.rows[index].id_product = 0;
+					this.rows[index].description = "";
+					this.rows[index].quantity = 1;
+					this.rows[index].product_sp_ex_vat = 0;
+					this.rows[index].row_total_sp_ex_vat = 0;
+					this.rows[index].row_total_sp_in_vat = 0;
+					this.rows[index].vat_procent = $('#stand_vat_procent').data("field-id");
+					this.rows[index].product_pp_ex_vat = 0;
+					this.rows[index].row_total_pp_ex_vat = 0;
+					this.rows[index].cost_ex_vat_bol_be = 0;
+					this.rows[index].cost_ex_vat_bol_nl = 0;
+					this.rows[index].row_total_cost_ex_vat_bol_be = 0;
+					this.rows[index].row_total_cost_ex_vat_bol_nl = 0;	
+				},
+
+				delRow: function(index, event){
+					this.rows.splice(index,1);
+
+					this.calculateTotals(index, event);
+				},
+			
+				changeInvoiceType: function(){
+			// Loop over row and change unit prices depending the chosen type TO DO
+			// Calculate Shipping Cost & Amount // recalculate Bol cost
+					if(this.selectedType == 1){
+						this.total_shipping_cost_ex_vat = 0;						// Cz-shop 
+						this.total_shipping_amount_ex_vat = 0;
+						this.total_shipping_amount_in_vat = 0;
+						this.total_cost_ex_vat_bol = 0;
+					}else if(this.selectedType == 2 ){                 // CZ-WEB BE
+						this.total_shipping_cost_ex_vat = this.param.shipping_cost_ex_vat_cz_be;
+						this.total_shipping_amount_ex_vat = this.param.shipping_amount_ex_vat_cz_be;
+						this.total_shipping_amount_in_vat = Math.round((this.total_shipping_amount_ex_vat + ((this.total_shipping_amount_ex_vat/100) * this.shipping_vat_procent))*100)/100
+						this.total_cost_ex_vat_bol = 0;
+					}else if(this.selectedType == 3 ){                 // CZ-WEB NL
+						this.total_shipping_cost_ex_vat = this.param.shipping_cost_ex_vat_cz_nl;
+						this.total_shipping_amount_ex_vat = this.param.shipping_amount_ex_vat_cz_nl;
+						this.total_shipping_amount_in_vat = Math.round((this.total_shipping_amount_ex_vat + ((this.total_shipping_amount_ex_vat/100) * this.shipping_vat_procent))*100)/100
+						this.total_cost_ex_vat_bol = 0;
+					}else if(this.selectedType == 4 ){					//Bol-be
+						this.total_shipping_cost_ex_vat = this.param.shipping_cost_ex_vat_bol_be;
+						this.total_shipping_amount_ex_vat = 0;
+						this.total_shipping_amount_in_vat = 0;
+						this.total_cost_ex_vat_bol = 0;
+						this.total_cost_ex_vat_bol_be = 0;
+ 						for (counter = 0; counter < this.rows.length; ++counter) {
+							this.total_cost_ex_vat_bol_be = this.total_cost_ex_vat_bol_be + this.rows[counter].row_total_cost_ex_vat_bol_be;
+						}
+						this.total_cost_ex_vat_bol = this.total_cost_ex_vat_bol_be;
+					}else if(this.selectedType == 5 ){					// bol-nl
+						this.total_shipping_cost_ex_vat = this.param.shipping_cost_ex_vat_bol_nl;
+						this.total_shipping_amount_ex_vat = 0;
+						this.total_shipping_amount_in_vat = 0;
+						this.total_cost_ex_vat_bol = 0;
+						this.total_cost_ex_vat_bol_nl = 0;
+						for (counter = 0; counter < this.rows.length; ++counter) {
+							this.total_cost_ex_vat_bol_nl = this.total_cost_ex_vat_bol_nl + this.rows[counter].row_total_cost_ex_vat_bol_nl;
+						}	
+						this.total_cost_ex_vat_bol = this.total_cost_ex_vat_bol_nl;
+					}else if(this.selectedType == 6 ){					// AMAZON nlTODO
+						this.total_shipping_cost_ex_vat = 0;
+						this.total_shipping_amount_ex_vat = 0;
+						this.total_shipping_amount_in_vat = 0;	
+						this.total_cost_ex_vat_bol = 0;	
+					}else if(this.selectedType == 7){					// Wholesale BE
+						this.total_shipping_cost_ex_vat = this.param.shipping_cost_ex_vat_cz_be;
+						this.total_shipping_amount_ex_vat = this.param.shipping_amount_ex_vat_wholesale_be;
+						this.total_shipping_amount_in_vat = Math.round((this.total_shipping_amount_ex_vat + ((this.total_shipping_amount_ex_vat/100) * this.shipping_vat_procent))*100)/100
+						this.total_cost_ex_vat_bol = 0;
+					}else if(this.selectedType == 8){					// Wholesale NL
+						this.total_shipping_cost_ex_vat = this.param.shipping_cost_ex_vat_cz_nl;
+						this.total_shipping_amount_ex_vat = this.param.shipping_amount_ex_vat_wholesale_nl;
+						this.total_shipping_amount_in_vat = Math.round((this.total_shipping_amount_ex_vat + ((this.total_shipping_amount_ex_vat/100) * this.shipping_vat_procent))*100)/100
+						this.total_cost_ex_vat_bol = 0;
+					}else if(this.selectedType == 9){					// Dropshipping BE
+						this.total_shipping_cost_ex_vat = this.param.shipping_cost_ex_vat_cz_be;
+						this.total_shipping_amount_ex_vat = this.param.shipping_amount_ex_vat_dropshipping_be;
+						this.total_shipping_amount_in_vat = Math.round((this.total_shipping_amount_ex_vat + ((this.total_shipping_amount_ex_vat/100) * this.shipping_vat_procent))*100)/100
+						this.total_cost_ex_vat_bol = 0;
+					}else if(this.selectedType == 10){					// Dropshipping NL
+						this.total_shipping_cost_ex_vat = this.param.shipping_cost_ex_vat_cz_nl;
+						this.total_shipping_amount_ex_vat = this.param.shipping_amount_ex_vat_dropshipping_nl;
+						this.total_shipping_amount_in_vat = Math.round((this.total_shipping_amount_ex_vat + ((this.total_shipping_amount_ex_vat/100) * this.shipping_vat_procent))*100)/100
+						this.total_cost_ex_vat_bol = 0;
+					}else{											    // Else
+						this.total_shipping_cost_ex_vat = 0;
+						this.total_shipping_amount_ex_vat = 0;
+						this.total_shipping_amount_in_vat = 0;	
+						this.total_cost_ex_vat_bol = 0;
+					}	
+				},
+
+				changeProduct: function(index, event){
+					let counter;
+					const product_id = event.target.value;
+					for (counter = 0; counter < this.products.length; ++counter) {
+						if(product_id == this.products[counter].id){
+							console.log('Product bestaat');
+							const product = this.products[counter];
+							this.rows[index].description = product.name_nl;
+							this.rows[index].product_pp_ex_vat = product.pp_ex_vat_cz;
+							this.rows[index].cost_ex_vat_bol_be = product.total_cost_ex_vat_bol_be;
+							this.rows[index].cost_ex_vat_bol_nl = product.total_cost_ex_vat_bol_nl;
+							if(this.selectedType == 1 || this.selectedType == 2 || this.selectedType == 3 ){                 // Cz-shop of CZ-WEB BE of CZ WEB NL
+								this.rows[index].product_sp_ex_vat = product.sp_ex_vat_cz;
+							}else if(this.selectedType == 4 ){										//Bol-be
+								this.rows[index].product_sp_ex_vat  = product.sp_ex_vat_bol_be;
+							}else if(this.selectedType == 5 ){										// bol-nl
+								this.rows[index].product_sp_ex_vat  = product.sp_ex_vat_bol_nl;	
+							}else if(this.selectedType == 7 || this.selectedType == 8 ){				// Wholesale BE or NL
+								this.rows[index].product_sp_ex_vat  = product.sp_ex_vat_wholesale;		
+							}else if(this.selectedType == 9 || this.selectedType == 10){			// Dropshipping BE or NL
+								this.rows[index].product_sp_ex_vat  = product.sp_ex_vat_dropshipping;		
+							}else{																	// Else
+								this.rows[index].product_sp_ex_vat  = product.sp_ex_vat_cz;
+							}
+							this.rows[index].id_product = product.id;
+							var product_exist = 1;
+						}
+					}
+
+					// If product id not exist and is not nul create error 
+					if(product_id != 0 && product_exist != 1){
+						$(event.target).focus();
+					}
+					this.calculateTotals(index, event);
+				},
+				changeQuantity: function(index, event){
+					this.calculateTotals(index, event);
+				},
+				changePrice: function(index, event){
+					this.calculateTotals(index, event);
+				},
+				changeVatProcent: function(index, event){
+					this.calculateTotals(index, event);
+				},
+				changeCustomer: function(event){
+					let counter;
+					const id_customer = event.target.value;
+					for (counter = 0; counter < this.customers.length; ++counter) {
+						if(id_customer == this.customers[counter].id){
+							this.selectedType = this.customers[counter].id_type;
+							this.addresses = this.customers[counter].addresses;;
+							if(this.addresses.length > 0){
+								this.selectedAddress = this.addresses[0].id;
+								this.alias = this.addresses[0].alias;
+								this.customer_first_name = this.addresses[0].first_name;
+								this.customer_last_name = this.addresses[0].last_name;
+								this.company = this.addresses[0].company;
+								this.vat_number = this.addresses[0].vat_number;
+								this.email = this.addresses[0].email;
+								this.phone = this.addresses[0].phone;
+								this.street = this.addresses[0].street;
+								this.number = this.addresses[0].number;
+								this.postcode = this.addresses[0].postcode;
+								this.state = this.addresses[0].state;
+								this.city = this.addresses[0].city;
+								this.country = this.addresses[0].country;
+							}else{
+								this.selectedAddress = 0;
+								this.alias  = "";
+								this.customer_first_name = "";
+								this.customer_last_name = "";
+								this.company = "";
+								this.vat_number = "";
+								this.email = "";
+								this.phone = "";
+								this.street = "";
+								this.number = "";
+								this.postcode = "";
+								this.state = "";
+								this.city = "";
+								this.country = ""
+							}
+						}			
+					}
+					this.changeInvoiceType()
+				},
+
+				changeInvoiceAddress: function(event){
+					let counter;
+					const id_address = event.target.value;
+					for (counter = 0; counter < this.addresses.length; ++counter) {
+						if(id_address == this.addresses[counter].id){
+							this.alias = this.addresses[counter].alias;
+							this.customer_first_name = this.addresses[counter].first_name;
+							this.customer_last_name = this.addresses[counter].last_name;
+							this.company = this.addresses[counter].company;
+							this.vat_number = this.addresses[counter].vat_number;
+							this.email = this.addresses[counter].email;
+							this.phone = this.addresses[counter].phone;
+							this.street = this.addresses[counter].street;
+							this.number = this.addresses[counter].number;
+							this.postcode = this.addresses[counter].postcode;
+							this.state = this.addresses[counter].state;
+							this.city = this.addresses[counter].city;
+							this.country = this.addresses[counter].country;
+						}		
+					}
+				},
+				changeShippingVatProcent: function(){
+					this.total_shipping_amount_in_vat = Math.round((this.total_shipping_amount_ex_vat + ((this.total_shipping_amount_ex_vat/100) * this.shipping_vat_procent))*100)/100
+				},
+				changeShippingAmountExVat: function(){
+					this.total_shipping_amount_in_vat = Math.round((this.total_shipping_amount_ex_vat + ((this.total_shipping_amount_ex_vat/100) * this.shipping_vat_procent))*100)/100
+
+				},
+				calculateTotals: function(index, event){
+				// INVOICE TOTALS
+					let counter;
+					this.total_products_ex_vat = 0;
+					this.total_products_in_vat = 0;
+					this.total_pp_ex_vat = 0;
+					this.total_cost_ex_vat_bol_be = 0;
+					this.total_cost_ex_vat_bol_nl = 0;
+					for (counter = 0; counter < this.rows.length; ++counter) {
+						this.rows[counter].row_total_sp_ex_vat = Math.round((this.rows[counter].product_sp_ex_vat  * this.rows[counter].quantity)*100)/100;
+						this.rows[counter].row_total_pp_ex_vat = Math.round((this.rows[counter].product_pp_ex_vat * this.rows[counter].quantity)*100)/100;
+						this.rows[counter].row_total_cost_ex_vat_bol_be = Math.round((this.rows[counter].cost_ex_vat_bol_be * this.rows[counter].quantity)*100)/100;
+						this.rows[counter].row_total_cost_ex_vat_bol_nl = Math.round((this.rows[counter].cost_ex_vat_bol_nl * this.rows[counter].quantity)*100)/100;
+						this.rows[counter].row_total_sp_in_vat = Math.round((this.rows[counter].row_total_sp_ex_vat + ((this.rows[counter].row_total_sp_ex_vat / 100) * this.rows[counter].vat_procent))*100)/100
+					
+						this.total_products_ex_vat = this.total_products_ex_vat + this.rows[counter].row_total_sp_ex_vat;
+						this.total_products_in_vat = this.total_products_in_vat + this.rows[counter].row_total_sp_in_vat;
+						this.total_pp_ex_vat = this.total_pp_ex_vat + this.rows[counter].row_total_pp_ex_vat;
+						this.total_cost_ex_vat_bol_be = this.total_cost_ex_vat_bol_be + this.rows[counter].row_total_cost_ex_vat_bol_be;
+						this.total_cost_ex_vat_bol_nl = this.total_cost_ex_vat_bol_nl + this.rows[counter].row_total_cost_ex_vat_bol_nl;
+					}
+				// Set Shipping Amount to 0 if total invoice > param.min_order_amount_free_shipping
+					if(this.total_invoice_ex_vat >= this.param.min_order_amount_in_vat_free_shipping){
+						if(this.selectedType == 2 || this.selectedType == 3){
+							this.total_shipping_amount_ex_vat = 0;
+							this.total_shipping_amount_in_vat = 0;
+						}
+					}else{
+						if(this.selectedType == 2 ){                 // CZ-WEB BE
+							this.total_shipping_cost_ex_vat = this.param.shipping_cost_ex_vat_cz_be;
+							this.total_shipping_amount_ex_vat = this.param.shipping_amount_ex_vat_cz_be;
+							this.total_shipping_amount_in_vat = Math.round((this.total_shipping_amount_ex_vat + ((this.total_shipping_amount_ex_vat/100) * this.shipping_vat_procent))*100)/100
+						}else if(this.selectedType == 3 ){                 // CZ-WEB NL
+							this.total_shipping_cost_ex_vat = this.param.shipping_cost_ex_vat_cz_nl;
+							this.total_shipping_amount_ex_vat = this.param.shipping_amount_ex_vat_cz_nl;
+							this.total_shipping_amount_in_vat = Math.round((this.total_shipping_amount_ex_vat + ((this.total_shipping_amount_ex_vat/100) * this.shipping_vat_procent))*100)/100
+						}
+					}	
+				// Set Bol Cost
+					if(this.selectedType == 4 ){  
+						this.total_cost_ex_vat_bol = this.total_cost_ex_vat_bol_be;
+					}else if(this.selectedType == 5){
+						this.total_cost_ex_vat_bol = this.total_cost_ex_vat_bol_nl;
+						
+					}else{
+						this.total_cost_ex_vat_bol = 0;
+					}
+				},
+
+				// Client site validation
+				checkForm: function(event){
+					if (this.selectedCustomer && this.selectedType) {
+						document.getElementById('salesInvoiceForm').submit();
+						return false;
+					}
+					this.errors = [];
+					if (!this.selectedCustomer) {
+						$('#id_customer').addClass("is-invalid");
+						$('#invalid-id-customer').removeClass("d-none")					
+					}
+					if (!this.selectedType) {
+						$('#id_invoice_type').addClass("is-invalid");
+						$('#invalid-id-type').removeClass("d-none");		
+					}
+					event.preventDefault();
+					console.log('errors');
+				}
+
+			},
+			computed:
+			{
+				total_invoice_ex_vat: function(){
+					return 	Math.round((this.total_products_ex_vat + this.total_shipping_amount_ex_vat)*100)/100;
+				},
+				total_invoice_in_vat: function(){
+					return 	Math.round((this.total_products_in_vat + this.total_shipping_amount_in_vat)*100)/100;
+				},
+				netto_margin_ex_vat: function(){
+					newValue = Math.round((this.total_invoice_ex_vat - this.total_pp_ex_vat - this.total_shipping_cost_ex_vat - this.total_cost_ex_vat_bol )*100)/100;
+					if( newValue > 0){
+						$('#netto_margin_ex_vat').css("background-color","#90EE90");
+					}else{
+						$('#netto_margin_ex_vat').css("background-color","#FFB6C1");
+					}
+					return newValue;
+				},
+				margin_procent: function(){
+					if((this.total_pp_ex_vat + this.total_shipping_cost_ex_vat + this.total_cost_ex_vat_bol)!= 0){
+						newValue =  Math.round(((this.total_invoice_ex_vat / (this.total_pp_ex_vat + this.total_shipping_cost_ex_vat + this.total_cost_ex_vat_bol))-1)*100);
+						if( newValue > 0){
+							$('#margin_procent').css("background-color","#90EE90");
+						}else{
+							$('#margin_procent').css("background-color","#FFB6C1");
+						}
+					}else{
+						newValue = 0;
+					}
+					return newValue;	
+				}
+			}
+			
+		})		
+	</script>
+@endsection

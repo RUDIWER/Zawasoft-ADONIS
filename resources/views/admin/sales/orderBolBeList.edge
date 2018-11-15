@@ -1,0 +1,94 @@
+@layout('admin.layouts.app')
+@section('styles')
+ 	<link rel="stylesheet" type="text/css" href="/vendor/datatables/custom.css"> 
+@endsection
+
+@section('content')
+	<div class="row">  
+		<div class="col-lg-12">
+			<div class="card card-primary">
+	<!-- TITLE BAR -->
+				<div class="card-header text-white bg-primary">
+					<b>	
+						<i class="fas fa-futbol"></i> Orders Bol-BE	
+					</b>
+				</div>
+	<!-- BUTTON BAR  -->
+				<div class="card-header">                      
+					<b>     
+						<a href="{{ route('admin') }}">
+							<i class="fas fa-fw fa-arrow-circle-left"></i>Terug	
+						</a>
+						&nbsp
+					</b>
+				</div>
+				<div class="card-body"> 
+					@each(order in orders)
+						<div class="card card-primary">
+						<!-- TITLE BAR -->
+							<div class="card-header text-grey">
+								<b>	
+									Ordernr : {{order.id_order_bol_be}}&nbsp&nbsp&nbsp<b>Datum Order : {{order.date_time_order}}</b>
+								</b>
+							</div>
+							<div class="card-body">
+									<div class="form-row">		
+										<div class="form-group col-md-4">
+											<b>Leverings adres :</b> {{order.phone_delivery}}<br> 
+											{{order.company_delivery}}<br>
+											{{order.customer_first_name_delivery}} {{order.customer_last_name_delivery}}<br>	 
+											{{order.street_delivery}} {{order.number_delivery}} {{order.bus_delivery}},<br>
+											{{order.postcode_delivery}} {{order.city_delivery}} {{order.country_delivery}}<br>
+											{{order.address_info_delivery}}<br><br>
+											<b>facturatie adres :</b><br> 
+											{{order.company_invoice}}<br>
+											{{order.customer_first_name_invoice}} {{order.customer_last_name_invoice}}<br>	 
+											{{order.street_invoice}} {{order.number_invoice}} {{order.bus_invoice}},<br>
+											{{order.postcode_invoice}} {{order.city_invoice}} {{order.country_invoice}}<br>
+											{{order.address_info_invoice}}<br>
+										</div>
+										<div class="form-group col-md-8">
+											<table id="orderTable" class="dn table table-bordered table-hover" cellspacing="0" width="100%">
+												<thead class="thead-default">
+													<tr>
+														<th scope="col">Id</th>
+														<th scope="col">Omschr.</th>
+														<th scope="col">Aantal</th>
+														<th scope="col">Eenh. Pr.</th>
+														<th scope="col">Totaal</th>
+														<th scope="col">eff. Bol Cost</th>
+														<th scope="col">Calc. Bol Cost</th>
+													</tr>
+												</thead>
+												<tbody>
+													@each(row in order.rows)
+														<tr>
+															<td>{{row.id_sales_order_bol_be}}</td>
+															<td>{{row.product_name_nl}}</td>
+															<td>{{row.quantity}}</td>
+															<td>{{row.product_sp_in_vat}}</td>
+															<td>{{row.row_total_sp_in_vat}}</td>
+															<td>{{row.transaction_fee}}</td>
+															<td>{{row.calc_cost_bol_be}}</td>
+														</tr>
+													@endeach
+												</tbody>
+											</table>
+											<div class="form-row">		
+												<div class="form-group col-md-6">
+													test
+												</div>
+											</div>		
+
+										</div>
+
+									</div>
+
+							</div>
+						</div>
+					@endeach
+				</div>
+			</div>
+		</div>
+	</div>
+@endsection

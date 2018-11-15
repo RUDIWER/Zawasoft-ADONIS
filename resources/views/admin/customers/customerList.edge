@@ -1,0 +1,86 @@
+@layout('admin.layouts.app')
+@section('styles')
+ 	<link rel="stylesheet" type="text/css" href="/vendor/datatables/custom.css"> 
+@endsection
+
+@section('content')
+	<div class="row">  
+		<div class="col-lg-12">
+			<div class="card card-primary">
+	<!-- TITLE BAR -->
+				<div class="card-header text-white bg-primary">
+					<b>	
+						<i class="nav-icon icon-user-follow"></i> Klanten   		
+					</b>
+				</div>
+	<!-- BUTTON BAR  -->
+				<div class="card-header">                      
+					<b>     
+						<a href="{{ route('admin') }}">
+							<i class="fas fa-fw fa-arrow-circle-left"></i>Terug	
+						</a>
+						&nbsp
+						<a class="float-right" href="{{route('admin-customer-create')}}">
+							<i class="fas fa-fw fa-plus-circle"></i>Nieuw
+						</a> 
+					</b>
+				</div>
+				<div class="card-body"> 
+					<div id="dataTableWrapper" style="width:100%" class="dataTableParentHidden">
+						<table id="customerTable" class="dn table table-bordered table-hover table-responsive" cellspacing="0" width="100%">
+							<thead class="thead-default">
+								<tr>
+									<th scope="col">Id</th>
+									<th scope="col">Voornaam</th>
+									<th scope="col">Familienaam</th>
+								</tr>
+							</thead>
+							<tbody>
+								@each(customer in customers)
+									<tr>
+										<td>{{ customer.id }}</td>
+										<td>{{ customer.first_name }}</td>
+										<td>{{ customer.last_name }}</td>
+									</tr>
+								@endeach
+							</tbody>
+						</table>
+					</div>	
+				</div>
+			</div>
+		</div>
+	</div>
+@endsection
+@section('scripts')
+    <script type="text/javascript" charset="utf-8">
+      	$(document).ready( function () {
+    // DataTables initialization         
+			var customerTable = $('#customerTable').DataTable({
+				dom :"<'myfilter'f><'mylength'l>t",
+				info: false,
+				responsive: true,
+				bSort : true,
+				fixedHeader: true,
+				order : [[ 1, "asc" ]],
+				paging : false,
+				language: {
+					search: "",
+					searchPlaceholder: "Zoeken...",
+					zeroRecords: "Geen data gevonden"
+				},			
+			});
+			$('#dataTableWrapper').removeClass('dataTableParentHidden');
+			$('div.dataTables_filter input').focus();
+			//(RW) Click on table row
+			$('#customerTable').on('click', 'tr', function () {
+				var row = customerTable.row(this).data();
+				var customerId = row[0];
+				var path = "/admin/customer/edit/" + customerId;
+				window.location.href = path;
+			});
+		});
+    </script>
+@endsection
+
+
+

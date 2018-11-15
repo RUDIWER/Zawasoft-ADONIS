@@ -1,0 +1,36 @@
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="form-row justify-content-md-center">
+			<div class="form-group  col-md-6"> 					<!--    GROUP 1  :   INKOOPRIJZEN -->
+				<h5>Categorieën</h5>
+	  			<div class="row">
+	  				<div class="col-md-12">
+				        <ul id="tree1">
+				            @each(productGroup in productGroups)
+								@if(productGroup.id_parent === 0)
+									<li>
+										&nbsp&nbsp&nbsp
+										<input type="checkbox" class="form-check-input" name="group" id="group-{{productGroup.id}}" 
+										value="{{ productGroup.id }}">
+										{{ productGroup.name }} - ({{productGroup.id}})
+										@if(!productGroup.childs.length < 1 || !productGroup.childs.length == undefined)
+											@include('admin.products.partials.subTree')
+										@endif
+									</li>
+								@endif
+				            @endeach
+				        </ul>
+	  				</div>
+	  			</div>	
+	  		</div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+

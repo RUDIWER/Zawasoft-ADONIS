@@ -1,0 +1,133 @@
+<!-- Right Sidebar menu -->
+<div class="sidebar">
+	<nav class="sidebar-nav">
+		<ul class="nav">
+			<li class="nav-item">
+				<a class="nav-link" href="index.html">
+					<i class="nav-icon icon-speedometer"></i> Dashboard
+					<span class="badge badge-primary">NEW</span>
+				</a>
+			</li>
+			<li class="nav-title">Basisbestanden</li>
+			<li class="nav-item">
+				<a class="nav-link" href="{{route('admin-old-products')}}">
+					<i class="nav-icon icon-present"></i> Oude Producten
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="{{route('admin-products')}}">
+					<i class="nav-icon icon-present"></i> Producten
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="{{route('admin-customers')}}">
+					<i class="nav-icon icon-user-follow"></i> Klanten
+				</a>
+			</li>
+				<li class="nav-item">
+				<a class="nav-link" href="{{route('admin-suppliers')}}">
+					<i class="nav-icon icon-user-unfollow"></i> Leveranciers
+				</a>
+			</li>
+			<li class="nav-title">Orderverwerking</li>
+			<li class="nav-item nav-dropdown">
+				<a class="nav-link nav-dropdown-toggle" href="#">
+					<i class="nav-icon icon-login"></i> Aankopen
+				</a>
+				<ul class="nav-dropdown-items">
+					<li class="nav-item">
+						<a class="nav-link" href="#">
+							<i class="nav-icon icon-logout"></i> Verkopen
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">
+							<i class="nav-icon icon-puzzle"></i> Cards
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">
+							<i class="nav-icon icon-puzzle"></i> Carousel
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">
+							<i class="nav-icon icon-puzzle"></i> Collapse
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">
+							<i class="nav-icon icon-puzzle"></i> Forms
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">
+							<i class="nav-icon icon-puzzle"></i> Jumbotron
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">
+							<i class="nav-icon icon-puzzle"></i> List group
+						</a>
+					</li>
+	
+				</ul>
+			</li>
+			<li class="nav-item nav-dropdown">
+				<a class="nav-link nav-dropdown-toggle" href="#">
+					<i class="nav-icon icon-logout"></i> Verkopen
+				</a>
+				<ul class="nav-dropdown-items">
+					<li class="nav-item float-right ">
+						<a class="nav-link" href="{{route('admin-sales-open-orders-bolbe')}}">
+							<i class="fas fa-futbol"></i>    Open orders Bol-BE
+						</a>
+					</li>
+					<li class="nav-item float-right ">
+						<a class="nav-link" href="{{route('admin-sales-open-orders-bolnl')}}">
+							<i class="fas fa-futbol"></i>    Open orders Bol-NL
+						</a>
+					</li>
+					<li class="nav-item float-right ">
+						<a class="nav-link" href="{{route('admin-sales-invoices')}}">
+							<i class="fas fa-fw fa-file-invoice-dollar"></i>    Facturen
+						</a>
+					</li>
+				</ul>
+			</li>
+			<li class="nav-item nav-dropdown">
+				<a class="nav-link nav-dropdown-toggle" href="#">
+					<i class="nav-icon icon-book-open"></i> Rapporten
+				</a>
+				<ul class="nav-dropdown-items">
+					<li class="nav-item">
+						<a class="nav-link" href="notifications/alerts.html">Producten</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="notifications/badge.html">Klanten</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="notifications/modals.html">Leveranciers</a>
+					</li>
+				</ul>
+			</li>
+			<li class="nav-title">Overige</li>
+			<li class="nav-item">
+				<a class="nav-link" href="{{route('admin-param')}}">
+					<i class="nav-icon icon-settings"></i> Parameters
+				</a>
+				<a class="nav-link" href="{{route('admin-bol')}}">
+					<i class="nav-icon icon-settings"></i> Bol -Test
+				</a>
+			</li>
+			<li class="divider"></li>
+			<li class="nav-item">
+				<a class="nav-link nav-link-danger" href="{{route('home')}}" target="_top">
+					<i class="nav-icon icon-basket-loaded"></i> 
+					<strong>Naar shop</strong>
+				</a>
+			</li>
+		</ul>
+	</nav>
+	<button class="sidebar-minimizer brand-minimizer" type="button"></button>
+</div>

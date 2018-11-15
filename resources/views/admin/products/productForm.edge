@@ -1,0 +1,443 @@
+@layout('admin.layouts.app')
+
+@section('content')
+	<link href="/vendor/treeview/treeview.css" rel="stylesheet">
+	<div class="row">  
+		<div class="col-lg-12">
+			<div class="card card-primary">
+	<!-- TITLE BAR  -->
+				<div class="card-header text-white bg-primary">
+					<b>	
+						<i class="fas fa-fw fa-gift"></i> Product toevoegen / wijzigen  		
+					</b>
+				</div>
+	<!-- BUTTON BAR  -->
+				<div class="card-header">                      
+					<b>     
+						<a href="{{ route('admin-products') }}">
+							<i class="fas fa-fw fa-arrow-circle-left"></i> Terug	
+						</a>
+						&nbsp
+						<a class="float-right" href="javascript:{}" onclick="document.getElementById('productForm').submit(); return false;">
+							<i class="fas fa-fw fa-check-circle"></i> Opslaan
+						</a> 
+					</b>
+				</div>
+				<div class="card-body"> 
+				@include('partials.notifications')
+		<!-- TAB HEADER -->
+				<ul class="nav nav-tabs" id="productTab" role="tablist">
+					<li class="nav-item">
+						<a class="nav-link active" id="commonTab" data-toggle="tab" href="#tab-0" role="tab" aria-controls="tab-0" aria-selected="true">Algemeen</a>
+					</li>
+					<li  class="nav-item">
+						<a class="nav-link" id="priceTab" data-toggle="tab" href="#tab-1" role="tab" aria-controls="tab-1" aria-selected="false" >Prijzen</a>
+					</li>
+					<li  class="nav-item">
+						<a class="nav-link" id="stockTab" data-toggle="tab" href="#tab-2" role="tab" aria-controls="tab-2" aria-selected="false" >Voorraad</a>
+					</li>
+						<li  class="nav-item">
+						<a class="nav-link" id="webTab" data-toggle="tab" href="#tab-3" role="tab" aria-controls="tab-3" aria-selected="false" >Web</a>
+					</li>
+					</li>
+						<li  class="nav-item">
+						<a class="nav-link" id="pictureTab" data-toggle="tab" href="#tab-4" role="tab" aria-controls="tab-4" aria-selected="false" >Categorieën</a>
+					</li>
+				</ul>
+				@if(isNew)
+					<form action="/admin/product/save/0" name="productForm" id="productForm" method="post">
+				@else
+					<form action="/admin/product/save/{{ product.id }}" name="productForm" id="productForm" method="post">
+				@endif
+					{{ csrfField()}}
+					<div class="tab-content" id="productTabContent">
+						<div class="tab-pane fade show active" id="tab-0" role="tabpanel" aria-labelledby="commonTab">
+							@include('admin.products.partials.tab0')
+						</div>
+						<div class="tab-pane fade show" id="tab-1" role="tabpanel" aria-labelledby="priceTab">
+							@include('admin.products.partials.tab1')
+						</div>
+						<div class="tab-pane fade show" id="tab-2" role="tabpanel" aria-labelledby="stockTab">         
+							@include('admin.products.partials.tab2')		
+						</div> 
+						<div class="tab-pane fade show" id="tab-3" role="tabpanel" aria-labelledby="webTab">              
+							@include('admin.products.partials.tab3')
+						</div> 
+						<div class="tab-pane fade show" id="tab-4" role="tabpanel" aria-labelledby="pictureTab">  			
+							@include('admin.products.partials.tab4')   
+						</div> 
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>	
+@endsection
+
+@section('scripts')
+	<script src="/vendor/treeview/treeview.js"></script>
+	<script src="/vendor/vue/vue.js"></script>
+	<script>
+		$(document).ready(function() {
+			// Fire change event to start recalculations in vue app
+			var element = document.getElementById('pp_ex_vat_supplier');
+			var oldValue = 	$('#pp_ex_vat_supplier').val();	
+			$('#pp_ex_vat_supplier').val(1);
+    		var event = new Event('change');
+    		element.dispatchEvent(event);
+			$('#pp_ex_vat_supplier').val(oldValue);
+    		element.dispatchEvent(event);
+
+	
+			$("#name_nl").change(function(){
+    			$("#slug_nl").val(slugify($('#name_nl').val()))
+			});
+
+			// SET CHECKBOXES PRODUCT GROUPS 
+			if({{{ product.id }}}){
+				// Set Checkboxes from Group Tree in Edit Mode
+				var groupArray = ({{{ toJSON(activeGroups) }}});
+				var groupArrayLength = groupArray.length;
+				for (let i = 0; i < groupArrayLength; i++) {
+					const groupId = groupArray[i].product_group_id;
+					const name = "group-" + groupId;
+					document.getElementById(name).checked = true;
+				}
+			}else{
+				// Set Checkboxes from Group Tree for OLD Values return after validation erro
+				var groupArray = ({{{ toJSON(old('group')) }}});
+				console.log('Group array : ' + groupArray);
+				var groupArrayLength = groupArray.length;
+				console.log('Length : ' + groupArrayLength);
+				for (let i = 0; i < groupArrayLength; i++) {
+					const groupId = groupArray[i];
+					console.log('group id : ' + groupId);
+					const name = "group-" + groupId;
+					document.getElementById(name).checked = true;
+				}
+			}
+
+			// Set checkboxes ACTIVE SHOPS
+			var czShopActive = $('#active').val();
+			console.log(czShopActive);
+    		if(czShopActive){
+        		$('#active').prop('checked', true);
+    		}
+
+			var bolBeActive = $('#active_bol_be').val();
+    		if(bolBeActive){
+        		$('#active_bol_be').prop('checked', true);
+    		}
+
+			var bolNlActive = $('#active_bol_nl').val();
+    		if(bolNlActive){
+        		$('#active_bol_nl').prop('checked', true);
+    		}
+
+			// OnChange Active Shops
+			$("#active").change(function(){
+				$('#active').val('0');
+				if($('#active').is(':checked')){
+					$('#active').val('1');	
+				}
+			});
+
+			$("#active_bol_be").change(function(){
+				$('#active_bol_be').val('0');
+				if($('#active_bol_be').is(':checked')){
+					$('#active_bol_be').val('1');	
+				}
+			});
+
+			$("#active_bol_nl").change(function(){
+				$('#active_bol_nl').val('0');
+				if($('#active_bol_nl').is(':checked')){
+					$('#active_bol_nl').val('1');	
+				}
+			});
+
+
+			// Check Ean code if correct
+			$("#ean13").change(()=>{
+				const barcode = $('#ean13').val();
+				const control = checkEan(barcode);
+				if(control){
+					// Barcode is ok
+					$("#ean13").removeClass( "is-invalid" ).addClass("is-valid");	
+				}else{
+					// Barcode is not ok
+					$("#ean13").removeClass( "is-valid" ).addClass("is-invalid");
+				}
+			});
+
+			//(RW) Slide UP  alert success messages
+			$(".alert-success").fadeTo(2000, 500).slideUp(500, function(){
+				$(".alert-success").alert('close');
+			});
+		})
+
+	// Init Vue app
+		var productApp = new Vue({
+			el: '#productApp',
+			data: {
+				vat_procent: Number($('#vat_procent').data("field-id")),
+				pp_ex_vat_supplier: Number($('#pp_ex_vat_supplier').data("field-id")),
+				cost_factor: Number($('#cost_factor').data("field-id")),
+				margin_factor_dropshipping: Number($('#margin_factor_dropshipping').data("field-id")),
+				margin_factor_wholesale: Number($('#margin_factor_wholesale').data("field-id")),
+				shipping_cost_ex_vat_cz_be_in_param: Number($('#shipping_cost_ex_vat_cz_be_in_param').data("field-id")),
+				shipping_amount_ex_vat_cz_be_in_param: Number($('#shipping_amount_ex_vat_cz_be_in_param').data("field-id")),
+				shipping_cost_ex_vat_cz_nl_in_param: Number($('#shipping_cost_ex_vat_cz_nl_in_param').data("field-id")),
+				shipping_amount_ex_vat_cz_nl_in_param: Number($('#shipping_amount_ex_vat_cz_nl_in_param').data("field-id")),
+				min_order_amount_in_vat_free_shipping_in_param: Number($('#min_order_amount_in_vat_free_shipping_in_param').data("field-id")),
+				shipping_cost_ex_vat_bol_be: Number($('#shipping_cost_ex_vat_bol_be').data("field-id")),
+				shipping_cost_ex_vat_bol_nl: Number($('#shipping_cost_ex_vat_bol_nl').data("field-id")),
+				sp_ex_vat_cz: Number($('#sp_ex_vat_cz').data("field-id")),
+				sp_in_vat_bol_be: Number($('#sp_in_vat_bol_be').data("field-id")),
+				sp_in_vat_bol_nl: Number($('#sp_in_vat_bol_nl').data("field-id")),
+				id_bol_category_in_db: Number($('#id_bol_category_in_db').data("field-id")),
+				id_bol_category: {{{ old('id_bol_category', !product.id_bol_category? 0 : product.id_bol_category ) }}},
+				options: {{{ toJSON(bolCategories) }}},
+			},
+
+			//sp_ex_vat_cz: Number(Math.round(($('#sp_ex_vat_cz').data("field-id")))*100)/100,
+
+			computed: {
+				bol_category: function() {
+					if(this.id_bol_category){
+						const id = this.id_bol_category;
+						const obj = this.options.find(function (obj) { return obj.id === id; });
+						return obj
+					}else{
+						const obj = {}
+						return obj
+					}
+				},
+
+				pp_ex_vat_cz: function() {
+						return Math.round((this.pp_ex_vat_supplier * this.cost_factor)*100)/100;
+				},
+				sp_ex_vat_dropshipping: {
+					get: function () {
+						return Math.round((this.pp_ex_vat_cz * this.margin_factor_dropshipping)*100)/100;
+					},
+					set: function (newValue) {
+						this.margin_factor_dropshipping = Math.round((newValue / this.pp_ex_vat_cz)*10000)/10000;
+					}
+				},
+				sp_ex_vat_wholesale: {
+					get: function () {
+					return Math.round((this.pp_ex_vat_cz * this.margin_factor_wholesale)*100)/100;
+					},
+					set: function (newValue) {
+						this.margin_factor_wholesale = Math.round((newValue / this.pp_ex_vat_cz)*10000)/10000;
+					}
+				},
+				margin_factor_cz_shop: {
+					get: function() {
+						newValue =  Math.round((this.sp_ex_vat_cz / this.pp_ex_vat_cz)*10000)/10000;
+						return (newValue? newValue:0)
+					},
+					set: function(newValue) {
+						this.sp_ex_vat_cz = Math.round((this.pp_ex_vat_cz * newValue)*10000)/10000;
+					}
+				},
+				margin_factor_cz_web_be: function(){
+					newValue = Math.round(((this.sp_ex_vat_cz - this.shipping_cost_ex_vat_cz_be_in_param) / this.pp_ex_vat_cz)*10000)/10000;
+					if( newValue > 1){
+						$('#margin_factor_cz_web_be').css("background-color","#90EE90");
+					}else{
+						$('#margin_factor_cz_web_be').css("background-color","#FFB6C1");
+					}
+					return (newValue)
+				},
+				margin_factor_cz_web_nl: function(){
+					newValue = Math.round(((this.sp_ex_vat_cz - this.shipping_cost_ex_vat_cz_nl_in_param) / this.pp_ex_vat_cz)*10000)/10000;
+					if( newValue > 1){
+						$('#margin_factor_cz_web_nl').css("background-color","#90EE90");
+					}else{
+						$('#margin_factor_cz_web_nl').css("background-color","#FFB6C1");
+					}
+					return (newValue)
+				},
+				sp_in_vat_cz: {
+					get: function() {
+						return Math.round((((this.sp_ex_vat_cz/100) * this.vat_procent) + (this.sp_ex_vat_cz))*100)/100;
+					},
+					set: function(newValue) {
+						this.sp_ex_vat_cz = Math.round((newValue / ((this.vat_procent/100)+1))*100)/100;
+					}
+				},
+				shipping_cost_ex_vat_cz_be: function(){
+					if(this.sp_in_vat_cz < this.min_order_amount_in_vat_free_shipping_in_param){
+						return (Math.round((this.shipping_cost_ex_vat_cz_be_in_param - this.shipping_amount_ex_vat_cz_be_in_param)*100)/100);
+					}else{
+						return (Math.round((this.shipping_cost_ex_vat_cz_be_in_param)*100)/100);
+					}
+				},
+				shipping_cost_ex_vat_cz_nl: function(){
+					if(this.sp_in_vat_cz < this.min_order_amount_in_vat_free_shipping_in_param){
+						return (Math.round((this.shipping_cost_ex_vat_cz_nl_in_param - this.shipping_amount_ex_vat_cz_nl_in_param)*100)/100);
+					}else{
+						return (Math.round((this.shipping_cost_ex_vat_cz_nl_in_param)*100)/100);
+					}
+				},
+				netto_profit_amount_cz_be: function(){
+					newValue = (Math.round((this.sp_ex_vat_cz- this.shipping_cost_ex_vat_cz_be-this.pp_ex_vat_cz)*100)/100)
+					if( newValue > 0){
+						$('#netto_profit_amount_cz_be').css("background-color","#90EE90");
+					}else{
+						$('#netto_profit_amount_cz_be').css("background-color","#FFB6C1");
+					}
+					return newValue;
+				},
+				netto_profit_amount_cz_nl: function(){
+					newValue = (Math.round((this.sp_ex_vat_cz- this.shipping_cost_ex_vat_cz_nl-this.pp_ex_vat_cz)*100)/100)
+					if( newValue > 0){
+						$('#netto_profit_amount_cz_nl').css("background-color","#90EE90");
+					}else{
+						$('#netto_profit_amount_cz_nl').css("background-color","#FFB6C1");
+					}
+					return newValue;
+				},
+				sp_ex_vat_bol_be: function(){
+					return (Math.round((this.sp_in_vat_bol_be / ((this.vat_procent/100)+1))*100)/100)
+				},
+				total_cost_ex_vat_bol_be: function(){
+					fixCostExVatBolBe = (Number(this.bol_category.cost_fix) / ((this.vat_procent/100)+1));
+					procentCostExVatBolBe = (Number(this.bol_category.cost_procent / 100) * this.sp_ex_vat_bol_be)
+					return (Math.round((fixCostExVatBolBe + procentCostExVatBolBe)*100)/100);
+				},
+				netto_profit_amount_bol_be: function(){
+					newValue =  (Math.round((this.sp_ex_vat_bol_be - this.pp_ex_vat_cz - this.total_cost_ex_vat_bol_be - this.shipping_cost_ex_vat_bol_be)*100)/100)
+					if( newValue > 0){
+						$('#netto_profit_amount_bol_be').css("background-color","#90EE90");
+					}else{
+						$('#netto_profit_amount_bol_be').css("background-color","#FFB6C1");
+					}
+					return newValue
+				},
+				margin_factor_bol_be: function() {
+					newValue = (Math.round((this.sp_ex_vat_bol_be / (this.pp_ex_vat_cz + this.total_cost_ex_vat_bol_be + this.shipping_cost_ex_vat_bol_be))*100)/100)
+					if( newValue > 1){
+						$('#margin_factor_bol_be').css("background-color","#90EE90");
+					}else{
+						$('#margin_factor_bol_be').css("background-color","#FFB6C1");
+					}
+					return newValue
+				},
+				sp_ex_vat_bol_nl: function(){
+					return (Math.round((this.sp_in_vat_bol_nl / ((this.vat_procent/100)+1))*100)/100)
+				},
+				total_cost_ex_vat_bol_nl: function(){
+					fixCostExVatBolNl = (Number(this.bol_category.cost_fix) / ((this.vat_procent/100)+1));
+					procentCostExVatBolNl = (Number(this.bol_category.cost_procent / 100) * this.sp_ex_vat_bol_nl)
+					return (Math.round((fixCostExVatBolBe + procentCostExVatBolBe)*100)/100);
+				},
+				netto_profit_amount_bol_nl: function(){
+					newValue =  (Math.round((this.sp_ex_vat_bol_nl - this.pp_ex_vat_cz - this.total_cost_ex_vat_bol_nl - this.shipping_cost_ex_vat_bol_nl)*100)/100)
+					if( newValue > 0){
+						$('#netto_profit_amount_bol_nl').css("background-color","#90EE90");
+					}else{
+						$('#netto_profit_amount_bol_nl').css("background-color","#FFB6C1");
+					}
+					return newValue
+				},
+				margin_factor_bol_nl: function() {
+					newValue = (Math.round((this.sp_ex_vat_bol_nl / (this.pp_ex_vat_cz + this.total_cost_ex_vat_bol_nl + this.shipping_cost_ex_vat_bol_nl))*100)/100)
+					if( newValue > 1){
+						$('#margin_factor_bol_nl').css("background-color","#90EE90");
+					}else{
+						$('#margin_factor_bol_nl').css("background-color","#FFB6C1");
+					}
+					return newValue
+				},
+		
+			},
+
+		})
+
+
+	var slugify = function(str) {
+		str = str.replace(/^\s+|\s+$/g, ''); // trim
+		str = str.toLowerCase();
+	
+		// remove accents, swap ñ for n, etc
+		var from = "ÁÄÂÀÃÅČÇĆĎÉĚËÈÊẼĔȆÍÌÎÏŇÑÓÖÒÔÕØŘŔŠŤÚŮÜÙÛÝŸŽáäâàãåčçćďéěëèêẽĕȇíìîïňñóöòôõøðřŕšťúůüùûýÿžþÞĐđßÆa·/_,:; ";
+		var to   = "AAAAAACCCDEEEEEEEEIIIINNOOOOOORRSTUUUUUYYZaaaaaacccdeeeeeeeeiiiinnooooooorrstuuuuuyyzbBDdBAa-------";
+		for (var i=0, l=from.length ; i<l ; i++) {
+			str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+		}
+		str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+					.replace(/-+/g, '-'); // collapse dashes
+		// If there is a id put id in front of slug
+		if($('#id').val()){
+			str = $('#id').val() + '-' + str
+		}
+		return str;
+	};
+
+	function checkEan(eanCode) {
+		// Check if only digits
+		var ValidChars = "0123456789";
+		for (i = 0; i < eanCode.length; i++) { 
+			digit = eanCode.charAt(i); 
+			if (ValidChars.indexOf(digit) == -1) {
+				return false;
+			}
+		}
+		
+		// Add five 0 if the code has only 8 digits
+		if (eanCode.length == 8 ) {
+			eanCode = "00000" + eanCode;
+		}
+		// Check for 13 digits otherwise
+		else if (eanCode.length != 13) {
+			return false;
+		}
+		
+		// Get the check number
+		originalCheck = eanCode.substring(eanCode.length - 1);
+		eanCode = eanCode.substring(0, eanCode.length - 1);
+		
+		// Add even numbers together
+		even = Number(eanCode.charAt(1)) + 
+			Number(eanCode.charAt(3)) + 
+			Number(eanCode.charAt(5)) + 
+			Number(eanCode.charAt(7)) + 
+			Number(eanCode.charAt(9)) + 
+			Number(eanCode.charAt(11));
+		// Multiply this result by 3
+		even *= 3;
+		
+		// Add odd numbers together
+		odd = Number(eanCode.charAt(0)) + 
+			Number(eanCode.charAt(2)) + 
+			Number(eanCode.charAt(4)) + 
+			Number(eanCode.charAt(6)) + 
+			Number(eanCode.charAt(8)) + 
+			Number(eanCode.charAt(10));
+		
+		// Add two totals together
+		total = even + odd;
+		
+		// Calculate the checksum
+		// Divide total by 10 and store the remainder
+		checksum = total % 10;
+		// If result is not 0 then take away 10
+		if (checksum != 0) {
+			checksum = 10 - checksum;
+		}
+
+		// Return the result
+		if (checksum != originalCheck) {
+			return false;
+		}
+		
+		return true;
+	}
+
+	</script>
+@endsection
+
+
+

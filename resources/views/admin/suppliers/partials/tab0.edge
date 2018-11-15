@@ -1,0 +1,143 @@
+<div class="form-row">
+	<div class="form-group col-md-2">
+		<label class="control-label">Leverancier ID</label><br>
+		@if(!isNew)
+			<input type="number" class="form-control form-control-sm" name="id" id="id" value="{{ supplier.id }}" required readonly tabindex="-1"/>
+		@else
+			<input type="text" class="form-control form-control-sm" placeholder="Nog niet toegekend..." readonly tabindex="-1"/>
+		@endif
+	</div>
+	<div class="ml-auto form-group col-md-2">	
+		<label class="control-label">Creatie Datum</label>
+		<input type="text" class="form-control form-control-sm float-right" name="created_at" id="created_at" 
+		value="{{ old('created_at', !supplier.created_at? 'Nog niet toegekend...':supplier.created_at) }}" readonly tabindex="-1"/>
+			
+	</div>
+	<div class="form-group col-md-2">
+		<label class="control-label">Laatste wijziging</label>
+		<input type="text" class="form-control form-control-sm float-right" name="updated_at" id="updated_at" 
+		value="{{ old('updated_at', !supplier.updated_at? 'Nog niet toegekend...':supplier.updated_at) }}" readonly tabindex="-1"/>
+	</div>
+</div> <!-- form-row -->
+<hr>
+
+<div class="row">
+	<div class="col-md-12">  
+		<div class="form-row">		
+			<div class="form-group col-md-10">
+				<label class="control-label">Bedrijf</label>
+				<input type="text" 
+				class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('company')) }}"
+				required name="company" id="company"
+				value="{{ old('company', !supplier.company? '':supplier.company) }}"/>
+				{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('company'), hasErrorFor('company')) }}
+			</div> <!-- form-group -->	
+			<div class="form-group col-md-10">
+				<label class="control-label">Website</label>
+				<input type="text" class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('website')) }}" 
+				name="website" id="website"
+				value="{{ old('website', !supplier.website? '':supplier.website) }}"/>
+				{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('website'), hasErrorFor('website')) }}
+			</div> <!-- form-group -->
+			<div class="form-group col-md-6">
+				<label class="control-label">Ondernemingsnr.</label>
+				<input type="text" class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('vat_number')) }}" 
+				name="vat_number" id="vat_number"
+				value="{{ old('vat_number', !supplier.vat_number? '':supplier.vat_number) }}"/>
+				{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('vat_number'), hasErrorFor('vat_number')) }}
+			</div> <!-- form-group -->
+			<div class="form-group col-md-6">
+				<label class="control-label">Bankrekening.</label>
+				<input type="text" class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('bank_account')) }}" 
+				name="bank_account" id="bank_account"
+				value="{{ old('bank_account', !supplier.bank_account? '':supplier.bank_account) }}"/>
+				{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('bank_account'), hasErrorFor('bank_account')) }}
+			</div> <!-- form-group -->
+		
+			<div class="col-md-6">
+				<div class="form-row">
+					<div class="form-group col-md-12">
+						<label class="control-label">Contact 1</label>
+						<input type="text" class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('contact_1')) }}" 
+						required name="contact_1" id="contact_1"
+						value="{{ old('contact_1', !supplier.contact_1? '':supplier.contact_1) }}"/>
+						{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('contact_1'), hasErrorFor('contact_1')) }}
+					</div> <!-- form-group -->
+					<div class="form-group col-md-12">
+						<label class="control-label">Contact 2</label>
+						<input type="text" class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('contact_2')) }}" 
+						name="contact_2" id="contact_2"
+						value="{{ old('contact_2', !supplier.contact_2? '':supplier.contact_2) }}"/>
+						{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('contact_2'), hasErrorFor('contact_2')) }}
+					</div> <!-- form-group -->
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-row">
+					<div class="form-group col-md-12 mr-auto">
+						<label class="control-label">E mail adres 1</label>
+						<input type="email" class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('email_1')) }}" 
+						name="email_1" id="email_1"
+						value="{{ old('email_1', !supplier.email_1? '':supplier.email_1) }}"/>
+						{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('email_1'), hasErrorFor('email_1')) }}
+					</div> <!-- form-group -->
+					<div class="form-group col-md-12">
+						<label class="control-label">E mail adres 2</label>
+						<input type="email" class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('email_2')) }}" 
+						name="email_2" id="email_2"
+						value="{{ old('email_2', !supplier.email_2? '':supplier.email_2) }}"/>
+						{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('email_2'), hasErrorFor('email_2')) }}
+					</div> <!-- form-group -->
+				</div>
+			</div>
+			
+			<div class="form-group col-md-6">
+				<label class="control-label">Tel omschr. 1</label>
+				<input type="text" class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('phone_descr_1')) }}" 
+				name="phone_descr_1" id="phone_descr_1"
+				value="{{ old('phone_descr_1', !supplier.phone_descr_1? '':supplier.phone_descr_1) }}"/>
+				{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('phone_descr_1'), hasErrorFor('phone_descr_1')) }}
+			</div> <!-- form-group -->
+			<div class="form-group col-md-6">
+				<label class="control-label">Tel 1</label>
+				<input type="text" class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('phone_1')) }}" 
+				name="phone_1" id="phone_1"
+				value="{{ old('phone_1', !supplier.phone_1? '':supplier.phone_1) }}"/>
+				{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('phone_1'), hasErrorFor('phone_1')) }}
+			</div> <!-- form-group -->
+			<div class="form-group col-md-6">
+				<label class="control-label">Tel omschr. 2</label>
+				<input type="text" class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('phone_descr_2')) }}" 
+				name="phone_descr_2" id="phone_descr_2"
+				value="{{ old('phone_descr_2', !supplier.phone_descr_2? '':supplier.phone_descr_2) }}"/>
+				{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('phone_descr_2'), hasErrorFor('phone_descr_2')) }}
+			</div> <!-- form-group -->
+			<div class="form-group col-md-6">
+				<label class="control-label">Tel 2</label>
+				<input type="text" class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('phone_2')) }}" 
+				name="phone_2" id="phone_2"
+				value="{{ old('phone_2', !supplier.phone_2? '':supplier.phone_2) }}"/>
+				{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('phone_2'), hasErrorFor('phone_2')) }}
+			</div> <!-- form-group -->
+			<div class="form-group col-md-6">
+				<label class="control-label">Tel omschr. 3</label>
+				<input type="text" class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('phone_descr_3')) }}" 
+				name="phone_descr_3" id="phone_descr_3"
+				value="{{ old('phone_descr_3', !supplier.phone_descr_3? '':supplier.phone_descr_3) }}"/>
+				{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('phone_descr_3'), hasErrorFor('phone_descr_3')) }}
+			</div> <!-- form-group -->
+			<div class="form-group col-md-6">
+				<label class="control-label">Tel 3</label>
+				<input type="text" class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('phone_3')) }}" 
+				name="phone_3" id="phone_3"
+				value="{{ old('phone_3', !supplier.phone_3? '':supplier.phone_3) }}"/>
+				{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('phone_3'), hasErrorFor('phone_3')) }}
+			</div> <!-- form-group -->
+		</div> <!-- form-row -->
+	</div>
+</div>	
+		
+
+
+<br>
+

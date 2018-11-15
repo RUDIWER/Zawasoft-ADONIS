@@ -1,0 +1,39 @@
+
+
+@if(flashMessage('notification'))
+    <div class="alert alert-{{ flashMessage('notification.type') }} alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+       	<li>{{ flashMessage('notification.message')}}</li>   
+		@if(flashMessage('notification.message2')) 
+			<li>{{ flashMessage('notification.message2')}}</li> 
+		@endif
+		@if(flashMessage('notification.message3')) 
+			<li>{{ flashMessage('notification.message3')}}</li> 
+		@endif
+		@if(flashMessage('notification.message4')) 
+			<li>{{ flashMessage('notification.message4')}}</li> 
+		@endif
+    </div>
+@endif
+@if(flashMessage('alert'))
+    <div class="alert alert-{{ flashMessage('alert.type') }} alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+       	<li>{{ flashMessage('alert.message')}}</li>
+		@if(flashMessage('alert.message2')) 
+			<li>{{ flashMessage('alert.message2')}}</li> 
+		@endif
+		@if(flashMessage('alert.message3')) 
+			<li>{{ flashMessage('alert.message3')}}</li> 
+		@endif
+		@if(flashMessage('alert.message4')) 
+			<li>{{ flashMessage('alert.message4')}}</li> 
+		@endif
+    </div>
+@endif
+
+
+

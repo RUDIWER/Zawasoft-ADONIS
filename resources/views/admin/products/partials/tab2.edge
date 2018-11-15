@@ -1,0 +1,76 @@
+	<!--    GROUP 1  :   voorraad -->
+
+<div class="col-md-6">
+	<div class="form-row">
+		<div class="form-group  col-md-6"> 				
+			<h5>Voorraad</h5>
+			<div class="form-row">
+				<div class="form-group  col-md-10">
+					<label class="control-label">Voorraad plaats 1</label>
+					<input type="text" step="1" class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('stock_place_1')) }}" 
+					name="stock_place_1" id="stock_place_1"
+					value="{{ old('stock_place_1', !product.stock_place_1? '':product.stock_place_1 ) }}"/>
+					{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('stock_place_1'), hasErrorFor('stock_place_1')) }}
+					{{ product.stock_place_1 }}
+				</div> <!-- class -->
+			</div> <!-- row -->
+			<div class="form-row">
+				<div class="form-group  col-md-10">
+					<label class="control-label">Voorraad plaats 2</label>
+					<input type="text" step="1" class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('stock_place_2')) }}" 
+					name="stock_place_2" id="stock_place_2"
+					value="{{ old('stock_place_2', !product.stock_place_2? '':product.stock_place_2 ) }}"/>
+					{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('stock_place_2'), hasErrorFor('stock_place_2')) }}
+				</div> <!-- class -->
+			</div> <!-- row -->
+			<div class="form-row">
+				<div class="form-group  col-md-10">
+					<label class="control-label">Voorraad plaats 3</label>
+					<input type="text" step="1" class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('stock_place_3')) }}" 
+					name="stock_place_3" id="stock_place_3" 
+					value="{{ old('stock_place_3', !product.stock_place_3? '':product.stock_place_3 ) }}"/>
+					{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('stock_place_3'), hasErrorFor('stock_place_3')) }}
+				</div> <!-- class -->
+			</div> <!-- row -->
+			<div class="form-row">
+				<div class="form-group  col-md-10">
+					<label class="control-label">Voorraad plaats 4</label>
+					<input type="text" step="1" class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('stock_place_4')) }}" 
+					name="stock_place_4" id="stock_place_4"
+					value="{{ old('stock_place_4', !product.stock_place_4? '':product.stock_place_4 ) }}"/>
+					{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('stock_place_1'), hasErrorFor('stock_place_1')) }}
+				</div> <!-- class -->
+			</div> <!-- row -->
+		</div>
+
+		<div class="form-group  col-md-6"> 					<!--    GROUP 1  :   INKOOPRIJZEN -->
+			<h5>Voorraad Plaatsen</h5>
+			<div class="form-row">
+				<div class="form-group  col-md-12">
+					<label class="control-label">Begin voorraad</label>
+					<input type="number" step="1" class="form-control form-control-sm" 
+					name="stock_start" id="stock_start" 
+					value="{{ old('stock_start', !product.stock_start? '':product.stock_start ) }}">
+				</div> <!-- class -->
+			</div> <!-- row -->
+			<div class="form-row">
+				<div class="form-group  col-md-12">
+					<label class="control-label">Boekhoudkundige Voorraad</label>
+					<input type="number" step="1" class="form-control form-control-sm" 
+					name="stock_accounting" id="stock_accounting" 
+					value="{{ old('stock_accounting', !product.stock_accounting? '':product.stock_accounting ) }}">
+				</div> <!-- class -->
+			</div> <!-- row -->
+			<div class="form-row">
+				<div class="form-group  col-md-12">
+					<label class="control-label">Werkelijke Voorraad</label>
+					<input type="number" step="1" class="form-control form-control-sm" 
+					name="stock_real" id="stock_real" value="{{ old('stock_real', !product.stock_real? '':product.stock_real ) }}">
+				</div> <!-- class -->
+			</div> <!-- row -->
+		</div>
+	</div>
+</div>
+
+
+		

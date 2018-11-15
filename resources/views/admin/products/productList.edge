@@ -1,0 +1,89 @@
+
+@layout('admin.layouts.app')
+@section('styles')
+ 	<link rel="stylesheet" type="text/css" href="/vendor/datatables/custom.css"> 
+@endsection
+
+@section('content')
+	<div class="row">  
+		<div class="col-lg-12">
+			<div class="card card-primary">
+	<!-- TITLE BAR -->
+				<div class="card-header text-white bg-primary">
+					<b>	
+						<i class="fas fa-fw fa-gift"></i> Producten   		
+					</b>
+				</div>
+	<!-- BUTTON BAR  -->
+				<div class="card-header">                      
+					<b>     
+						<a href="{{ route('admin') }}">
+							<i class="fas fa-fw fa-arrow-circle-left"></i>Terug	
+						</a>
+						&nbsp
+						<a class="float-right" href="{{route('admin-product-create')}}">
+							<i class="fas fa-fw fa-plus-circle"></i>Nieuw
+						</a> 
+					</b>
+				</div>
+				<div class="card-body"> 
+					<div id="dataTableWrapper" style="width:100%" class="dataTableParentHidden">
+						<table id="productTable" class="dn table table-bordered table-hover table-responsive" cellspacing="0" width="100%">
+							<thead class="thead-default">
+								<tr>
+									<th scope="col">Id</th>
+									<th scope="col">{{antl.formatMessage('products.title')}}</th>
+									<th scope="col">{{antl.formatMessage('products.sub_title')}}</th>
+								</tr>
+							</thead>
+							<tbody>
+								@each(product in products)
+									<tr>
+										<td>{{ product.id }}</td>
+										<td>{{ product.name_nl }}</td>
+										<td>{{ product.sp_in_vat_cz }}</td>
+									</tr>
+								@endeach
+							</tbody>
+						</table>
+					</div>	
+				</div>
+			</div>
+		</div>
+	</div>
+@endsection
+@section('scripts')
+    <script type="text/javascript" charset="utf-8">
+      	$(document).ready( function () {
+    // DataTables initialization         
+			var productTable = $('#productTable').DataTable({
+				dom :"<'myfilter'f><'mylength'l>t",
+				info: false,
+				responsive: true,
+				bSort : true,
+				fixedHeader: true,
+				order : [[ 1, "asc" ]],
+				paging : false,
+				language: {
+					search: "",
+					searchPlaceholder: "Zoeken...",
+					zeroRecords: "Geen data gevonden"
+				},
+				
+			});
+			$('#dataTableWrapper').removeClass('dataTableParentHidden');
+			$('div.dataTables_filter input').focus();
+	//(RW) Click on table row
+			$('#productTable').on('click', 'tr', function () {
+				console.log(productTable.row(this).data());
+				var row = productTable.row(this).data();
+				var productId = row[0];
+				var path = "/admin/product/edit/" + productId;
+				window.location.href = path;
+			});
+		});
+    </script>
+@endsection
+
+
+

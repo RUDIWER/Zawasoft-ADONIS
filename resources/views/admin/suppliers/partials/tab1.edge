@@ -1,0 +1,77 @@
+
+<div class="form-row">
+	<div class="form-group col-md-8">
+		<label class="control-label">Straat</label>
+		<input type="text" 
+		class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('street')) }}"
+		name="street" id="street"
+		value="{{ old('street', !supplier.street? '':supplier.street) }}"/>
+		{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('street'), hasErrorFor('street')) }}
+	</div> <!-- form-group -->
+	<div class="form-group col-md-2">
+		<label class="control-label">Huisnr.</label>
+		<input type="text" 
+		class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('number')) }}"
+		name="number" id="number"number
+		value="{{ old('number', !supplier.number? '':supplier.number) }}"/>
+		{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('number'), hasErrorFor('number')) }}
+	</div> <!-- form-group -->
+	<div class="form-group col-md-2">
+		<label class="control-label">Bus</label>
+		<input type="text" 
+		class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('bus')) }}"
+		name="bus" id="bus"
+		value="{{ old('bus', !supplier.bus? '':supplier.bus) }}"/>
+		{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('bus'), hasErrorFor('bus')) }}
+	</div> <!-- form-group -->
+</div> <!-- form row -->	
+
+<div class="form-row">
+	<div class="form-group col-md-2">
+		<label class="control-label">Postcode</label>
+		<input type="text" 
+		class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('postcode')) }}"
+		name="postcode" id="postcode"
+		value="{{ old('postcode', !supplier.postcode? '':supplier.postcode) }}"/>
+		{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('postcode'), hasErrorFor('postcode')) }}
+	</div> <!-- form-group -->
+	<div class="form-group col-md-4">
+		<label class="control-label">Gemeente</label>
+		<input type="text" 
+		class="form-control form-control-sm  {{ elIf('is-invalid','', hasErrorFor('city')) }}"
+		name="city" id="city"
+		value="{{ old('city', !supplier.city? '':supplier.city) }}"/>
+		{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('city'), hasErrorFor('city')) }}
+	</div> <!-- form-group -->
+	<div class="form-group col-md-3">
+		<label class="control-label">Provincie</label>
+		<input type="text" 
+		class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('state')) }}"
+		name="state" id="state"
+		value="{{ old('state', !supplier.state? '':supplier.state) }}"/>
+		{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('state'), hasErrorFor('state')) }}
+	</div> <!-- form-group -->
+	<div class="form-group col-md-3">
+		<label class="control-label">Land</label>
+		<input type="text" 
+		class="form-control form-control-sm{{ elIf('is-invalid','', hasErrorFor('country')) }}"
+		name="country" id="country"
+		value="{{ old('country', !supplier.country? '':supplier.country) }}"/>
+		{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('country'), hasErrorFor('country')) }}
+	</div> <!-- form-group -->
+</div> <!-- form row -->
+
+<div class="form-row">
+	<div class="form-group col-md-8">
+		<label class="control-label">Opmerking</labelmemo
+		<input type="text" 
+		class="form-control form-control-sm  {{ elIf('is-invalid','', hasErrorFor('memo')) }}"
+		placeholder="bv. Mijn Privé Adres"
+		name="memo" id="memo"
+		value="{{ old('memo', !supplier.memo? '':supplier.memo) }}"/>
+		{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('memo'), hasErrorFor('memo')) }}
+	</div> <!-- form-group -->
+</div>
+
+
+

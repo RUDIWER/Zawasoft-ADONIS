@@ -1,0 +1,200 @@
+
+<div id="productApp">
+	<div class="row">
+		<input type="hidden" name="shipping_cost_ex_vat_cz_be_in_param" id="shipping_cost_ex_vat_cz_be_in_param" data-field-id="{{ param.shipping_cost_ex_vat_cz_be }}" v-model="shipping_cost_ex_vat_cz_be_in_param">
+		<input type="hidden" name="shipping_amount_ex_vat_cz_be_in_param" id="shipping_amount_ex_vat_cz_be_in_param" data-field-id="{{ param.shipping_amount_ex_vat_cz_be }}" v-model.number="shipping_amount_ex_vat_cz_be_in_param">
+		<input type="hidden" name="shipping_cost_ex_vat_cz_nl_in_param" id="shipping_cost_ex_vat_cz_nl_in_param" data-field-id="{{ param.shipping_cost_ex_vat_cz_nl }}" v-model.number="shipping_cost_ex_vat_cz_nl_in_param">
+		<input type="hidden" name="shipping_amount_ex_vat_cz_nl_in_param" id="shipping_amount_ex_vat_cz_nl_in_param" data-field-id="{{ param.shipping_amount_ex_vat_cz_nl }}" v-model.number="shipping_amount_ex_vat_cz_nl_in_param">	
+		<input type="hidden" name="min_order_amount_in_vat_free_shipping_in_param" id="min_order_amount_in_vat_free_shipping_in_param" data-field-id="{{ param.min_order_amount_in_vat_free_shipping }}" v-model.number="min_order_amount_in_vat_free_shipping_in_param">
+		<input type="hidden" name="id_bol_category_in_db" id="id_bol_category_in_db" data-field-id="{{ product.id_bol_category }}" v-model.number="id_bol_category_in_db">
+
+		<div class="col-md-6">
+			<div class="form-row">
+				<div class="form-group  col-md-6"> 					<!--    GROUP 1  :   INKOOPRIJZEN -->
+					<h5>Inkoopprijzen</h5>
+					<div class="form-group">
+					<label class="control-label">IKP. Lev. Netto</label>
+					<input type="number" step="0.01" class="form-control form-control-sm input-required" name="pp_ex_vat_supplier" id="pp_ex_vat_supplier" data-field-id="{{ old('pp_ex_vat_supplier', !product.pp_ex_vat_supplier? '0' : product.pp_ex_vat_supplier) }}" v-model.number.lazy="pp_ex_vat_supplier">
+					</div>
+					<div class="form-group">
+					<label class="control-label">Kosten Factor</label>
+					<input type="number" step="0.01" class="form-control form-control-sm input-required" name="cost_factor" id="cost_factor" data-field-id="{{ old('cost_factor', !product.cost_factor? '0' : product.cost_factor) }}" v-model.number.lazy="cost_factor">
+					</div>
+					<div class="form-group">
+					<label class="control-label">Inkoopprijs All In CZ</label>
+					<input type="number" step="0.01" class="form-control form-control-sm" name="pp_ex_vat_cz" id="pp_ex_vat_cz" data-field-id="{{ old('pp_ex_vat_cz', !product.pp_ex_vat_cz? '0' : product.pp_ex_vat_cz) }}" v-model.number.lazy="pp_ex_vat_cz"  tabindex="-1" readonly>
+					</div>
+					<label class="control-label">BTW %</label>
+					@if(!isNew)
+						<input type="number" step="0.01" class="form-control form-control-sm input-required" required name="vat_procent" id="vat_procent" data-field-id="{{ old('vat_procent', !product.vat_procent? '0' : product.vat_procent) }}" v-model.number="vat_procent">
+					@else
+						<input type="number" step="0.01" class="form-control form-control-sm input-required" required name="vat_procent" id="vat_procent" data-field-id="{{ param.stand_vat_procent }}" v-model.number="vat_procent">
+					@endif
+				
+				</div> <!-- class -->
+			</div> <!-- row -->
+		</div>
+		<div class="col-md-6">
+			<h5>Groothandel / Dropshipping</h5>
+			<div class="form-row">
+				<div class="form-group col-md-6">    <!--    GROUP 1  :   GROOTHANDELSPRIJZEN -->	
+					<label class="control-label">Marge dropshipping</label>
+					@if(!isNew)
+						<input type="number" step="0.01" class="form-control form-control-sm  input-required" required name="margin_factor_dropshipping" id="margin_factor_dropshipping" data-field-id="{{ old('margin_factor_dropshipping', !product.margin_factor_dropshipping? '1' : product.margin_factor_dropshipping) }}" v-model.number="margin_factor_dropshipping">	
+					@else
+						<input type="number" step="0.01" class="form-control form-control-sm  input-required" required name="margin_factor_dropshipping" id="margin_factor_dropshipping" data-field-id="{{ param.stand_margin_dropshipping }}" v-model.number="margin_factor_dropshipping">	
+					@endif
+				</div>
+				<div class="form-group col-md-6">    <!--    GROUP 1  :   GROOTHANDELSPRIJZEN -->					
+					<label class="control-label">VKP. ex. Dropshipping</label>
+					<input type="number" step="0.01" class="form-control form-control-sm  input-required" required name="sp_ex_vat_dropshipping" id="sp_ex_vat_dropshipping" data-field-id="{{ old('sp_ex_vat_dropshipping', !product.sp_ex_vat_dropshipping? '0' : product.sp_ex_vat_dropshipping) }}" v-model.number.lazy="sp_ex_vat_dropshipping">	
+				</div>
+			</div> <!-- FORM-ROW -->
+			<div class="form-row">
+				<div class="form-group col-md-6">
+					<label class="control-label">Marge Groothandel</label>
+					@if(!isNew)
+						<input type="number" step="0.01" class="form-control form-control-sm input-required" name="margin_factor_wholesale" id="margin_factor_wholesale" data-field-id="{{ old('margin_factor_wholesale', !product.margin_factor_wholesale? '1' : product.margin_factor_wholesale) }}" v-model.number="margin_factor_wholesale">
+					@else
+						<input type="number" step="0.01" class="form-control form-control-sm input-required" name="margin_factor_wholesale" id="margin_factor_wholesale" data-field-id="{{ param.stand_margin_wholesale }}" v-model.number="margin_factor_wholesale">
+					@endif
+				</div>
+				<div class="form-group col-md-6">
+					<label class="control-label">VKP. ex. Groothandel</label>
+					<input type="number" step="0.01" class="form-control form-control-sm input-required" required name="sp_ex_vat_wholesale" id="sp_ex_vat_wholesale" data-field-id="{{ old('sp_ex_vat_wholesale', !product.sp_ex_vat_wholesale? '1' : product.sp_ex_vat_wholesale) }}" v-model.number.lazy="sp_ex_vat_wholesale">
+				</div>
+			</div> <!-- FORM-ROW -->
+<!-- BOL CATEGORIES -->			
+			<div class="form-row">		
+				<div class="form-group col-md-12">
+					<label class="control-label">Bol-Categorie</label>		
+					<select class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('id_bol_category')) }}"
+					v-model="id_bol_category" 
+					placeholder="Selecteer..."  
+					name="id_bol_category" id="id_bol_category">
+						<option v-for="option in options" v-bind:value="option.id">@{{ option.name }} / @{{option.cost_fix}}€ / @{{option.cost_procent}}%
+						</option>
+					</select>
+					{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('id_bol_category'), hasErrorFor('id_bol_category')) }}	
+				</div>
+			</div>
+		</div> <!-- fcol -->
+		<div class="h-line"></div><br>
+		<div class="col-md-3">
+			<div class="form-row">
+				<div class="form-group col-md-12"> 
+					<h5>VKP Cool-Zawadi</h5>
+					<label class="control-label">Marge Ex. Verzending</label>
+					<input type="number" step="0.0001" class="form-control form-control-sm input-required" required name="margin_factor_cz_shop" id="margin_factor_cz_shop" v-model.number="margin_factor_cz_shop">
+				</div>
+				<div class="form-group col-md-12">
+					<label class="control-label">Marge Belgie</label>
+					<input type="number" step="0.01" class="form-control form-control-sm" name="margin_factor_cz_web_be" id="margin_factor_cz_web_be" v-model.number.lazy="margin_factor_cz_web_be" tabindex="-1" readonly>
+				</div>
+				<div class="form-group col-md-12">
+					<label class="control-label">Marge Nederland</label>
+					<input type="number" step="0.01" class="form-control form-control-sm" name="margin_factor_cz_web_nl" id="margin_factor_cz_web_nl" v-model.number.lazy="margin_factor_cz_web_nl" tabindex="-1" readonly>
+				</div>
+				<div class="form-group col-md-12">
+					<label class="control-label">VKP. ex. BTW</label>
+					<input type="number" step="0.01" class="form-control form-control-sm input-required" required name="sp_ex_vat_cz" id="sp_ex_vat_cz" data-field-id="{{ old('sp_ex_vat_cz', !product.sp_ex_vat_cz? '0' : product.sp_ex_vat_cz )}}" v-model.number.lazy="sp_ex_vat_cz" tabindex="-1" readonly>
+				</div>
+				<div class="form-group col-md-12">
+					<label class="control-label">VKP. incl. BTW</label>
+					<input type="number" step="0.01" class="form-control form-control-sm input-required" required name="sp_in_vat_cz" id="sp_in_vat_cz" data-field-id="{{ product.sp_in_vat_cz? product.sp_in_vat_cz:0 }}" v-model.number.lazy="sp_in_vat_cz">
+					<div v-if="sp_in_vat_cz < min_order_amount_in_vat_free_shipping_in_param">
+					+ @{{ shipping_amount_ex_vat_cz_be_in_param }}€  ex. BTW verzending </div>
+				</div>
+				<div class="form-group col-md-12">
+					<label class="control-label">Verzendkost Ex. BTW Belgie</label>
+					<input type="number" step="0.01" class="form-control form-control-sm" id="shipping_cost_ex_vat_cz_be" data-field-id="" v-model.number="shipping_cost_ex_vat_cz_be" tabindex="-1" readonly>
+				</div>
+				<div class="form-group col-md-12">
+					<label class="control-label">Verzendkost Ex. BTW Nederland</label>
+					<input type="number" step="0.01" class="form-control form-control-sm" id="shipping_cost_ex_vat_cz_nl" data-field-id="" v-model.number="shipping_cost_ex_vat_cz_nl" tabindex="-1" readonly>
+				</div>
+				<div class="form-group col-md-12">
+					<label class="control-label">Winst Bedrag Belgie</label>
+					<input type="number" step="0.01" class="form-control form-control-sm input-required" name="netto_profit_amount_cz_be" id="netto_profit_amount_cz_be" data-field-id="{{ product.netto_profit_amount_cz_be? product.netto_profit_amount_cz_be:0 }}" v-model.number="netto_profit_amount_cz_be"  tabindex="-1" readonly>
+				</div>
+				<div class="form-group col-md-12">
+					<label class="control-label">Winst Bedrag Nederland</label>
+					<input type="number" step="0.01" class="form-control form-control-sm input-required" name="netto_profit_amount_cz_nl" id="netto_profit_amount_cz_nl" data-field-id="{{ product.netto_profit_amount_cz_nl? product.netto_profit_amount_cz_nl:0 }}" v-model.number="netto_profit_amount_cz_nl" tabindex="-1" readonly>
+				</div>		
+			</div>   <!--form row -->
+		</div>
+		<div class="col-md-3">
+			<div class="form-row">
+				<div class="form-group col-md-12"> 
+					<h5>VKP Bol.com BE</h5>
+					<label class="control-label">Marge</label>
+					<input type="number" step="0.01" class="form-control form-control-sm" name="margin_factor_bol_be" id="margin_factor_bol_be" data-field-id="{{ product.margin_factor_bol_be? product.margin_factor_bol_be:1 }}" v-model.number="margin_factor_bol_be" tabindex="-1" readonly>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					
+				</div>
+				<div class="form-group col-md-12"> 
+					<label class="control-label">VKP. ex. BTW</label>
+					<input type="number" step="0.01" class="form-control form-control-sm" name="sp_ex_vat_bol_be" id="sp_ex_vat_bol_be" data-field-id="{{ product.sp_ex_vat_bol_be? product.sp_ex_vat_bol_be:0 }}" v-model.number="sp_ex_vat_bol_be" tabindex="-1" readonly>
+				</div>
+				<div class="form-group col-md-12"> 
+					<label class="control-label">VKP. incl BTW</label>
+					<input type="number" step="0.01" class="form-control form-control-sm input-required" required name="sp_in_vat_bol_be" id="sp_in_vat_bol_be" data-field-id="{{ old('sp_in_vat_bol_be', !product.sp_in_vat_bol_be? '0' : product.sp_in_vat_bol_be) }}" v-model.number.lazy="sp_in_vat_bol_be" required>
+				</div>
+				<div class="form-group col-md-12"> 
+					<label class="control-label">Verzending Bol BE (ex. BTW)</label>	
+					<input type="number" step="0.01" class="form-control form-control-sm" name="shipping_cost_ex_vat_bol_be" id="shipping_cost_ex_vat_bol_be" data-field-id="{{ param.shipping_cost_ex_vat_bol_be }}" v-model.number="shipping_cost_ex_vat_bol_be" tabindex="-1" readonly>
+				</div>
+				<div class="form-group col-md-12"> 
+					<label class="control-label">Kosten Bol BE (ex. BTW)</label>
+					<input type="number" step="0.01" class="form-control form-control-sm" name="total_cost_ex_vat_bol_be" id="total_cost_ex_vat_bol_be" data-field-id="{{ product.total_cost_ex_vat_bol_be? product.total_cost_ex_vat_bol_be:0  }}" v-model.number="total_cost_ex_vat_bol_be"  tabindex="-1" readonly>
+				</div>
+				<div class="form-group col-md-12"> 
+					<label class="control-label">Winst Bedrag</label>
+					<input type="number" step="0.01" class="form-control form-control-sm" name="netto_profit_amount_bol_be" id="netto_profit_amount_bol_be" data-field-id="{{ product.netto_profit_amount_bol_be? product.netto_profit_amount_bol_be:0 }}" v-model.number="netto_profit_amount_bol_be"  tabindex="-1" readonly>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div class="form-row">
+				<div class="form-group col-md-12"> 
+					<h5>VKP Bol.com NL</h5>
+					<label class="control-label">Marge</label>
+					<input type="number" step="0.01" class="form-control form-control-sm" name="margin_factor_bol_nl" id="margin_factor_bol_nl" data-field-id="{{ product.margin_factor_bol_nl? product.margin_factor_bol_nl:1 }}" v-model.number="margin_factor_bol_nl" tabindex="-1" readonly>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+				</div>
+				<div class="form-group col-md-12"> 
+					<label class="control-label">VKP. ex. BTW</label>
+					<input type="number" step="0.01" class="form-control form-control-sm" name="sp_ex_vat_bol_nl" id="sp_ex_vat_bol_nl" data-field-id="{{ product.sp_ex_vat_bol_nl? product.sp_ex_vat_bol_nl:0 }}" v-model.number="sp_ex_vat_bol_nl" tabindex="-1" readonly>
+				</div>
+				<div class="form-group col-md-12"> 
+					<label class="control-label">VKP. incl BTW</label>
+					<input type="number" step="0.01" class="form-control form-control-sm input-required" required name="sp_in_vat_bol_nl" id="sp_in_vat_bol_nl" data-field-id="{{ old('sp_in_vat_bol_nl', !product.sp_in_vat_bol_nl? '0' : product.sp_in_vat_bol_nl) }}" v-model.number.lazy="sp_in_vat_bol_nl" required>
+				</div>
+				<div class="form-group col-md-12"> 
+					<label class="control-label">Verzending Bol NL</label>
+					<input type="number" step="0.01" class="form-control form-control-sm" name="shipping_cost_ex_vat_bol_nl" id="shipping_cost_ex_vat_bol_nl" data-field-id="{{ param.shipping_cost_ex_vat_bol_nl }}" v-model.number="shipping_cost_ex_vat_bol_nl" tabindex="-1" readonly>
+				</div>
+				<div class="form-group col-md-12"> 
+					<label class="control-label">Kosten Bol NL</label>
+					<input type="number" step="0.01" class="form-control form-control-sm" name="total_cost_ex_vat_bol_nl" id="total_cost_ex_vat_bol_nl" data-field-id="{{ product.total_cost_ex_vat_bol_nl? product.total_cost_ex_vat_bol_nl:0 }}" v-model.number="total_cost_ex_vat_bol_nl" tabindex="-1" readonly>
+				</div>
+				<div class="form-group col-md-12"> 
+					<label class="control-label">Winst Bedrag</label>
+					<input type="number" step="0.01" class="form-control form-control-sm" name="netto_profit_amount_bol_nl" id="netto_profit_amount_bol_nl" data-field-id="{{ product.netto_profit_amount_bol_nl? product.netto_profit_amount_bol_nl:0 }}" v-model.number="netto_profit_amount_bol_nl" tabindex="-1" readonly>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+	

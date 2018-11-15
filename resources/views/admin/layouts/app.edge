@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+	<head>
+		<html lang="nl">
+    	<base href="./">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    	<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    	<meta name="description" content="Cool-Zawadi">
+<!-- KEywords -->
+		 <meta name="keyword" content="cool-zawadi">
+<!-- Title -->
+		<title>ZawaDeals</title>
+
+<!--Icons -->
+		<link rel="icon" href="/favicon/cz-glypicon.png">
+		<link href="/vendor/simple-line-icons/css/simple-line-icons.css" rel="stylesheet">
+
+<!-- Custom fonts for this template-->
+		<link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    	<link href="/vendor/pace-progress/css/pace.min.css" rel="stylesheet">
+
+<!-- Custom style files -->
+		<link href="/admin-panel/css/app-admin.css" rel="stylesheet" type="text/css">
+<!-- APP Styles -->
+	  	@!section('styles')
+	</head>
+	<body class="app header-fixed sidebar-fixed aside-menu-fixed sidebar-lg-show">	 
+		@include('admin.partials.navbar')
+		<div class="app-body">
+			@include('admin.partials.sitebar')
+			<main class="main">
+			<!-- include('admin.partials.breadcrumbs') -->
+				<div class="container-fluid" style="margin-top:30px;">
+					<div class="animated fadeIn">
+						<div id="app">
+							@!section('content')
+						</div>
+					</div>
+				</div>
+			</main>
+		<!-- include('admin.partials.asidemenu') -->
+		</div>
+		<footer class="app-footer">
+			@include('admin.partials.footer')
+		</footer>	
+	</body>
+<!-- Scripts -->
+	<script src="/js/app.js"></script>
+ 	<script src="/admin-panel/js/pace.min.js"></script>
+    <script src="/admin-panel/js/perfect-scrollbar.min.js"></script> 
+	<script src="/admin-panel/js/coreui.min.js"></script>
+	<script src="/admin-panel/js/custom-tooltips.min.js"></script>
+
+	@!section('scripts')
+</html>

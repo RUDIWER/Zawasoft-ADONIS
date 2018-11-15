@@ -1,0 +1,17 @@
+
+<tr class="d-flex" id="row'+ rowNumber +'"> 
+	<td class="rowNumber col-1" name="row[]" value="{{rowCount}}"> 
+		<select class="selectpicker productSelector show-tick show-menu-arrow form-control"
+			data-live-search="true" data-style="btn-default btn-sm btn-required"
+			data-size="8" name="id_product[]" id="{{$rowCount}}">
+			@each(product in products) 
+				<option data-cz-price="{{product.sp_in_vat_cz}}"
+					data-bolbe-price="{{product.sp_in_vat_bol_be}}"
+					data-bolnl-price="{{product.sp_in_vat_bol_nl}}"
+					data-vat="{{product.vat_procent}}"
+					data-bol-cost="{{product.total_cost_ex_vat_bol_be}}"
+					value="{{ product.id }}">{{ product.id  }} / {{   product.name_nl  }}</option>
+			@endeach
+		</select>
+	</td>
+</tr>
