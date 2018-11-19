@@ -18,6 +18,7 @@ class SalesOrderBolBeSchema extends Schema {
 			table.string('city_delivery', 50).notNullable();
 			table.string('postcode_delivery', 20).notNullable();
 			table.string('address_info_delivery', 200);
+			table.string('address_extra_info_delivery', 200);
 			table.string('country_delivery', 50).notNullable();
 			table.string('email_delivery', 60).nullable();
 			table.string('phone_delivery', 50).nullable();
@@ -32,6 +33,7 @@ class SalesOrderBolBeSchema extends Schema {
 			table.string('city_invoice', 50).notNullable();
 			table.string('postcode_invoice', 20).notNullable();
 			table.string('address_info_invoice', 200).nullable();
+			table.string('address_extra_info_invoice', 200);
 			table.string('country_invoice', 50).notNullable();
 			table.string('email_invoice', 60).nullable();
 			table.timestamps();

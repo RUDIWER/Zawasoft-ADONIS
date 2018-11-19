@@ -1,0 +1,18 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="form-row justify-content-md-center">
+			<div class="form-group  col-md-6"> 					
+				<h5>Afbeelding</h5>
+				<div class="col-md-12">                            
+					<div class="form-group">
+						<input type="file" id="product_pic" name="product_pic"
+							class="dropify" 
+							data-max-file-size="1M" 
+							data-allowed-file-extensions="gif jpg jpeg png"     
+							data-default-file="{{ old('product_pic', !product.product_pic? "" : product.product_pic) }}"/>        
+					</div>
+				</div>
+	  		</div>
+        </div>
+    </div>
+</div>

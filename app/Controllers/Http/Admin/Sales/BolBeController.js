@@ -65,6 +65,9 @@ class BolBeController {
 			order.address_info_delivery = bolOrder.CustomerDetails[0].ShipmentDetails[0].AddressSupplement
 				? bolOrder.CustomerDetails[0].ShipmentDetails[0].AddressSupplement
 				: '';
+			order.address_extra_info_delivery = bolOrder.CustomerDetails[0].ShipmentDetails[0].ExtraAddressInformation
+				? bolOrder.CustomerDetails[0].ShipmentDetails[0].ExtraAddressInformation
+				: '';
 			order.country_delivery = bolOrder.CustomerDetails[0].ShipmentDetails[0].CountryCode
 				? bolOrder.CustomerDetails[0].ShipmentDetails[0].CountryCode
 				: '';
@@ -106,6 +109,9 @@ class BolBeController {
 				: '';
 			order.address_info_invoice = bolOrder.CustomerDetails[0].BillingDetails[0].AddressSupplement
 				? bolOrder.CustomerDetails[0].BillingDetails[0].AddressSupplement
+				: '';
+			order.address_extra_info_invoice = bolOrder.CustomerDetails[0].BillingDetails[0].ExtraAddressInformation
+				? bolOrder.CustomerDetails[0].BillingDetails[0].ExtraAddressInformation
 				: '';
 			order.country_invoice = bolOrder.CustomerDetails[0].BillingDetails[0].CountryCode
 				? bolOrder.CustomerDetails[0].BillingDetails[0].CountryCode

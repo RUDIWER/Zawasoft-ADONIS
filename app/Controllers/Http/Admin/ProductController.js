@@ -9,6 +9,8 @@ const ProductProductGroup = use('App/Models/ProductProductGroup');
 const BolCategory = use('App/Models/BolCategory');
 const Env = use('Env');
 const BolApi = use('App/ZawaClasses/BolApi.js');
+const Helpers = use('Helpers');
+const fs = require('fs');
 
 class ProductController {
 	async index({ view }) {
@@ -62,6 +64,7 @@ class ProductController {
 		// Flash old values to the session
 		session.flashAll();
 		// Get productData data from form
+		const appRoot = Env.get('APP_URL');
 		const productData = request.except([
 			'_csrf',
 			'submit',
@@ -75,6 +78,7 @@ class ProductController {
 			'id_bol_category_in_db',
 			'group'
 		]);
+		//	return productData;
 		// Optimize productData
 		if (!productData.margin_factor_cz_web_be) {
 			productData.margin_factor_cz_web_be = '0';
@@ -139,8 +143,10 @@ class ProductController {
 		if (!productData.active_bol_nl) {
 			productData.active_bol_nl = '0';
 		}
-
-		//return productData;
+		const product_pic = request.file('product_pic', {
+			maxSize: '2mb',
+			allowedExtension: [ 'png', 'jpg', 'jpeg', 'gif' ]
+		});
 		// Save Record
 		if (params.id === '0') {
 			var product = new Product();
@@ -226,6 +232,25 @@ class ProductController {
 						.delete();
 				}
 			}
+
+			// Get images and move them to the img-prd map
+			// If PRODUCT_PIC is changed (then clientName is name of new downloaded image on client site)
+
+			if (product_pic.clientName) {
+				const fileName = 'product-' + product.id + '-pic_1.' + product_pic.subtype;
+				// Check if file not already exist and delete it before copuying the new one
+				fs.exists(Helpers.publicPath('/img-prd/img-prd-' + product.id + '/' + fileName), function(exists) {
+					if (exists) {
+						fs.unlinkSync(Helpers.publicPath('/img-prd/img-prd-' + product.id + '/' + fileName));
+					}
+				});
+				await product_pic.move(Helpers.publicPath('/img-prd/img-prd-' + product.id), { name: fileName });
+				if (!product_pic.moved()) {
+					return product_pic.error();
+				}
+				product.product_pic = appRoot + '/img-prd/img-prd-' + product.id + '/' + fileName;
+			}
+
 			await product.save();
 
 			// Set product info in BOL.BE

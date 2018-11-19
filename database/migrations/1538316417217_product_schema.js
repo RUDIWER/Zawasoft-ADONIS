@@ -69,6 +69,7 @@ class ProductSchema extends Schema {
 			table.string('stock_place_2', 20);
 			table.string('stock_place_3', 20);
 			table.string('stock_place_4', 20);
+			table.string('product_pic', 80);
 			table.timestamps();
 		});
 	}

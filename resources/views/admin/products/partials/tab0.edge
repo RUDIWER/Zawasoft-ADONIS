@@ -71,7 +71,7 @@
 </div> <!-- form-row -->
 <br>
 <div class="row">
-	<div class="col-md-6">
+	<div class="col-md-4">
 		<div class="form-row">		
 			<div class="form-group col-md-8">
 				<label class="control-label">Leverancier</label>
@@ -109,9 +109,9 @@
 			</div>
 		</div>	
 	</div>
-	<div class="col-md-6">
+	<div class="col-md-4">
 		<div class="form-row">
-			<div class="form-group col-md-8 ml-auto">
+			<div class="form-group col-md-10 ml-auto">
 				<div class="checkbox">
 					<label> 
 						<input type="checkbox" id="active" name="active"  
@@ -122,7 +122,7 @@
 			</div>
 		</div>
 		<div class="form-row">
-			<div class="form-group col-md-8 ml-auto">
+			<div class="form-group col-md-10 ml-auto">
 				<div class="checkbox ml-auto">
 					<label> 
 						<input type="checkbox" id="active_bol_be" name="active_bol_be" 
@@ -133,7 +133,7 @@
 			</div>
 		</div>
 		<div class="form-row">
-			<div class="form-group col-md-8 ml-auto">
+			<div class="form-group col-md-10 ml-auto">
 				<div class="checkbox ml-auto">
 					<label>
 						<input type="checkbox" id="active_bol_nl" name="active_bol_nl" 
@@ -143,6 +143,16 @@
 				</div>
 			</div>	
 		</div>		
+	</div>
+	<div class="col-md-4">
+		@if(product.product_pic)
+			<div class="form-row">
+				Afbeelding :
+				<div class="form-group">
+					<img src="{{product.product_pic}}" alt="product afbeelding" class="img-fluid" alt="Responsive image" img style="border:1px solid grey"/>
+				</div>
+			</div>
+		@endif
 	</div>
 </div>
 
