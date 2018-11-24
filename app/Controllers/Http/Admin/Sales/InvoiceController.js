@@ -8,11 +8,16 @@ const Param = use('App/Models/Param');
 const Product = use('App/Models/Product');
 const CustomerType = use('App/Models/CustomerType');
 const Database = use('Database');
+const puppeteer = require('puppeteer');
+const Helpers = use('Helpers');
+const fs = use('fs');
+const Env = use('Env');
+const readFile = Helpers.promisify(fs.readFile);
 
 class InvoiceController {
 	async index({ view }) {
 		const invoices = (await SalesInvoice.all()).toJSON();
-		return view.render('admin.sales.invoiceList', { invoices });
+		return view.render('admin.sales.invoice.invoiceList', { invoices });
 	}
 
 	async create({ view }) {
@@ -29,18 +34,18 @@ class InvoiceController {
 				description: '',
 				quantity: 1,
 				product_sp_ex_vat: 0,
-				vat_procent: param.stand_vat_procent,
 				product_pp_ex_vat: 0,
 				row_total_sp_ex_vat: 0,
 				row_total_sp_in_vat: 0,
 				row_total_pp_ex_vat: 0,
+				vat_procent: param.stand_vat_procent,
 				row_total_cost_ex_vat_bol_be: 0,
 				row_total_cost_ex_vat_bol_nl: 0,
 				cost_ex_vat_bol_be: 0,
 				cost_ex_vat_bol_nl: 0
 			}
 		];
-		return view.render('admin.sales.invoiceForm', {
+		return view.render('admin.sales.invoice.invoiceForm', {
 			isNew,
 			param,
 			invoice,
@@ -60,7 +65,7 @@ class InvoiceController {
 		const addresses = (await Address.query().where('id_customer', invoice.id_customer).fetch()).toJSON();
 		const products = (await Product.all()).toJSON();
 		const customerTypes = (await CustomerType.all()).toJSON();
-		return view.render('admin.sales.invoiceForm', {
+		return view.render('admin.sales.invoice.invoiceForm', {
 			isNew,
 			param,
 			invoice,
@@ -213,6 +218,50 @@ class InvoiceController {
 		});
 		return response.redirect('/admin/sales/invoice/edit/' + invoice.id);
 	}
+
+	/*
+	async print({ response, params }) {
+		const browser = await puppeteer.launch();
+		const page = await browser.newPage();
+		const options = {
+			path: 'public/pdf/invoice.pdf',
+			format: 'A4'
+		};
+		await page.goto('http://localhost:3333/login', { waitUntil: 'networkidle2' });
+		await page.type('#email', Env.get('LOGIN_E_MAIL'));
+		await page.type('#password', Env.get('LOGIN_PASSWORD'));
+		// click and wait for navigation
+		console.log('na login');
+		await Promise.all([ page.click('#btnLogin'), page.waitForNavigation({ waitUntil: 'networkidle0' }) ]);
+		await page.goto('http://localhost:3333/admin/sales/invoice/pdf/' + params.id, { waitUntil: 'networkidle2' });
+		console.log('na route');
+		await page.pdf(options);
+		await browser.close();
+		response.header('Content-type', 'application/pdf');
+		response.type('application/pdf');
+		response.download('public/pdf/invoice.pdf');
+		//return await readFile('hn.pdf');
+	}
+
+	async getPdf({ view, params }) {
+		const param = await Param.find(1);
+		const invoice = (await SalesInvoice.find(params.id)).toJSON();
+		const invoiceRows = (await SalesInvoiceRow.query().where('id_invoice', params.id).fetch()).toJSON();
+		const customers = (await Customer.query().with('addresses').fetch()).toJSON();
+		const addresses = (await Address.query().where('id_customer', invoice.id_customer).fetch()).toJSON();
+		const products = (await Product.all()).toJSON();
+		const customerTypes = (await CustomerType.all()).toJSON();
+		return view.render('admin.sales.invoice.pdf.invoicePdf', {
+			param,
+			invoice,
+			invoiceRows,
+			customers,
+			addresses,
+			products,
+			customerTypes
+		});
+	}
+*/
 }
 
 module.exports = InvoiceController;

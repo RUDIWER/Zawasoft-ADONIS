@@ -5,17 +5,18 @@ const Model = use('Model');
 class SalesInvoice extends Model {
 	// DATE REFORMATTING
 	static get dates() {
-		return super.dates.concat([ 'invoice_date' ]);
+		return super.dates.concat([ 'invoice_date', 'order_date' ]);
 	}
 
 	static castDates(field, value) {
-		if (field === 'invoice_date') {
+		if (field === 'invoice_date' || 'order_date') {
 			if (value) {
 				return value.format('YYYY-MM-DD');
 			}
 		}
 		return super.formatDates(field, value);
 	}
+
 	// RELATIONS
 	rows() {
 		return this.hasMany('App/Models/SalesInvoiceRow', 'id', 'id_invoice');

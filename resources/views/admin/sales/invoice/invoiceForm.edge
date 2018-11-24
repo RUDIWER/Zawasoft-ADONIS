@@ -17,7 +17,17 @@
 							<i class="fas fa-fw fa-arrow-circle-left"></i> Terug	
 						</a>
 						&nbsp
-						<a class="float-right" href="javascript:{}" @click="checkForm">
+						<!--
+						<a href="/admin/sales/invoice/print/{{ invoice.id }}" target="_blank">
+							<i class="fas fa-fw fa-print"></i> Print Server
+						</a>
+						-->
+						&nbsp
+						<a target="_blank" @click="createPdf">
+							<i class="fas fa-fw fa-print"></i> Print Client
+						</a>
+						&nbsp
+						<a class="float-right" href="javascript:{}" onclick="document.getElementById('salesInvoiceForm').submit(); return false;">
 							<i class="fas fa-fw fa-check-circle"></i> Opslaan
 						</a> 
 					</b>
@@ -39,9 +49,9 @@
 								<div class="form-group col-md-8">
 									<label class="control-label">Factuurnr.</label><br>
 									@if(!isNew)
-										<input type="number" class="form-control form-control-sm" name="id" id="id" value="{{ invoice.invoice_number}}" required readonly tabindex="-1"/>
+										<input type="number" class="form-control form-control-sm" name="id" id="id" required readonly tabindex="-1"  v-model="invoice_number"/>
 									@else
-										<input type="text" class="form-control form-control-sm" placeholder="Nog niet toegekend..." readonly tabindex="-1"/>
+										<input type="text" class="form-control form-control-sm" placeholder="Nog niet toegekend..." readonly tabindex="-1" v-model="invoice_number"/>
 									@endif
 								</div>	
 							</div>	
@@ -82,7 +92,7 @@
 									</select> 
 								</div>
 						
-								<div class="form-group col-md-10">
+								<div class="form-group col-md-8">
 									<input type="text" name="street" id="street" type="text"
 										v-model="street"
 										class="form-control form-control-sm"
@@ -94,6 +104,13 @@
 										v-model="number"
 										class="form-control form-control-sm"
 										placeholder="Huisnr."
+									/>
+								</div>
+								<div class="form-group col-md-2">
+									<input type="bus" name="bus" id="bus" type="text"
+										v-model="bus"
+										class="form-control form-control-sm"
+										placeholder="Bus."
 									/>
 								</div>
 								<div class="form-group col-md-2">
@@ -196,10 +213,17 @@
 							<div class="form-row">
 								<div class="ml-auto form-group col-md-10">
 									<label class="control-label">Order Datum.</label>
-									<input type="date" name="order_date" id="order_date" readonly tabindex="-1"
-										v-model='order_date'
-										class="form-control form-control-sm"		
-									/>	
+									@if(isNew)
+										<input type="date" name="order_date" id="order_date"
+											v-model='order_date'
+											class="form-control form-control-sm"
+										/>
+									@else
+										<input type="date" name="order_date" id="order_date" value="{{invoice.order_date}}" 
+											readonly tabindex="-1"
+											class="form-control form-control-sm"
+										/>
+									@endif			
 								</div>
 							</div>
 						</div>
@@ -466,7 +490,10 @@
 @endsection
 @section('scripts')
 	<script src="/vendor/vue/vue.js"></script>	
-	<script src="/vendor/dateFormat/dateFormat.js"></script>	
+	<script src="/vendor/dateFormat/dateFormat.js"></script>
+	<script src="/vendor/jspdf/jspdf.min.js"></script>
+	<script src="/vendor/jspdf/jspdf.plugin.autotable.min.js"></script>
+	<script src="/vendor/jspdf/jspdf.plugin.text-align.js"></script>
 	<script type="text/javascript" charset="utf-8">
 
 		$(document).ready(function() {
@@ -478,9 +505,9 @@
 			// Reset Validations
 			$('#id_customer').removeClass("is-invalid");
 			$('#invalid-id-customer').addClass("d-none");
-			$('#invalid-id-product').addClass("d-none");
+			$('#invalid-id-product').addClass("d-none");		
 		});
-	
+
 		var productApp = new Vue({	
 			el: '#salesInvoiceApp',
 			data: 
@@ -490,12 +517,14 @@
 				selectedCustomer: {{{ old('id_customer', !invoice.id_customer? 0 : invoice.id_customer ) }}},
 				selectedAddress: {{ old('id_invoice_address', !invoice.id_invoice_address? 0 : invoice.id_invoice_address )}},
 				selectedType:  {{{ old('id_invoice_type', !invoice.id_invoice_type? 0 : invoice.id_invoice_type ) }}},
+				invoice_number: {{{ old('invoice_number', !invoice.invoice_number? 0 : invoice.invoice_number ) }}},
 				customer_first_name : {{{ old('"' + 'customer_first_name' + '"', !invoice.customer_first_name? '""' : '"' + invoice.customer_first_name + '"'  ) }}},
 				customer_last_name : {{{ old('"' + 'customer_last_name' + '"', !invoice.customer_last_name? '""' : '"' + invoice.customer_last_name + '"'  ) }}},
 				company : {{{ old('"' + 'company' + '"', !invoice.company? '""' : '"' + invoice.company + '"' ) }}},
 				vat_number: {{{ old('"' + 'vat_number' + '"' , !invoice.vat_number? '""' : '"' + invoice.vat_number + '"') }}},
 				street: {{{ old('"' + 'street' + '"', !invoice.street? '""' : '"'+ invoice.street + '"') }}},
 				number: {{{ old('"' + 'number' + '"', !invoice.number? '""': '"' + invoice.number + '"') }}},
+				bus: {{{ old('"' + 'bus' + '"', !invoice.bus? '""': '"' + invoice.bus + '"') }}},
 				postcode: {{{ old('"' + 'postcode' + '"', !invoice.postcode? '""':  '"' + invoice.postcode + '"') }}},
 				state: {{{ old('"' + 'state' + '"', !invoice.state? '""' : '"' + invoice.state + '"') }}},
 				city: {{{ old('"' + 'city' + '"', !invoice.city? '""' : '"' + invoice.city + '"') }}},
@@ -719,6 +748,7 @@
 							this.phone = this.addresses[counter].phone;
 							this.street = this.addresses[counter].street;
 							this.number = this.addresses[counter].number;
+							this.bus = this.addresses[counter].bus;
 							this.postcode = this.addresses[counter].postcode;
 							this.state = this.addresses[counter].state;
 							this.city = this.addresses[counter].city;
@@ -799,8 +829,110 @@
 					}
 					event.preventDefault();
 					console.log('errors');
-				}
+				},
+				
+				createPdf: function(){
+					var self = this;
+					var doc = new jsPDF('p', 'pt', 'A4');
+					//source = $('#invoicePdf').get(0);
+					source = '<div><img src="/admin-panel/img/brand/cz-logo-trends.png" width="200" height="60" alt="Cool Zawadi Logo"><br></div><div></div>'
+					margins = {
+						top: 30,
+						bottom: 30,
+						left: 30,
+						width: 500
+					};
+					doc.fromHTML(
+						source, 
+						margins.left, 
+						margins.top, {
+							"width" : margins.width
+					}, function (dispose) {
+						doc.text(30, 110, 'FACTUUR nr.' + self.invoice_number);
+						doc.setFontSize(10);
+						doc.setFontType('bold');
+						doc.text(30, 130, 'Cool-Zawadi bvba');
+						doc.text(30, 144, 'Maatschappelijke zetel:');
+						doc.setFontSize(8);
+						doc.setFontType('normal');
+						doc.text(30, 154, 'Woestenhof 6,');
+						doc.text(30, 164, '8954 Westouter (België');
+						doc.text(30, 174, 'Ondernemingsnummer: BE0525.673.088');
+						doc.text(30, 184, 'IBAN: BE02 0016 9415 7540');
+						doc.setFontSize(10);
+						doc.setFontType('bold');
+						doc.text(30, 198, 'Burelen & Magazijn:');
+						doc.setFontSize(8);
+						doc.setFontType('normal');
+						doc.text(30, 208, 'Koninginnestraat 24,');
+						doc.text(30, 218, '8930 Menen (België');
+						doc.text(30, 228, 'tel : 0470/44.31.32');
+						doc.text(30, 238, 'email : rudi.werner@pandora.be');
+						console.log(document.getElementById("order_date").value);
+						doc.text(420, 40, 'Datum Order: ' + document.getElementById("order_date").value);
+						doc.text(420, 50, 'Datum Factuur: ' + document.getElementById("invoice_date").value);
+						doc.text(420,60, 'BTW nr. Klant: ' + self.vat_number);
+						doc.text(420,70, 'Tel. Klant: ' + self.phone);
+						doc.text(420,80, 'Email. Klant: ' + self.email);
+						doc.setFontSize(10);
+						doc.setFontType('bold');
+						doc.text(300, 144, self.company);
+						doc.text(300, 158, self.customer_first_name + ' ' + self.customer_last_name);
+						doc.setFontType('normal');
+						doc.text(300, 180, self.street + ' ' + self.number + ' ' + self.bus + ',');
+						doc.text(300, 194, self.postcode + ' ' + self.city + ' (' + self.state + ' ' + self.country + ')');
+						// AutoTable for Invoice rows
+						var rows = self.rows;	
+						var pdfRows = [];
+						for(var i = 0 ; i < rows.length; i++){
+							var row = rows[i];
+							var pdfRow = [(row.id), (row.description).slice(0,30), (row.quantity),(row.product_sp_ex_vat).toFixed(2),(row.product_sp_in_vat).toFixed(2),(row.row_total_sp_ex_vat).toFixed(2),(row.vat_procent), (row.row_total_sp_in_vat).toFixed(2)];
+							pdfRows.push(pdfRow);
+						}
+										
+						var columns = ["Product Nr.", "Omschrijving", "Aantal", "Prijs/st. Ex.", "Prijs/st. In.", "Tot. Ex. ","Btw %",  "Tot. In." ];
+						doc.autoTable(columns, pdfRows, {
+							theme: 'grid',
+							headerStyles: {
+								fillColor: [211, 211, 211],
+								textColor: 0
+							},
+							columnStyles: {
+								0: {halign: 'right'},
+								2: {halign: 'right'},
+								3: {halign: 'right'},
+								4: {halign: 'right', fontStyle: 'bold'},
+								5: {halign: 'right'},
+								6: {halign: 'right'},
+								7: {halign: 'right', fontStyle: 'bold'},
+							},				
+							tableWidth: 550,
+							margin: {
+								top: 250,
+								left: 30
+							},
+						});
+						let finalY = doc.autoTable.previous.finalY; // The y position on the page
+						doc.text(300, finalY + 20, "Netto Producten:");
+						doc.writeText(0, finalY + 20 , ((self.total_products_ex_vat).toFixed(2)), { align: 'right',width:575 });
+						doc.text(300, finalY + 34, "Verzending ex. BTW:");
+						doc.writeText(0, finalY + 34, (self.total_shipping_amount_ex_vat).toFixed(2), { align: 'right',width:575 });
+						doc.text(300, finalY + 48, "Geschenkverpakking ex. BTW:");
+						doc.writeText(0, finalY + 48,'0,00', { align: 'right',width:575 });
+						doc.text(300, finalY + 62, "Totaal ex. BTW");
+						doc.writeText(0, finalY + 62, (self.total_invoice_ex_vat).toFixed(2), { align: 'right',width:575 });
+						doc.text(300, finalY + 76, "BTW bedrag:");
+						doc.writeText(0, finalY + 76, (self.total_invoice_in_vat - self.total_invoice_ex_vat).toFixed(2), { align: 'right',width:575 });
+						doc.setFontType('bold');
+						doc.text(300, finalY + 90, "TOTAAL INCL. BTW:");
+						doc.writeText(0, finalY + 90, (self.total_invoice_in_vat).toFixed(2), { align: 'right',width:575 });
+						doc.text(300, finalY + 104, "(Factuur opgemaakt in euro.)");
+						doc.save('test.pdf');
+					}, margins);
+					
 
+				//	doc.save('test.pdf');
+				}
 			},
 			computed:
 			{
@@ -833,7 +965,7 @@
 					return newValue;	
 				}
 			}
+		})
 			
-		})		
-	</script>
+	</script>	
 @endsection

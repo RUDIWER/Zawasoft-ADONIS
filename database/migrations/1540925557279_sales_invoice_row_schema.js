@@ -17,7 +17,7 @@ class SalesInvoiceRowSchema extends Schema {
 			table.integer('id_product').unsigned().defaultTo(0);
 			table.string('id_product_supplier', 20);
 			table.string('ean13', 20);
-			table.string('description', 50).notNullable();
+			table.string('description', 80).notNullable();
 			table.decimal('quantity', 12, 2).nullable();
 			table.decimal('product_pp_ex_vat', 12, 2).defaultTo(0);
 			table.decimal('product_sp_ex_vat', 12, 2).defaultTo(0);

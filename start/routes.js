@@ -133,7 +133,19 @@ Route.post('/admin/sales/invoice/save/:id', 'Admin/Sales/InvoiceController.save'
 	.validator('storeSalesInvoice')
 	.middleware([ 'auth' ]);
 
+/*
+Route.get('admin/sales/invoice/print/:id', 'Admin/Sales/InvoiceController.print')
+	.as('admin-sales-invoice-print')
+	.middleware([ 'auth' ]);
+Route.get('admin/sales/invoice/pdf/:id', 'Admin/Sales/InvoiceController.getPdf')
+	.as('admin-sales-invoice-pdf')
+	.middleware([ 'auth' ]);
+*/
+
 // BOL ORDERS
 Route.get('admin/sales/open-orders/bolbe', 'Admin/Sales/BolBeController.openOrders')
 	.as('admin-sales-open-orders-bolbe')
 	.middleware([ 'auth' ]);
+
+// TEST Routes
+Route.get('admin/test', 'Admin/Sales/TestController.index').as('admin-test').middleware([ 'auth' ]);
