@@ -27,9 +27,11 @@
 							<i class="fas fa-fw fa-print"></i> Print Client
 						</a>
 						&nbsp
-						<a class="float-right" href="javascript:{}" onclick="document.getElementById('salesInvoiceForm').submit(); return false;">
-							<i class="fas fa-fw fa-check-circle"></i> Opslaan
-						</a> 
+						@if(!oldInvoice)
+							<a class="float-right" href="javascript:{}" onclick="document.getElementById('salesInvoiceForm').submit(); return false;">
+								<i class="fas fa-fw fa-check-circle"></i> Opslaan
+							</a> 
+						@endif
 					</b>
 				</div>
 				<div class="card-body"> 

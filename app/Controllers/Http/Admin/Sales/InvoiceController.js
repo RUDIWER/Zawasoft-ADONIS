@@ -58,8 +58,12 @@ class InvoiceController {
 
 	async edit({ view, params }) {
 		const isNew = 0;
+		var oldInvoice = 0;
 		const param = await Param.find(1);
 		const invoice = (await SalesInvoice.find(params.id)).toJSON();
+		if (invoice.invoice_number < 745) {
+			oldInvoice = 1;
+		}
 		const invoiceRows = (await SalesInvoiceRow.query().where('id_invoice', params.id).fetch()).toJSON();
 		const customers = (await Customer.query().with('addresses').fetch()).toJSON();
 		const addresses = (await Address.query().where('id_customer', invoice.id_customer).fetch()).toJSON();
@@ -67,6 +71,7 @@ class InvoiceController {
 		const customerTypes = (await CustomerType.all()).toJSON();
 		return view.render('admin.sales.invoice.invoiceForm', {
 			isNew,
+			oldInvoice,
 			param,
 			invoice,
 			invoiceRows,

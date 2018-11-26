@@ -148,4 +148,4 @@ Route.get('admin/sales/open-orders/bolbe', 'Admin/Sales/BolBeController.openOrde
 	.middleware([ 'auth' ]);
 
 // TEST Routes
-Route.get('admin/test', 'Admin/Sales/TestController.index').as('admin-test').middleware([ 'auth' ]);
+Route.get('admin/test', 'Admin/TestController.getInvoiceRows').as('admin-test').middleware([ 'auth' ]);

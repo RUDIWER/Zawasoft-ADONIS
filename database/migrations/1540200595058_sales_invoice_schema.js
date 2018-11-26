@@ -11,6 +11,8 @@ class SalesInvoiceSchema extends Schema {
 			table.string('order_reference', 20).defaultTo(0);
 			table.date('invoice_date').notNullable();
 			table.date('order_date').nullable();
+			table.string('id_order_bol', 20).nullable();
+			table.integer('id_payment_method').unsigned().defaultTo(0);
 			table.integer('id_customer').unsigned().notNullable();
 			table.integer('id_invoice_type').unsigned().notNullable(); // Comes from customer_type
 			table.integer('id_invoice_address').unsigned().nullable();
