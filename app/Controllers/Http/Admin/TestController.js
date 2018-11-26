@@ -10,6 +10,8 @@ const OldAddress = use('App/Models/OldAddress');
 const Address = use('App/Models/Address');
 const Product = use('App/Models/Product');
 
+//test
+
 class TestController {
 	async getInvoices() {
 		console.log('Start import oude facturen ...');
