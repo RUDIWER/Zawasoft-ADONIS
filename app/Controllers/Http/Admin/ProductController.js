@@ -23,6 +23,7 @@ class ProductController {
 		const isNew = 1;
 		const product = await new Product();
 		const suppliers = (await Supplier.all()).toJSON();
+		const brands = (await ProductBrand.all()).toJSON();
 		const param = await Param.find(1);
 		const productGroupsFlat = (await ProductGroup.all()).toJSON();
 		//loop over array and add field active
@@ -39,6 +40,7 @@ class ProductController {
 			product,
 			suppliers,
 			param,
+			brands,
 			productGroups,
 			bolCategories,
 			stockPlace1,
