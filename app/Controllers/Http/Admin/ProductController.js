@@ -332,7 +332,9 @@ class ProductController {
 					message: antl.formatMessage('products.product_success')
 				}
 			});
-			return response.redirect('back');
+
+			//return response.redirect('back');
+			return response.route('admin-product-edit', { id: product.id });
 		}
 	}
 }
