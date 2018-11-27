@@ -283,14 +283,14 @@ class ProductController {
 			} else if (product.active_bol_be == 0 && product.ean13 != '' && oldBolBe == 1) {
 				var result = await bolApiBe.delProduct(product.id);
 			}
-			if (result == '202') {
+			if (product.active_bol_be == 1 && result == '202') {
 				session.flash({
 					notification: {
 						type: 'success',
 						message2: 'Transfer naar Bol - BE was successvol'
 					}
 				});
-			} else if (result != undefined) {
+			} else if (product.active_bol_be == 1 && result != undefined) {
 				if (product.ean13) {
 					session.flash({
 						alert: {
@@ -308,14 +308,14 @@ class ProductController {
 			} else if (product.active_bol_nl == 0 && product.ean13 != '' && oldBolNl == 1) {
 				var result = await bolApiNl.delProduct(product.id);
 			}
-			if (result == '202') {
+			if (product.active_bol_nl == 1 && result == '202') {
 				session.flash({
 					notification: {
 						type: 'success',
 						message3: 'Transfer naar Bol - NL was successvol'
 					}
 				});
-			} else if (result != undefined) {
+			} else if (product.active_bol_nl == 1 && result != undefined) {
 				if (product.ean13) {
 					session.flash({
 						alert: {
