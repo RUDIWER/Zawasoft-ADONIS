@@ -24,6 +24,11 @@ class OldProductController {
 		const array = (await ProductGroup.all()).toJSON();
 		const productGroups = makeTree(array, 0); // See functon on bottom
 		const bolCategories = (await BolCategory.all()).toJSON();
+		const stockPlace1 = await StockPlace.query().where('place_level', '=', '1');
+		const stockPlace2 = await StockPlace.query().where('place_level', '=', '2');
+		const stockPlace3 = await StockPlace.query().where('place_level', '=', '3');
+		const stockPlace4 = await StockPlace.query().where('place_level', '=', '4');
+		const stockPlace5 = await StockPlace.query().where('place_level', '=', '5');
 		//const activeGroups = await ProductProductGroup.query().where('product_id', '=', product.id);
 
 		const product = await new Product();
@@ -105,7 +110,12 @@ class OldProductController {
 			param,
 			productGroups,
 			brands,
-			bolCategories
+			bolCategories,
+			stockPlace1,
+			stockPlace2,
+			stockPlace3,
+			stockPlace4,
+			stockPlace5
 		});
 	}
 
