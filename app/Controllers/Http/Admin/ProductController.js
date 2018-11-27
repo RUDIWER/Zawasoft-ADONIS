@@ -3,6 +3,7 @@
 const Product = use('App/Models/Product');
 const Supplier = use('App/Models/Supplier');
 const Param = use('App/Models/Param');
+const StockPlace = use('App/Models/StockPlace');
 const ProductGroup = use('App/Models/ProductGroup');
 const ProductBrand = use('App/Models/ProductBrand');
 const ProductProductGroup = use('App/Models/ProductProductGroup');
@@ -27,6 +28,11 @@ class ProductController {
 		//loop over array and add field active
 		const productGroups = makeTree(productGroupsFlat, 0); // See function on bottom
 		const bolCategories = (await BolCategory.all()).toJSON();
+		const stockPlace1 = await StockPlace.query().where('place_level', '=', '1');
+		const stockPlace2 = await StockPlace.query().where('place_level', '=', '2');
+		const stockPlace3 = await StockPlace.query().where('place_level', '=', '3');
+		const stockPlace4 = await StockPlace.query().where('place_level', '=', '4');
+		const stockPlace5 = await StockPlace.query().where('place_level', '=', '5');
 
 		return view.render('admin.products.productForm', {
 			isNew,
@@ -34,7 +40,12 @@ class ProductController {
 			suppliers,
 			param,
 			productGroups,
-			bolCategories
+			bolCategories,
+			stockPlace1,
+			stockPlace2,
+			stockPlace3,
+			stockPlace4,
+			stockPlace5
 		});
 	}
 
@@ -48,6 +59,11 @@ class ProductController {
 		const productGroups = makeTree(array, 0); // See functon on bottom
 		const bolCategories = (await BolCategory.all()).toJSON();
 		const activeGroups = await ProductProductGroup.query().where('product_id', '=', product.id);
+		const stockPlace1 = await StockPlace.query().where('place_level', '=', '1');
+		const stockPlace2 = await StockPlace.query().where('place_level', '=', '2');
+		const stockPlace3 = await StockPlace.query().where('place_level', '=', '3');
+		const stockPlace4 = await StockPlace.query().where('place_level', '=', '4');
+		const stockPlace5 = await StockPlace.query().where('place_level', '=', '5');
 		return view.render('admin.products.productForm', {
 			isNew,
 			product,
@@ -56,7 +72,12 @@ class ProductController {
 			productGroups,
 			brands,
 			bolCategories,
-			activeGroups
+			activeGroups,
+			stockPlace1,
+			stockPlace2,
+			stockPlace3,
+			stockPlace4,
+			stockPlace5
 		});
 	}
 

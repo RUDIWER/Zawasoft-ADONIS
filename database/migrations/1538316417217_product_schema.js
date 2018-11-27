@@ -65,10 +65,11 @@ class ProductSchema extends Schema {
 			table.decimal('stock_start', 12, 2).defaultTo(0);
 			table.decimal('stock_real', 12, 2).defaultTo(0);
 			table.decimal('stock_accounting', 12, 2).defaultTo(0);
-			table.string('stock_place_1', 20);
-			table.string('stock_place_2', 20);
-			table.string('stock_place_3', 20);
-			table.string('stock_place_4', 20);
+			table.integer('stock_place_1').unsigned().nullable();
+			table.integer('stock_place_2').unsigned().nullable();
+			table.integer('stock_place_3').unsigned().nullable();
+			table.integer('stock_place_4').unsigned().nullable();
+			table.integer('stock_place_5').unsigned().nullable();
 			table.string('product_pic', 80);
 			table.timestamps();
 		});

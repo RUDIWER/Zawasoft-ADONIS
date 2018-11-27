@@ -75,7 +75,6 @@
 			$('div.dataTables_filter input').focus();
 	//(RW) Click on table row
 			$('#productTable').on('click', 'tr', function () {
-				console.log(productTable.row(this).data());
 				var row = productTable.row(this).data();
 				var productId = row[0];
 				var path = "/admin/product/edit/" + productId;
