@@ -8,6 +8,7 @@ const ProductBrand = use('App/Models/ProductBrand');
 const ProductGroup = use('App/Models/ProductGroup');
 const ProductProductGroup = use('App/Models/ProductProductGroup');
 const BolCategory = use('App/Models/BolCategory');
+const StockPlace = use('App/Models/StockPlace');
 
 class OldProductController {
 	async index({ view }) {
