@@ -257,6 +257,11 @@
 				margin_factor_cz_shop: {
 					get: function() {
 						newValue =  Math.round((this.sp_ex_vat_cz / this.pp_ex_vat_cz)*10000)/10000;
+						if( newValue > 1){
+							$('#margin_factor_cz_shop').css("background-color","#90EE90");
+						}else{
+							$('#margin_factor_cz_shop').css("background-color","#FFB6C1");
+						}
 						return (newValue? newValue:0)
 					},
 					set: function(newValue) {
@@ -264,7 +269,7 @@
 					}
 				},
 				margin_factor_cz_web_be: function(){
-					newValue = Math.round(((this.sp_ex_vat_cz - this.shipping_cost_ex_vat_cz_be_in_param) / this.pp_ex_vat_cz)*10000)/10000;
+					newValue = Math.round(((this.sp_ex_vat_cz - this.shipping_cost_ex_vat_cz_be) / this.pp_ex_vat_cz)*10000)/10000;
 					if( newValue > 1){
 						$('#margin_factor_cz_web_be').css("background-color","#90EE90");
 					}else{
@@ -273,7 +278,7 @@
 					return (newValue)
 				},
 				margin_factor_cz_web_nl: function(){
-					newValue = Math.round(((this.sp_ex_vat_cz - this.shipping_cost_ex_vat_cz_nl_in_param) / this.pp_ex_vat_cz)*10000)/10000;
+					newValue = Math.round(((this.sp_ex_vat_cz - this.shipping_cost_ex_vat_cz_nl) / this.pp_ex_vat_cz)*10000)/10000;
 					if( newValue > 1){
 						$('#margin_factor_cz_web_nl').css("background-color","#90EE90");
 					}else{

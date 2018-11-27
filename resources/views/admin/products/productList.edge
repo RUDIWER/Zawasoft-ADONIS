@@ -32,8 +32,10 @@
 							<thead class="thead-default" style="width:100%">
 								<tr>
 									<th scope="col">Id</th>
-									<th scope="col">{{antl.formatMessage('products.title')}}</th>
-									<th scope="col">{{antl.formatMessage('products.sub_title')}}</th>
+									<th scope="col">Omschr.</th>
+									<th scope="col">Voorraad</th>
+									<th scope="col">Ik.Prijs CZ ex.</th>
+									<th scope="col">Vk.Prijs CZ incl.</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -41,6 +43,8 @@
 									<tr>
 										<td>{{ product.id }}</td>
 										<td>{{ product.name_nl }}</td>
+										<td>{{ product.stock_real }}</td>
+										<td>{{ product.pp_ex_vat_cz }}</td>
 										<td>{{ product.sp_in_vat_cz }}</td>
 									</tr>
 								@endeach
@@ -63,6 +67,9 @@
 				bSort : true,
 				fixedHeader: true,
 				order : [[ 1, "asc" ]],
+				columnDefs: [
+					{ className: "text-right", "targets": [0,2,3,4] },
+				],
 				paging : false,
 				language: {
 					search: "",
