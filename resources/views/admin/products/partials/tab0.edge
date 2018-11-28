@@ -7,7 +7,6 @@
 		@else
 			<input type="text" class="form-control form-control-sm" placeholder="Nog niet toegekend..." readonly tabindex="-1"/>
 		@endif
-		{{ product.id }} / {{isNew}}
 	</div>
 	<div class="form-group col-md-2">
 		<label class="control-label">EAN-13</label>
@@ -150,7 +149,9 @@
 			<div class="form-row">
 				Afbeelding :
 				<div class="form-group">
-					<img src="{{product.product_pic}}" alt="product afbeelding" class="img-fluid" alt="Responsive image" img style="border:1px solid grey"/>
+					<div class="img1">
+						<img src="{{product.product_pic}}" alt="product afbeelding" class="img-fluid" alt="Responsive image" img style="border:1px solid grey"/>
+					</div>
 				</div>
 			</div>
 		@endif

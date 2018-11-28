@@ -50,7 +50,7 @@ class SupplierController {
 					message: antl.formatMessage('products.product_success')
 				}
 			});
-			return response.redirect('back');
+			return response.route('admin-supplier-edit', { id: supplier.id });
 		}
 	}
 }

@@ -13,7 +13,7 @@
 						<option value="0" selected="selected disabled">Selecteer...</option>
 						@each(place1 in stockPlace1)
 							@if(place1.id == product.stock_place_1)
-								<option value="{{ place1.id }}" selected="selected">{{ place1.name }}</option>
+								<option value="{{ place1.id }}" selected="selected" inBox>{{ place1.name }}</option>
 							@else
 								<option value="{{ place1.id }}">{{ place1.name }}</option> 
 							@endif
@@ -46,8 +46,8 @@
 				<div class="form-group col-md-8">
 					<label class="control-label">Voorraad plaats 3</label>
 					<select 
-					class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('stock_place_3')) }}" 
-					title="Kies een voorraadplaats..." name="stock_place_3" id="stock_place_3">
+						class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('stock_place_3')) }}" 
+						title="Kies een voorraadplaats..." name="stock_place_3" id="stock_place_3">
 						<option value="0" selected="selected disabled">Selecteer...</option>
 						@each(place3 in stockPlace3)
 							@if(place3.id == product.stock_place_3)
@@ -65,8 +65,8 @@
 				<div class="form-group col-md-8">
 					<label class="control-label">Voorraad plaats 4</label>
 					<select 
-					class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('stock_place_4')) }}" 
-					title="Kies een voorraadplaats..." name="stock_place_4" id="stock_place_4">
+						class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('stock_place_4')) }}" 
+						title="Kies een voorraadplaats..." name="stock_place_4" id="stock_place_4">
 						<option value="0" selected="selected disabled">Selecteer...</option>
 						@each(place4 in stockPlace4)
 							@if(place4.id == product.stock_place_4)
@@ -85,8 +85,8 @@
 				<div class="form-group col-md-8">
 					<label class="control-label">Voorraad plaats 5</label>
 					<select 
-					class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('stock_place_5')) }}" 
-					title="Kies een voorraadplaats..." name="stock_place_5" id="stock_place_5">
+						class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('stock_place_5')) }}" 
+						title="Kies een voorraadplaats..." name="stock_place_5" id="stock_place_5">
 						<option value="0" selected="selected disabled">Selecteer...</option>
 						@each(place5 in stockPlace5)
 							@if(place5.id == product.stock_place_5)
@@ -99,6 +99,16 @@
 					{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('stock_place_5'), hasErrorFor('stock_place_5')) }}
 				</div>
 			</div>
+			@if(!isNew)
+				<div class="form-row">
+					<div class="form-group  col-md-12">
+						<button type="button" @click="createPdf" class="btn btn-primary">
+							<i class="fas fa-print"></i>
+							Print Voorraadblad
+						</button>
+					</div>
+				</div>	
+			@endif
 		</div>
 
 		<div class="form-group  col-md-6"> 					<!--    GROUP 1  :   INKOOPRIJZEN -->

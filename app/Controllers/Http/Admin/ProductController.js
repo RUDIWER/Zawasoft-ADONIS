@@ -25,6 +25,7 @@ class ProductController {
 		const suppliers = (await Supplier.all()).toJSON();
 		const brands = (await ProductBrand.all()).toJSON();
 		const param = await Param.find(1);
+		const appRoot = Env.get('APP_URL');
 		const productGroupsFlat = (await ProductGroup.all()).toJSON();
 		//loop over array and add field active
 		const productGroups = makeTree(productGroupsFlat, 0); // See function on bottom
@@ -47,7 +48,8 @@ class ProductController {
 			stockPlace2,
 			stockPlace3,
 			stockPlace4,
-			stockPlace5
+			stockPlace5,
+			appRoot
 		});
 	}
 
@@ -57,6 +59,7 @@ class ProductController {
 		const suppliers = (await Supplier.all()).toJSON();
 		const brands = (await ProductBrand.all()).toJSON();
 		const param = await Param.find(1);
+		const appRoot = Env.get('APP_URL');
 		const array = (await ProductGroup.all()).toJSON();
 		const productGroups = makeTree(array, 0); // See functon on bottom
 		const bolCategories = (await BolCategory.all()).toJSON();
@@ -79,7 +82,8 @@ class ProductController {
 			stockPlace2,
 			stockPlace3,
 			stockPlace4,
-			stockPlace5
+			stockPlace5,
+			appRoot
 		});
 	}
 
@@ -333,7 +337,6 @@ class ProductController {
 				}
 			});
 
-			//return response.redirect('back');
 			return response.route('admin-product-edit', { id: product.id });
 		}
 	}

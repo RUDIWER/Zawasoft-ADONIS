@@ -929,11 +929,8 @@
 						doc.text(300, finalY + 90, "TOTAAL INCL. BTW:");
 						doc.writeText(0, finalY + 90, (self.total_invoice_in_vat).toFixed(2), { align: 'right',width:575 });
 						doc.text(300, finalY + 104, "(Factuur opgemaakt in euro.)");
-						doc.save('test.pdf');
-					}, margins);
-					
-
-				//	doc.save('test.pdf');
+						doc.save('invoice.pdf');
+					}, margins);					
 				}
 			},
 			computed:

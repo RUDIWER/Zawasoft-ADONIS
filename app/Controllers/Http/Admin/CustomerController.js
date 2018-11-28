@@ -129,7 +129,7 @@ class CustomerController {
 					message: antl.formatMessage('messages.save_success')
 				}
 			});
-			return response.redirect('back');
+			return response.route('admin-customer-edit', { id: customer.id });
 		}
 	}
 
