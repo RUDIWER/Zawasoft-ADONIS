@@ -4,6 +4,7 @@ const SalesInvoice = use('App/Models/SalesInvoice');
 const SalesInvoiceRow = use('App/Models/SalesInvoiceRow');
 const Customer = use('App/Models/Customer');
 const Address = use('App/Models/Address');
+const PaymentMethod = use('App/Models/PaymentMethod');
 const Param = use('App/Models/Param');
 const Product = use('App/Models/Product');
 const CustomerType = use('App/Models/CustomerType');
@@ -28,6 +29,7 @@ class InvoiceController {
 		const customers = (await Customer.query().with('addresses').fetch()).toJSON();
 		const products = (await Product.all()).toJSON();
 		const customerTypes = (await CustomerType.all()).toJSON();
+		const paymentMethods = (await PaymentMethod.all()).toJSON();
 		const invoiceRows = [
 			{
 				id_product: 0,
@@ -52,7 +54,8 @@ class InvoiceController {
 			invoiceRows,
 			customers,
 			products,
-			customerTypes
+			customerTypes,
+			paymentMethods
 		});
 	}
 
@@ -69,6 +72,7 @@ class InvoiceController {
 		const addresses = (await Address.query().where('id_customer', invoice.id_customer).fetch()).toJSON();
 		const products = (await Product.all()).toJSON();
 		const customerTypes = (await CustomerType.all()).toJSON();
+		const paymentMethods = (await PaymentMethod.all()).toJSON();
 		return view.render('admin.sales.invoice.invoiceForm', {
 			isNew,
 			oldInvoice,
@@ -78,7 +82,8 @@ class InvoiceController {
 			customers,
 			addresses,
 			products,
-			customerTypes
+			customerTypes,
+			paymentMethods
 		});
 	}
 
@@ -121,6 +126,7 @@ class InvoiceController {
 			invoice.customer_last_name = invoiceData.customer_last_name;
 			invoiceData.company ? (invoice.company = invoiceData.company) : (invoice.company = '');
 			invoiceData.country ? (invoice.country = invoiceData.country) : (invoice.country = '');
+
 			invoiceData.state ? (invoice.state = invoiceData.state) : (invoice.state = '');
 			invoiceData.postcode ? (invoice.postcode = invoiceData.postcode) : (invoice.postcode = '');
 			invoiceData.alias ? (invoice.alias = invoiceData.alias) : (invoice.alias = '');
@@ -143,6 +149,9 @@ class InvoiceController {
 			invoice.invoice_in_vat = invoiceData.total_invoice_in_vat;
 			invoice.netto_margin_ex_vat = invoiceData.netto_margin_ex_vat;
 			invoice.margin_procent = invoiceData.margin_procent;
+			invoiceData.id_payment_method
+				? (invoice.id_payment_method = invoiceData.id_payment_method)
+				: (invoice.id_payment_method = '');
 
 			// Wrapping & paid = TODO
 			invoice.wrapping_cost_ex_vat = 0;

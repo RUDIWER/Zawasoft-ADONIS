@@ -131,6 +131,7 @@
 					.find('[name="bus"]').val('').end()
 					.find('[name="postcode"]').val('').end()
 					.find('[name="city"]').val('').end()
+					.find('[name="state"]').val('').end()
 					.find('[name="country"]').val('').end()
 					.find('[name="other"]').val('').end()
 					.find('[name="company"]').val(company).end()
@@ -158,6 +159,9 @@
 				$('#addressForm input[name=city]').removeClass("is-invalid");
 				$('#invalid-city').addClass("d-none");
 				$('#length-city').addClass("d-none");
+				$('#addressForm input[name=state]').removeClass("is-invalid");
+				$('#invalid-state').addClass("d-none");
+				$('#length-state').addClass("d-none");
 				$('#addressForm input[name=country]').removeClass("is-invalid");
 				$('#invalid-country').addClass("d-none");
 				$('#length-country').addClass("d-none");
@@ -227,53 +231,12 @@
 					.find('[name="phone"]').val(address.phone).end()
 					.find('[name="mobile"]').val(address.mobile).end()
 					.find('[name="fax"]').val(address.fax).end()
+					$("#country").val(address.country);
+					
 				});
 
 				// Reset all Validations
-				$('#addressForm input[name=alias]').removeClass("is-invalid");
-				$('#length-alias').addClass("d-none");
-				$('#invalid-alias').addClass("d-none");	
-				$('#addressForm input[name=street]').removeClass("is-invalid");
-				$('#invalid-street').addClass("d-none");
-				$('#length-street').addClass("d-none");
-				$('#addressForm input[name=number]').removeClass("is-invalid");
-				$('#invalid-number').addClass("d-none");
-				$('#length-number').addClass("d-none");
-				$('#addressForm input[name=postcode]').removeClass("is-invalid");
-				$('#invalid-postcode').addClass("d-none");	
-				$('#length-postcode').addClass("d-none");
-				$('#addressForm input[name=city]').removeClass("is-invalid");
-				$('#invalid-city').addClass("d-none");
-				$('#length-city').addClass("d-none");
-				$('#addressForm input[name=country]').removeClass("is-invalid");
-				$('#invalid-country').addClass("d-none");
-				$('#length-country').addClass("d-none");
-				$('#addressForm input[name=first_name]').removeClass("is-invalid");
-				$('#invalid-first_name').addClass("d-none");
-				$('#length-first_name').addClass("d-none");
-				$('#addressForm input[name=last_name]').removeClass("is-invalid");
-				$('#invalid-last_name').addClass("d-none");	
-				$('#length-last_name').addClass("d-none");
-				$('#addressForm input[name=email]').removeClass("is-invalid");
-				$('#validate-email').addClass("d-none");
-				$('#length-email').addClass("d-none");
-				$('#invalid-email').addClass("d-none");
-				$('#addressForm input[name=bus]').removeClass("is-invalid");
-				$('#length-bus').addClass("d-none");
-				$('#addressForm input[name=other]').removeClass("is-invalid");
-				$('#length-other').addClass("d-none");
-				$('#addressForm input[name=company]').removeClass("is-invalid");
-				$('#length-company').addClass("d-none");
-				$('#addressForm input[name=vat_number]').removeClass("is-invalid");
-				$('#length-vat_number').addClass("d-none");	
-				$('#addressForm input[name=phone]').removeClass("is-invalid");
-				$('#length-phone').addClass("d-none");
-				$('#addressForm input[name=mobile]').removeClass("is-invalid");
-				$('#length-mobile').addClass("d-none");
-				$('#addressForm input[name=fax]').removeClass("is-invalid");
-				$('#length-fax').addClass("d-none");
-				$('#addressForm input[name=state]').removeClass("is-invalid");
-				$('#length-state').addClass("d-none");		
+				resetValidations();	
 			});
 
 		// save Address (Same routine for add & change)
@@ -301,7 +264,7 @@
 					postcode: $('#addressForm input[name=postcode]').val(),
 					city: $('#addressForm input[name=city]').val(),
 					state: $('#addressForm input[name=state]').val(),
-					country: $('#addressForm input[name=country]').val(),
+					country: $('#addressForm select[name=country]').val(),
 					other: $('#addressForm input[name=other]').val(),
 					company: $('#addressForm input[name=company]').val(),
 					email: $('#addressForm input[name=email]').val(),
@@ -312,6 +275,7 @@
 
 			// Validate Address Modal formData on client site
 			// Set Validation messages
+				resetValidations();
 
 				if(!formData.alias){
 					$('#addressForm input[name=alias]').addClass("is-invalid");
@@ -356,10 +320,10 @@
 					$('#length-state').removeClass("d-none");
 				}
 				if(!formData.country){
-					$('#addressForm input[name=country]').addClass("is-invalid");
+					$('#addressForm select[name=country]').addClass("is-invalid");
 					$('#invalid-country').removeClass("d-none");		
 				}else if(((formData.country).length) > 50){
-					$('#addressForm input[name=country]').addClass("is-invalid");
+					$('#addressForm select[name=country]').addClass("is-invalid");
 					$('#length-country').removeClass("d-none");
 				}
 				if(!formData.first_name){
@@ -513,11 +477,66 @@
 			}
 		};
 
+	// Function to reset validation rules
+
+		function resetValidations(){
+			// Reset all Validations
+			$('#addressForm input[name=alias]').removeClass("is-invalid");
+			$('#length-alias').addClass("d-none");
+			$('#invalid-alias').addClass("d-none");	
+			$('#addressForm input[name=street]').removeClass("is-invalid");
+			$('#invalid-street').addClass("d-none");
+			$('#length-street').addClass("d-none");
+			$('#addressForm input[name=number]').removeClass("is-invalid");
+			$('#invalid-number').addClass("d-none");
+			$('#length-number').addClass("d-none");
+			$('#addressForm input[name=postcode]').removeClass("is-invalid");
+			$('#invalid-postcode').addClass("d-none");	
+			$('#length-postcode').addClass("d-none");
+			$('#addressForm input[name=city]').removeClass("is-invalid");
+			$('#invalid-city').addClass("d-none");
+			$('#length-city').addClass("d-none");
+			$('#addressForm input[name=state]').removeClass("is-invalid");
+			$('#invalid-state').addClass("d-none");
+			$('#length-state').addClass("d-none");
+			$('#addressForm select[name=country]').removeClass("is-invalid");
+			$('#invalid-country').addClass("d-none");
+			$('#length-country').addClass("d-none");
+			$('#addressForm input[name=first_name]').removeClass("is-invalid");
+			$('#invalid-first_name').addClass("d-none");
+			$('#length-first_name').addClass("d-none");
+			$('#addressForm input[name=last_name]').removeClass("is-invalid");
+			$('#invalid-last_name').addClass("d-none");	
+			$('#length-last_name').addClass("d-none");
+			$('#addressForm input[name=email]').removeClass("is-invalid");
+			$('#validate-email').addClass("d-none");
+			$('#length-email').addClass("d-none");
+			$('#invalid-email').addClass("d-none");
+			$('#addressForm input[name=bus]').removeClass("is-invalid");
+			$('#length-bus').addClass("d-none");
+			$('#addressForm input[name=other]').removeClass("is-invalid");
+			$('#length-other').addClass("d-none");
+			$('#addressForm input[name=company]').removeClass("is-invalid");
+			$('#length-company').addClass("d-none");
+			$('#addressForm input[name=vat_number]').removeClass("is-invalid");
+			$('#length-vat_number').addClass("d-none");	
+			$('#addressForm input[name=phone]').removeClass("is-invalid");
+			$('#length-phone').addClass("d-none");
+			$('#addressForm input[name=mobile]').removeClass("is-invalid");
+			$('#length-mobile').addClass("d-none");
+			$('#addressForm input[name=fax]').removeClass("is-invalid");
+			$('#length-fax').addClass("d-none");
+			$('#addressForm input[name=state]').removeClass("is-invalid");
+			$('#length-state').addClass("d-none");	
+		};
+
 	//(RW) Slide UP  alert success messages
-			$(".alert-success").fadeTo(2000, 500).slideUp(500, function(){
-				$(".alert-success").alert('close');
-			});
+		$(".alert-success").fadeTo(2000, 500).slideUp(500, function(){
+			$(".alert-success").alert('close');
 		});
+	});
+
+
 	</script>
 @endsection
 

@@ -17,18 +17,13 @@
 							<i class="fas fa-fw fa-arrow-circle-left"></i> Terug	
 						</a>
 						&nbsp
-						<!--
-						<a href="/admin/sales/invoice/print/{{ invoice.id }}" target="_blank">
-							<i class="fas fa-fw fa-print"></i> Print Server
-						</a>
-						-->
 						&nbsp
-						<a target="_blank" @click="createPdf">
-							<i class="fas fa-fw fa-print"></i> Print Client
+						<a target="_blank" href="javascript:{}" @click="createPdf">
+							<i class="fas fa-fw fa-print"></i> Print Factuur
 						</a>
 						&nbsp
 						@if(!oldInvoice)
-							<a class="float-right" href="javascript:{}" onclick="document.getElementById('salesInvoiceForm').submit(); return false;">
+							<a class="float-right" href="javascript:{}" @click="checkForm">
 								<i class="fas fa-fw fa-check-circle"></i> Opslaan
 							</a> 
 						@endif
@@ -137,11 +132,14 @@
 									/>
 								</div>
 								<div class="form-group col-md-4">
-									<input type="country" name="country" id="country" type="text"
+									<select 
 										v-model="country"
-										class="form-control form-control-sm"
-										placeholder = "Land"
-									/>
+										class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('id_title')) }}" 
+										title="Kies een aanspreektitel..." name="country" id="country">
+										<option value="België">België</option>
+										<option value="Nederland">Nederland</option>
+										<option value="France">France</option>		
+									</select>
 								</div>
 								<input type="hidden" v-model="alias" name="alias"/>
 								<input type="hidden" v-model="customer_first_name" name="customer_first_name"/>
@@ -257,7 +255,7 @@
 										/>
 									</td>
 									<td class="col-4">
-										<input class="form-control form-control-sm" name="description[]"
+										<input class="form-control form-control-sm" name="description[]" ref="description[]"
 											@change="changeProduct(index, $event)"
 											autocomplete="off"
 											v-model ="row.description"
@@ -307,7 +305,9 @@
 									<input type="hidden" v-model.number="row.row_total_cost_ex_vat_bol_nl" name="row_total_cost_ex_vat_bol_nl[]"/>
 								</tr>
 							</tbody>
-						</table>		
+						</table>
+						<div class="d-none small text-danger" id="invalid-invoice-rows">Let Op : Eén of meerdere omschrijvingen hebben te veel karakters ! (max : 80)</div>
+
 					</div>
 		<!-- INVOICE FOOTER -->
 					<hr>
@@ -331,7 +331,7 @@
 									<label class="control-label">Totaal IKP ex. BTW</label>
 									<input type="number" 
 										v-model.number = "total_pp_ex_vat"
-										class="form-control input-sm" name="total_pp_ex_vat" id="total_pp_ex_vat" 
+										class="form-control form-control-sm" name="total_pp_ex_vat" id="total_pp_ex_vat" 
 										value="" readonly tabindex="-1"
 									/>
 								</div>
@@ -343,7 +343,7 @@
 									<label class="control-label">Tot. Producten ex. BTW</label>
 									<input type="number"
 										v-model.number="total_products_ex_vat"
-										class="form-control input-sm" name="total_products_ex_vat" 
+										class="form-control form-control-sm" name="total_products_ex_vat" 
 										id="total_products_ex_vat" readonly tabindex="-1">
 								</div>
 							</div>
@@ -354,7 +354,7 @@
 							<div class="form-row">
 								<div class="form-group col-md-6">
 									<label class="control-label">Verzending Ex. BTW</label>
-									<input type="number" class="form-control input-sm" 
+									<input type="number" class="form-control form-control-sm" 
 										@change="changeShippingAmountExVat()"								
 										v-model.number="total_shipping_amount_ex_vat"
 										name="total_shipping_amount_ex_vat" id="total_shipping_amount_ex_vat"
@@ -366,7 +366,7 @@
 							<div class="form-row">
 								<div class="form-group col-md-6">
 									<label class="control-label">Kost. Verzending Ex. BTW</label>
-									<input type="number" class="form-control input-sm" 
+									<input type="number" class="form-control form-control-sm" 
 										v-model.number="total_shipping_cost_ex_vat"
 										name="total_shipping_cost_ex_vat" id="total_shipping_cost_ex_vat" 
 									/>
@@ -379,7 +379,7 @@
 									<label class="control-label">Tot. Producten Incl. BTW</label>
 									<input type="number" 
 										v-model.number="total_products_in_vat"
-										class="form-control input-sm" name="total_products_in_vat" id="total_products_in_vat" 
+										class="form-control form-control-sm" name="total_products_in_vat" id="total_products_in_vat" 
 										readonly tabindex="-1"
 									/>
 								</div>
@@ -393,7 +393,7 @@
 									<label class="control-label">Verzending Incl. BTW</label>
 									<input type="number" 
 										v-model.number="total_shipping_amount_in_vat"
-										class="form-control input-sm" name="total_shipping_amount_in_vat" id="total_shipping_amount_in_vat" 
+										class="form-control form-control-sm" name="total_shipping_amount_in_vat" id="total_shipping_amount_in_vat" 
 										readonly tabindex="-1"
 									/>
 								</div>
@@ -405,7 +405,7 @@
 									<label class="control-label">Kost. Bol Ex. BTW</label>
 									<input type="number" name="total_cost_ex_vat_bol" id="total_cost_ex_vat_bol" 
 										v-model.number="total_cost_ex_vat_bol"
-										class="form-control input-sm" 
+										class="form-control form-control-sm" 
 										readonly tabindex="-1"
 									/>
 								</div>
@@ -415,7 +415,7 @@
 							<div class="form-row">
 								<div class="form-group col-md-6 ml-auto">
 									<label class="control-label">Tot. Factuur Ex. BTW</label>
-									<input type="number" class="form-control input-sm" name="total_invoice_ex_vat" id="total_invoice_ex_vat" 
+									<input type="number" class="form-control form-control-sm" name="total_invoice_ex_vat" id="total_invoice_ex_vat" 
 										v-model.number="total_invoice_ex_vat"
 										readonly tabindex="-1"
 									/>
@@ -428,7 +428,7 @@
 							<div class="form-row">
 								<div class="form-group col-md-6">
 									<label class="control-label">Geschenkverp. Ex. BTW</label>
-									<input type="number" class="form-control input-sm" name="total_wrapping_cost_ex_vat" id="total_wrapping_cost_ex_vat" value="" readonly tabindex="-1">
+									<input type="number" class="form-control form-control-sm" name="total_wrapping_cost_ex_vat" id="total_wrapping_cost_ex_vat" value="" readonly tabindex="-1">
 								</div>
 							</div>
 						</div>
@@ -436,7 +436,7 @@
 							<div class="form-row">
 								<div class="form-group col-md-6">
 									<label class="control-label">Marge %</label>
-									<input type="number" class="form-control input-sm" name="margin_procent" id="margin_procent" 
+									<input type="number" class="form-control form-control-sm" name="margin_procent" id="margin_procent" 
 										v-model.number="margin_procent"
 										readonly tabindex="-1"
 									/>
@@ -448,7 +448,7 @@
 							<div class="form-row">
 								<div class="form-group col-md-6 ml-auto">
 									<b><label class="control-label">Tot. Factuur Incl. BTW</label></b>	
-									<input type="number" class="form-control input-sm" name="total_invoice_in_vat" id="total_invoice_in_vat" 
+									<input type="number" class="form-control form-control-sm" name="total_invoice_in_vat" id="total_invoice_in_vat" 
 										v-model.number="total_invoice_in_vat"
 										readonly tabindex="-1"
 									/>
@@ -461,7 +461,7 @@
 							<div class="form-row">
 								<div class="form-group col-md-6">
 									<label class="control-label">Geschenkverp. Incl. BTW</label>
-									<input type="number" class="form-control input-sm" name="total_wrapping_cost_in_vat" id="total_wrapping_cost_in_vat" value="" readonly tabindex="-1">
+									<input type="number" class="form-control form-control-sm" name="total_wrapping_cost_in_vat" id="total_wrapping_cost_in_vat" value="" readonly tabindex="-1">
 								</div>
 							</div>
 						</div>
@@ -469,7 +469,7 @@
 							<div class="form-row">
 								<div class="form-group col-md-6">
 									<label class="control-label">Netto Marge Ex. BTW</label>
-									<input type="number" class="form-control input-sm" name="netto_margin_ex_vat" id="netto_margin_ex_vat" 
+									<input type="number" class="form-control form-control-sm" name="netto_margin_ex_vat" id="netto_margin_ex_vat" 
 										v-model.number="netto_margin_ex_vat"
 										readonly tabindex="-1"
 									/>
@@ -479,8 +479,24 @@
 						<div class="col-md-4">
 							<div class="form-row">
 								<div class="form-group col-md-6 ml-auto">
+									<label class="control-label">Betaalwijze</label>
+									<select 
+										v-model='paymentMethod'
+										class="form-control form-control-sm" 
+										title="Betaalwijze..." name="id_payment_method" id="id_payment_method">
+											<option value="0" selected="selected disabled">Selecteer...</option>
+											@each(paymentMethod in paymentMethods)
+												@if(paymentMethod.id == invoice.id_payment_method || paymentMethod.id == old('id_payment_method') )
+													<option value="{{ paymentMethod.id }}" selected="selected">{{ paymentMethod.name }}</option>
+												@else
+													<option value="{{ paymentMethod.id }}">{{ paymentMethod.name }}</option> 
+												@endif
+											@endeach 
+									</select> 
+								</div>
+								<div class="form-group col-md-6 ml-auto">
 									<label class="control-label">Totaal Betaald</label>
-									<input type="number" class="form-control input-sm" name="amount_paid" id="amount_paid" value="" readonly tabindex="-1">
+									<input type="number" class="form-control  form-control-sm" name="amount_paid" id="amount_paid" value="" readonly tabindex="-1">
 								</div>
 							</div>
 						</div>
@@ -491,7 +507,7 @@
 	</div>
 @endsection
 @section('scripts')
-	<script src="/vendor/vue/vue.js"></script>	
+	<script src="/vendor/vue/vue.js"></script>
 	<script src="/vendor/dateFormat/dateFormat.js"></script>
 	<script src="/vendor/jspdf/jspdf.min.js"></script>
 	<script src="/vendor/jspdf/jspdf.plugin.autotable.min.js"></script>
@@ -502,13 +518,9 @@
 			//(RW) Slide UP  alert success messages
 			$(".alert-success").fadeTo(2000, 500).slideUp(500, function(){
 				$(".alert-success").alert('close');
-			});
-
-			// Reset Validations
-			$('#id_customer').removeClass("is-invalid");
-			$('#invalid-id-customer').addClass("d-none");
-			$('#invalid-id-product').addClass("d-none");		
+			});	
 		});
+		
 
 		var productApp = new Vue({	
 			el: '#salesInvoiceApp',
@@ -519,6 +531,7 @@
 				selectedCustomer: {{{ old('id_customer', !invoice.id_customer? 0 : invoice.id_customer ) }}},
 				selectedAddress: {{ old('id_invoice_address', !invoice.id_invoice_address? 0 : invoice.id_invoice_address )}},
 				selectedType:  {{{ old('id_invoice_type', !invoice.id_invoice_type? 0 : invoice.id_invoice_type ) }}},
+				paymentMethod:  {{{ old('id_payment_method', !invoice.id_payment_method? 0 : invoice.id_payment_method ) }}},
 				invoice_number: {{{ old('invoice_number', !invoice.invoice_number? 0 : invoice.invoice_number ) }}},
 				customer_first_name : {{{ old('"' + 'customer_first_name' + '"', !invoice.customer_first_name? '""' : '"' + invoice.customer_first_name + '"'  ) }}},
 				customer_last_name : {{{ old('"' + 'customer_last_name' + '"', !invoice.customer_last_name? '""' : '"' + invoice.customer_last_name + '"'  ) }}},
@@ -549,7 +562,7 @@
 				customers: {{{ toJSON(customers) }}},
 				param: {{{ toJSON(param) }}},
 				addresses : {{{ toJSON(addresses) }}},
-				errors: []
+				errors: [],
 			},
 
 			methods: 
@@ -646,15 +659,17 @@
 						this.total_shipping_amount_ex_vat = 0;
 						this.total_shipping_amount_in_vat = 0;	
 						this.total_cost_ex_vat_bol = 0;
-					}	
+					}
+					$('#id_invoice_type').removeClass("is-invalid");
+					$('#invalid-id-type').addClass("d-none");	
 				},
 
 				changeProduct: function(index, event){
 					let counter;
 					const product_id = event.target.value;
+					
 					for (counter = 0; counter < this.products.length; ++counter) {
 						if(product_id == this.products[counter].id){
-							console.log('Product bestaat');
 							const product = this.products[counter];
 							this.rows[index].description = product.name_nl;
 							this.rows[index].product_pp_ex_vat = product.pp_ex_vat_cz;
@@ -733,6 +748,8 @@
 							}
 						}			
 					}
+					$('#id_customer').removeClass("is-invalid");
+					$('#invalid-id-customer').addClass("d-none");
 					this.changeInvoiceType()
 				},
 
@@ -816,7 +833,16 @@
 
 				// Client site validation
 				checkForm: function(event){
-					if (this.selectedCustomer && this.selectedType) {
+					var isError = 0;
+					for (counter = 0; counter < this.rows.length; ++counter) {
+						console.log((this.rows[counter].description).length);
+						if((this.rows[counter].description).length > 80){
+							$('#invalid-invoice-rows').removeClass("d-none");
+							isError = 1;
+						}
+
+					}
+					if (this.selectedCustomer && this.selectedType && isError  == 0) {
 						document.getElementById('salesInvoiceForm').submit();
 						return false;
 					}
@@ -828,10 +854,13 @@
 					if (!this.selectedType) {
 						$('#id_invoice_type').addClass("is-invalid");
 						$('#invalid-id-type').removeClass("d-none");		
-					}
+					}	
 					event.preventDefault();
-					console.log('errors');
+					//document.getElementById('salesInvoiceForm').submit();
+					//return false;
 				},
+
+				
 				
 				createPdf: function(){
 					var self = this;

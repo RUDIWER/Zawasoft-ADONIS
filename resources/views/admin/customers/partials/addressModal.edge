@@ -101,9 +101,18 @@
 					</div> <!-- form-group -->
 					<div class="form-group col-md-3">
 						<label class="control-label">Land</label>
+						<!--
 						<input type="text" 
 						class="form-control form-control-sm input-required"
 						required name="country" id="country"/>
+						-->
+						<select 
+							class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('id_title')) }}" 
+							title="Kies een aanspreektitel..." name="country" id="country">
+							<option value="België">België</option>
+							<option value="Nederland">Nederland</option>
+							<option value="France">France</option>		
+						</select>
 						<div class="d-none small text-danger" id="invalid-country">Dit veld is verplicht !</div>
 						<div class="d-none small text-danger" id="length-country">Land mag max. 50 kar. lang zijn</div>
 					</div> <!-- form-group -->
