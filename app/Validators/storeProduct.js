@@ -32,6 +32,7 @@ class storeProduct {
 
 	get rules() {
 		const productId = this.ctx.params.id;
+		console.log(productId);
 		return {
 			name_nl: 'required|max:80',
 			name_fr: 'max:80',
@@ -56,7 +57,7 @@ class storeProduct {
 			id_supplier: 'not_equals:0',
 			id_bol_category: 'required',
 			id_product_supplier: 'max:20',
-			ean13: 'unique:products,ean13|required_if:active_bol_be|required_if:active_bol_nl|max:20'
+			ean13: 'required_if:active_bol_be|required_if:active_bol_nl|max:20'
 		};
 	}
 
