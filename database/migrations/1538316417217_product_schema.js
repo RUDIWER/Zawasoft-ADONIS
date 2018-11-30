@@ -10,7 +10,7 @@ class ProductSchema extends Schema {
 			table.integer('id_supplier').unsigned().notNullable();
 			table.integer('id_bol_category').unsigned().notNullable();
 			table.integer('id_brand').unsigned().nullable();
-			table.string('ean13', 20);
+			table.string('ean13', 20).unique().nullable();
 			table.string('name_nl', 80).notNullable();
 			table.string('name_fr', 80);
 			table.string('name_en', 80);

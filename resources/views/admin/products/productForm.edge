@@ -1,95 +1,96 @@
 @layout('admin.layouts.app')
 
 @section('content')
-	<link href="/vendor/treeview/treeview.css" rel="stylesheet">
-	<link href="/vendor/dropify/dropify.css" rel="stylesheet">
-	<div id="productApp">
-		<div class="row">  
-			<div class="col-lg-12">
-				<div class="card card-primary">
-		<!-- TITLE BAR  -->
-					<div class="card-header text-white bg-primary">
-						<b>	
-							<i class="fas fa-fw fa-gift"></i> Product toevoegen / wijzigen  		
-						</b>
-					</div>
-		<!-- BUTTON BAR  -->
-					<div class="card-header">                      
-						<b>     
-							<a href="{{ route('admin-products') }}">
-								<i class="fas fa-fw fa-arrow-circle-left"></i> Terug	
-							</a>
-							&nbsp
-							<a class="float-right" href="javascript:{}" onclick="document.getElementById('productForm').submit(); return false;">
-								<i class="fas fa-fw fa-check-circle"></i> Opslaan
-							</a> 
-						</b>
-					</div>
-					<div class="card-body"> 
-					@include('partials.notifications')
-			<!-- TAB HEADER -->
-						<ul class="nav nav-tabs" id="productTab" role="tablist">
-							<li class="nav-item">
-								<a class="nav-link active" id="commonTab" data-toggle="tab" href="#tab-0" role="tab" aria-controls="tab-0" aria-selected="true">Algemeen</a>
-							</li>
+    <link href="/vendor/treeview/treeview.css" rel="stylesheet"/>
+	<link href="/vendor/dropify/dropify.css" rel="stylesheet"/>
+	<div class="row">  
+		<div class="col-lg-12">
+			<div class="card card-primary">
+	<!-- TITLE BAR  -->
+				<div class="card-header text-white bg-primary">
+					<b>	
+						<i class="fas fa-fw fa-gift"></i> Product toevoegen / wijzigen  		
+					</b>
+				</div>
+	<!-- BUTTON BAR  -->
+				<div class="card-header">                      
+					<b>     
+						<a href="{{ route('admin-products') }}">
+							<i class="fas fa-fw fa-arrow-circle-left"></i> Terug	
+						</a>
+						&nbsp
+						<a class="float-right" href="javascript:{}" onclick="document.getElementById('productForm').submit(); return false;">
+							<i class="fas fa-fw fa-check-circle"></i> Opslaan
+						</a> 
+					</b>
+				</div>
+				<div class="card-body"> 
+				@include('partials.notifications')
+		<!-- TAB HEADER -->
+					<ul class="nav nav-tabs" id="productTab" role="tablist">
+						<li class="nav-item">
+							<a class="nav-link active" id="commonTab" data-toggle="tab" href="#tab-0" role="tab" aria-controls="tab-0" aria-selected="true">Algemeen</a>
+						</li>
+						<li  class="nav-item">
+							<a class="nav-link" id="priceTab" data-toggle="tab" href="#tab-1" role="tab" aria-controls="tab-1" aria-selected="false" >Prijzen</a>
+						</li>
+						<li  class="nav-item">
+							<a class="nav-link" id="stockTab" data-toggle="tab" href="#tab-2" role="tab" aria-controls="tab-2" aria-selected="false" >Voorraad</a>
+						</li>
 							<li  class="nav-item">
-								<a class="nav-link" id="priceTab" data-toggle="tab" href="#tab-1" role="tab" aria-controls="tab-1" aria-selected="false" >Prijzen</a>
-							</li>
+							<a class="nav-link" id="webTab" data-toggle="tab" href="#tab-3" role="tab" aria-controls="tab-3" aria-selected="false" >Web</a>
+						</li>
+						</li>
 							<li  class="nav-item">
-								<a class="nav-link" id="stockTab" data-toggle="tab" href="#tab-2" role="tab" aria-controls="tab-2" aria-selected="false" >Voorraad</a>
-							</li>
-								<li  class="nav-item">
-								<a class="nav-link" id="webTab" data-toggle="tab" href="#tab-3" role="tab" aria-controls="tab-3" aria-selected="false" >Web</a>
-							</li>
-							</li>
-								<li  class="nav-item">
-								<a class="nav-link" id="categoryTab" data-toggle="tab" href="#tab-4" role="tab" aria-controls="tab-4" aria-selected="false" >Categorieën</a>
-							</li>
-							</li>
-								<li  class="nav-item">
-								<a class="nav-link" id="pictureTab" data-toggle="tab" href="#tab-5" role="tab" aria-controls="tab-5" aria-selected="false" >Afbeelding</a>
-							</li>
-						</ul>
-						@if(isNew)
-						<form action="/admin/product/save/0" name="productForm" id="productForm" method="post" enctype="multipart/form-data">
-						@else
-						<form action="/admin/product/save/{{ product.id }}" name="productForm" id="productForm" method="post" enctype="multipart/form-data">
-						@endif
-							{{ csrfField()}}
-							<div class="tab-content" id="productTabContent">
-								<div class="tab-pane fade show active" id="tab-0" role="tabpanel" aria-labelledby="commonTab">
-									@include('admin.products.partials.tab0')
-								</div>
-								<div class="tab-pane fade show" id="tab-1" role="tabpanel" aria-labelledby="priceTab">
-									@include('admin.products.partials.tab1')
-								</div>
-								<div class="tab-pane fade show" id="tab-2" role="tabpanel" aria-labelledby="stockTab">         
-									@include('admin.products.partials.tab2')		
-								</div> 
-								<div class="tab-pane fade show" id="tab-3" role="tabpanel" aria-labelledby="webTab">              
-									@include('admin.products.partials.tab3')
-								</div> 
-								<div class="tab-pane fade show" id="tab-4" role="tabpanel" aria-labelledby="categoryTab">  			
-									@include('admin.products.partials.tab4')   
-								</div> 
-								<div class="tab-pane fade show" id="tab-5" role="tabpanel" aria-labelledby="pictureTab">  			
-									@include('admin.products.partials.tab5')   
-								</div> 
+							<a class="nav-link" id="categoryTab" data-toggle="tab" href="#tab-4" role="tab" aria-controls="tab-4" aria-selected="false" >Categorieën</a>
+						</li>
+						</li>
+							<li  class="nav-item">
+							<a class="nav-link" id="pictureTab" data-toggle="tab" href="#tab-5" role="tab" aria-controls="tab-5" aria-selected="false" >Afbeelding</a>
+						</li>
+					</ul>
+				
+				@if(isNew)
+					<form action="/admin/product/save/0" name="productForm" id="productForm" method="post" enctype="multipart/form-data">
+				@else
+					<form action="/admin/product/save/{{ product.id }}" name="productForm" id="productForm" method="post" enctype="multipart/form-data">
+				@endif
+						{{ csrfField()}}
+						<div class="tab-content" id="productTabContent">
+							<div class="tab-pane fade show active" id="tab-0" role="tabpanel" aria-labelledby="commonTab">
+								@include('admin.products.partials.tab0')
 							</div>
-						</form>
-					</div>
+							<div class="tab-pane fade show" id="tab-1" role="tabpanel" aria-labelledby="priceTab">
+								@include('admin.products.partials.tab1')
+							</div>
+							<div class="tab-pane fade show" id="tab-2" role="tabpanel" aria-labelledby="stockTab">         
+								@include('admin.products.partials.tab2')		
+							</div> 
+							<div class="tab-pane fade show" id="tab-3" role="tabpanel" aria-labelledby="webTab">              
+								@include('admin.products.partials.tab3')
+							</div> 
+							<div class="tab-pane fade show" id="tab-4" role="tabpanel" aria-labelledby="categoryTab">  			
+								@include('admin.products.partials.tab4')   
+							</div> 
+							<div class="tab-pane fade show" id="tab-5" role="tabpanel" aria-labelledby="pictureTab">  			
+								@include('admin.products.partials.tab5')   
+							</div> 
+						</div>
+					</form>
 				</div>
 			</div>
-		</div>	
-	</div>
+		</div>
+	</div>	
 @endsection
 
 @section('scripts')
-	<script src="/vendor/treeview/treeview.js"></script>
+	
 	<script src="/vendor/vue/vue.js"></script>
 	<script src="/vendor/dropify/dropify.js"></script>
 	<script src="/vendor/jspdf/jspdf.min.js"></script>
 	<script src="/vendor/jspdf/jspdf.plugin.text-align.js"></script>
+	<!-- code example https://itsolutionstuff.com/post/laravel-5-category-treeview-hierarchical-structure-example-with-demoexample.html -->
+    <script src="/vendor/treeview/treeview.js"></script>
 	<script>
 		$(document).ready(function() {
 			// Fire change event to start recalculations in vue app
@@ -223,15 +224,6 @@
 				id_bol_category_in_db: Number($('#id_bol_category_in_db').data("field-id")),
 				id_bol_category: {{{ old('id_bol_category', !product.id_bol_category? 0 : product.id_bol_category ) }}},
 				options: {{{ toJSON(bolCategories) }}},
-				stock_place_1: $('#stock_place_1 option:selected' ).text(),
-				stock_place_2: $('#stock_place_2 option:selected' ).text(),
-				stock_place_3: $('#stock_place_3 option:selected' ).text(),
-				stock_place_4: $('#stock_place_4 option:selected' ).text(),
-				stock_place_5: $('#stock_place_5 option:selected' ).text(),
-				appRoot: '{{{ appRoot }}}',
-				image_source: $('.img1 img').attr('src'),
-				id_product: '{{{product.id}}}',
-				name_product: '{{{product.name_nl}}}',
 			},
 
 			computed: {
@@ -389,7 +381,21 @@
 					}
 					return newValue
 				},
-		
+			},
+		})
+
+		var stockApp = new Vue({
+			el: '#stockApp',
+			data: {
+				stock_place_1: $('#stock_place_1 option:selected' ).text(),
+				stock_place_2: $('#stock_place_2 option:selected' ).text(),
+				stock_place_3: $('#stock_place_3 option:selected' ).text(),
+				stock_place_4: $('#stock_place_4 option:selected' ).text(),
+				stock_place_5: $('#stock_place_5 option:selected' ).text(),
+				appRoot: '{{{ appRoot }}}',
+				image_source: $('.img1 img').attr('src'),
+				id_product: '{{{product.id}}}',
+				name_product: '{{{product.name_nl}}}',
 			},
 			methods: {
     			createPdf: function () {
@@ -431,7 +437,8 @@
 					margins);		
 				}
 			},
-		})
+		});
+
 
 		var slugify = function(str) {
 			str = str.replace(/^\s+|\s+$/g, ''); // trim

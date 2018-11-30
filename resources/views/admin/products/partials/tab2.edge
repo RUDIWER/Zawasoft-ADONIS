@@ -1,141 +1,142 @@
 	<!--    GROUP 1  :   voorraad -->
-
-<div class="col-md-6">
-	<div class="form-row">
-		<div class="form-group  col-md-6"> 				
-			<h5>Voorraad Plaats</h5>
-			<div class="form-row">
-				<div class="form-group col-md-8">
-					<label class="control-label">Voorraad plaats 1</label>
-					<select 
-					class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('stock_place_1')) }}" 
-					title="Kies een voorraadplaats..." name="stock_place_1" id="stock_place_1">
-						<option value="0" selected="selected disabled">Selecteer...</option>
-						@each(place1 in stockPlace1)
-							@if(place1.id == product.stock_place_1)
-								<option value="{{ place1.id }}" selected="selected" inBox>{{ place1.name }}</option>
-							@else
-								<option value="{{ place1.id }}">{{ place1.name }}</option> 
-							@endif
-						@endeach 
-					</select>
-					{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('stock_place_1'), hasErrorFor('stock_place_1')) }}
+<div id="stockApp">  
+	<div class="col-md-6">
+		<div class="form-row">
+			<div class="form-group  col-md-6"> 				
+				<h5>Voorraad Plaats</h5>
+				<div class="form-row">
+					<div class="form-group col-md-8">
+						<label class="control-label">Voorraad plaats 1</label>
+						<select 
+						class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('stock_place_1')) }}" 
+						title="Kies een voorraadplaats..." name="stock_place_1" id="stock_place_1">
+							<option value="0" selected="selected disabled">Selecteer...</option>
+							@each(place1 in stockPlace1)
+								@if(place1.id == product.stock_place_1)
+									<option value="{{ place1.id }}" selected="selected" inBox>{{ place1.name }}</option>
+								@else
+									<option value="{{ place1.id }}">{{ place1.name }}</option> 
+								@endif
+							@endeach 
+						</select>
+						{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('stock_place_1'), hasErrorFor('stock_place_1')) }}
+					</div>
 				</div>
+
+				<div class="form-row">
+					<div class="form-group col-md-8">
+						<label class="control-label">Voorraad plaats 2</label>
+						<select 
+						class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('stock_place_2')) }}" 
+						title="Kies een voorraadplaats..." name="stock_place_2" id="stock_place_2">
+							<option value="0" selected="selected disabled">Selecteer...</option>
+							@each(place2 in stockPlace2)
+								@if(place2.id == product.stock_place_2)
+									<option value="{{ place2.id }}" selected="selected">{{ place2.name }}</option>
+								@else
+									<option value="{{ place2.id }}">{{ place2.name }}</option> 
+								@endif
+							@endeach 
+						</select>
+						{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('stock_place_2'), hasErrorFor('stock_place_2')) }}
+					</div>
+				</div>
+
+				<div class="form-row">
+					<div class="form-group col-md-8">
+						<label class="control-label">Voorraad plaats 3</label>
+						<select 
+							class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('stock_place_3')) }}" 
+							title="Kies een voorraadplaats..." name="stock_place_3" id="stock_place_3">
+							<option value="0" selected="selected disabled">Selecteer...</option>
+							@each(place3 in stockPlace3)
+								@if(place3.id == product.stock_place_3)
+									<option value="{{ place3.id }}" selected="selected">{{ place3.name }}</option>
+								@else
+									<option value="{{ place3.id }}">{{ place3.name }}</option> 
+								@endif
+							@endeach 
+						</select>
+						{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('stock_place_3'), hasErrorFor('stock_place_3')) }}
+					</div>
+				</div>
+
+				<div class="form-row">
+					<div class="form-group col-md-8">
+						<label class="control-label">Voorraad plaats 4</label>
+						<select 
+							class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('stock_place_4')) }}" 
+							title="Kies een voorraadplaats..." name="stock_place_4" id="stock_place_4">
+							<option value="0" selected="selected disabled">Selecteer...</option>
+							@each(place4 in stockPlace4)
+								@if(place4.id == product.stock_place_4)
+									<option value="{{ place4.id }}" selected="selected">{{ place4.name }}</option>
+								@else
+									<option value="{{ place4.id }}">{{ place4.name }}</option> 
+								@endif
+							@endeach 
+						</select>
+						{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('stock_place_4'), hasErrorFor('stock_place_4')) }}
+					</div>
+				</div>
+
+
+				<div class="form-row">
+					<div class="form-group col-md-8">
+						<label class="control-label">Voorraad plaats 5</label>
+						<select 
+							class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('stock_place_5')) }}" 
+							title="Kies een voorraadplaats..." name="stock_place_5" id="stock_place_5">
+							<option value="0" selected="selected disabled">Selecteer...</option>
+							@each(place5 in stockPlace5)
+								@if(place5.id == product.stock_place_5)
+									<option value="{{ place5.id }}" selected="selected">{{ place5.name }}</option>
+								@else
+									<option value="{{ place5.id }}">{{ place5.name }}</option> 
+								@endif
+							@endeach 
+						</select>
+						{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('stock_place_5'), hasErrorFor('stock_place_5')) }}
+					</div>
+				</div>
+				@if(!isNew)
+					<div class="form-row">
+						<div class="form-group  col-md-12">
+							<button type="button" @click="createPdf" class="btn btn-primary">
+								<i class="fas fa-print"></i>
+								Print Voorraadblad
+							</button>
+						</div>
+					</div>	
+				@endif
 			</div>
 
-			<div class="form-row">
-				<div class="form-group col-md-8">
-					<label class="control-label">Voorraad plaats 2</label>
-					<select 
-					class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('stock_place_2')) }}" 
-					title="Kies een voorraadplaats..." name="stock_place_2" id="stock_place_2">
-						<option value="0" selected="selected disabled">Selecteer...</option>
-						@each(place2 in stockPlace2)
-							@if(place2.id == product.stock_place_2)
-								<option value="{{ place2.id }}" selected="selected">{{ place2.name }}</option>
-							@else
-								<option value="{{ place2.id }}">{{ place2.name }}</option> 
-							@endif
-						@endeach 
-					</select>
-					{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('stock_place_2'), hasErrorFor('stock_place_2')) }}
-				</div>
-			</div>
-
-			<div class="form-row">
-				<div class="form-group col-md-8">
-					<label class="control-label">Voorraad plaats 3</label>
-					<select 
-						class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('stock_place_3')) }}" 
-						title="Kies een voorraadplaats..." name="stock_place_3" id="stock_place_3">
-						<option value="0" selected="selected disabled">Selecteer...</option>
-						@each(place3 in stockPlace3)
-							@if(place3.id == product.stock_place_3)
-								<option value="{{ place3.id }}" selected="selected">{{ place3.name }}</option>
-							@else
-								<option value="{{ place3.id }}">{{ place3.name }}</option> 
-							@endif
-						@endeach 
-					</select>
-					{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('stock_place_3'), hasErrorFor('stock_place_3')) }}
-				</div>
-			</div>
-
-			<div class="form-row">
-				<div class="form-group col-md-8">
-					<label class="control-label">Voorraad plaats 4</label>
-					<select 
-						class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('stock_place_4')) }}" 
-						title="Kies een voorraadplaats..." name="stock_place_4" id="stock_place_4">
-						<option value="0" selected="selected disabled">Selecteer...</option>
-						@each(place4 in stockPlace4)
-							@if(place4.id == product.stock_place_4)
-								<option value="{{ place4.id }}" selected="selected">{{ place4.name }}</option>
-							@else
-								<option value="{{ place4.id }}">{{ place4.name }}</option> 
-							@endif
-						@endeach 
-					</select>
-					{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('stock_place_4'), hasErrorFor('stock_place_4')) }}
-				</div>
-			</div>
-
-
-			<div class="form-row">
-				<div class="form-group col-md-8">
-					<label class="control-label">Voorraad plaats 5</label>
-					<select 
-						class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('stock_place_5')) }}" 
-						title="Kies een voorraadplaats..." name="stock_place_5" id="stock_place_5">
-						<option value="0" selected="selected disabled">Selecteer...</option>
-						@each(place5 in stockPlace5)
-							@if(place5.id == product.stock_place_5)
-								<option value="{{ place5.id }}" selected="selected">{{ place5.name }}</option>
-							@else
-								<option value="{{ place5.id }}">{{ place5.name }}</option> 
-							@endif
-						@endeach 
-					</select>
-					{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('stock_place_5'), hasErrorFor('stock_place_5')) }}
-				</div>
-			</div>
-			@if(!isNew)
+			<div class="form-group  col-md-6"> 					<!--    GROUP 1  :   INKOOPRIJZEN -->
+				<h5>Voorraad</h5>
 				<div class="form-row">
 					<div class="form-group  col-md-12">
-						<button type="button" @click="createPdf" class="btn btn-primary">
-							<i class="fas fa-print"></i>
-							Print Voorraadblad
-						</button>
-					</div>
-				</div>	
-			@endif
-		</div>
-
-		<div class="form-group  col-md-6"> 					<!--    GROUP 1  :   INKOOPRIJZEN -->
-			<h5>Voorraad</h5>
-			<div class="form-row">
-				<div class="form-group  col-md-12">
-					<label class="control-label">Begin voorraad</label>
-					<input type="number" step="1" class="form-control form-control-sm" 
-					name="stock_start" id="stock_start" 
-					value="{{ old('stock_start', !product.stock_start? '':product.stock_start ) }}">
-				</div> <!-- class -->
-			</div> <!-- row -->
-			<div class="form-row">
-				<div class="form-group  col-md-12">
-					<label class="control-label">Boekhoudkundige Voorraad</label>
-					<input type="number" step="1" class="form-control form-control-sm" 
-					name="stock_accounting" id="stock_accounting" 
-					value="{{ old('stock_accounting', !product.stock_accounting? '':product.stock_accounting ) }}">
-				</div> <!-- class -->
-			</div> <!-- row -->
-			<div class="form-row">
-				<div class="form-group  col-md-12">
-					<label class="control-label">Werkelijke Voorraad</label>
-					<input type="number" step="1" class="form-control form-control-sm" 
-					name="stock_real" id="stock_real" value="{{ old('stock_real', !product.stock_real? '':product.stock_real ) }}">
-				</div> <!-- class -->
-			</div> <!-- row -->
+						<label class="control-label">Begin voorraad</label>
+						<input type="number" step="1" class="form-control form-control-sm" 
+						name="stock_start" id="stock_start" 
+						value="{{ old('stock_start', !product.stock_start? 0:product.stock_start ) }}">
+					</div> <!-- class -->
+				</div> <!-- row -->
+				<div class="form-row">
+					<div class="form-group  col-md-12">
+						<label class="control-label">Boekhoudkundige Voorraad</label>
+						<input type="number" step="1" class="form-control form-control-sm" 
+						name="stock_accounting" id="stock_accounting" 
+						value="{{ old('stock_accounting', !product.stock_accounting? 0:product.stock_accounting ) }}">
+					</div> <!-- class -->
+				</div> <!-- row -->
+				<div class="form-row">
+					<div class="form-group  col-md-12">
+						<label class="control-label">Werkelijke Voorraad</label>
+						<input type="number" step="1" class="form-control form-control-sm" 
+						name="stock_real" id="stock_real" value="{{ old('stock_real', !product.stock_real? 0:product.stock_real ) }}">
+					</div> <!-- class -->
+				</div> <!-- row -->
+			</div>
 		</div>
 	</div>
 </div>
