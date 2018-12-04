@@ -20,6 +20,18 @@
 						<a href="{{ route('admin') }}">
 							<i class="fas fa-fw fa-arrow-circle-left"></i>Terug	
 						</a>
+						&nbsp&nbsp&nbsp&nbsp&nbsp
+						<a href="{{route('admin-products-no-stock')}}">
+							<i class="fas fa-fw fa-dot-circle"></i>Zonder voorraad
+						</a>
+						&nbsp
+						<a href="{{route('admin-products-not-in-bol-be')}}">
+							<i class="fas fa-fw fa-dot-circle"></i>Niet op Bol-BE
+						</a>
+						&nbsp
+						<a href="{{route('admin-products-not-in-bol-nl')}}">
+							<i class="fas fa-fw fa-dot-circle"></i>Niet op Bol-NL
+						</a>
 						&nbsp
 						<a class="float-right" href="{{route('admin-product-create')}}">
 							<i class="fas fa-fw fa-plus-circle"></i>Nieuw

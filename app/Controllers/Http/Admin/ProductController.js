@@ -19,7 +19,27 @@ class ProductController {
 		const products = (await Product.all()).toJSON();
 		const count = await Database.from('products').count();
 		const records = count[0]['count(*)'];
-		//return 'aantal records : ' + records;
+		return view.render('admin.products.productList', { products, records });
+	}
+
+	async noStock({ view }) {
+		const products = await Product.query().where('stock_real', '<', '1');
+		const count = await Database.from('products').count();
+		const records = count[0]['count(*)'];
+		return view.render('admin.products.productList', { products, records });
+	}
+
+	async notBolBe({ view }) {
+		const products = await Product.query().where('active_bol_be', '<', '1');
+		const count = await Database.from('products').count();
+		const records = count[0]['count(*)'];
+		return view.render('admin.products.productList', { products, records });
+	}
+
+	async notBolNl({ view }) {
+		const products = await Product.query().where('active_bol_nl', '<', '1');
+		const count = await Database.from('products').count();
+		const records = count[0]['count(*)'];
 		return view.render('admin.products.productList', { products, records });
 	}
 

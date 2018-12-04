@@ -53,6 +53,16 @@ Route.post('/admin/param/save', 'Admin/ParamController.save')
 
 // PRODUCT
 Route.get('admin/products', 'Admin/ProductController.index').as('admin-products').middleware([ 'auth' ]);
+Route.get('admin/products/no-stock', 'Admin/ProductController.noStock')
+	.as('admin-products-no-stock')
+	.middleware([ 'auth' ]);
+Route.get('admin/products/not-in-bol-be', 'Admin/ProductController.notBolBe')
+	.as('admin-products-not-in-bol-be')
+	.middleware([ 'auth' ]);
+Route.get('admin/products/not-in-bol-nl', 'Admin/ProductController.notBolNl')
+	.as('admin-products-not-in-bol-nl')
+	.middleware([ 'auth' ]);
+
 Route.get('admin/product/edit/:id', 'Admin/ProductController.edit').as('admin-product-edit').middleware([ 'auth' ]);
 Route.get('admin/product/create', 'Admin/ProductController.create').as('admin-product-create').middleware([ 'auth' ]);
 Route.post('/admin/product/save/:id', 'Admin/ProductController.save')
