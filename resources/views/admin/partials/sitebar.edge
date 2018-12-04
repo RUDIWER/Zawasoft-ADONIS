@@ -101,7 +101,14 @@
 				</a>
 				<ul class="nav-dropdown-items">
 					<li class="nav-item">
-						<a class="nav-link" href="notifications/alerts.html">Producten</a>
+						<li class="nav-item nav-dropdown">
+							<a class="nav-link nav-dropdown-toggle" href="#">Producten</a>
+							<ul class="nav-dropdown-items">
+								<li class="nav-item float-right">
+									<a class="nav-link" href="{{route('admin-products-reports-stockreport')}}">Voorraadlijst</a>
+								</li>
+							</ul>
+						</li>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="notifications/badge.html">Klanten</a>

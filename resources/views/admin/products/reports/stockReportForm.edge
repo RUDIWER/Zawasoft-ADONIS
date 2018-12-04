@@ -1,0 +1,144 @@
+@layout('admin.layouts.app')
+
+@section('content')
+<div id="stockReportApp">
+	<div class="row">  
+		<div class="col-lg-12">
+			<div class="card card-primary">
+	<!-- TITLE BAR  -->
+				<div class="card-header text-white bg-primary">
+					<b>  			  
+						<i class="nav-icon icon-settings"></i> Voorraad rapporten	
+					</b>
+				</div>
+	<!-- BUTTON BAR  -->
+				<div class="card-header">                      
+					<b>     
+						<a href="{{ route('admin') }}">
+							<i class="fas fa-fw fa-arrow-circle-left"></i> Terug	
+						</a>
+						&nbsp&nbsp
+						<a target="_blank" href="javascript:{}" @click="createPdf">
+							<i class="fas fa-fw fa-print"></i> Print Rapport
+						</a>
+					</b>
+				</div>
+				<div class="card-body"> 
+				@include('partials.notifications')
+				<div class="form-row">
+					<div class="form-group col-md-10 ml-auto">
+						<div class="checkbox">
+							<label> 
+								<input type="checkbox" id="zeroStock" name="zeroStock"/>  
+								Producten met nul voorraad afdrukken?
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="form-group col-md-10 ml-auto">
+						<div class="checkbox">
+							<label> 
+								<input type="checkbox" id="printSp" name="printSp"/>  
+								Verkoopprijzen afdrukken?
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+@endsection
+@section('scripts')
+	<script src="/vendor/vue/vue.js"></script>
+	<script src="/vendor/dateFormat/dateFormat.js"></script>
+	<script src="/vendor/jspdf/jspdf.min.js"></script>
+	<script src="/vendor/jspdf/jspdf.plugin.autotable.min.js"></script>
+	<script src="/vendor/jspdf/jspdf.plugin.text-align.js"></script>
+	<script type="text/javascript" charset="utf-8">
+
+		$(document).ready(function() {
+			//(RW) Slide UP  alert success messages
+			$(".alert-success").fadeTo(2000, 500).slideUp(500, function(){
+				$(".alert-success").alert('close');
+			});	
+		});
+		
+		var stockReportApp = new Vue({	
+			el: '#salesInvoiceApp',
+			data: { 
+				rows: {{{ toJSON(products) }}}
+			},
+
+			methods:{
+				createPdf: function(){
+					var self = this;
+					var doc = new jsPDF('p', 'pt', 'A4');
+					margins = {
+						top: 30,
+						bottom: 30,
+						left: 30,
+						width: 500
+					};
+					doc.fromHTML(
+						source, 
+						margins.left, 
+						margins.top, {
+							"width" : margins.width
+					}, function (dispose) {
+						doc.text(30, 110, 'Voorraadlijst');
+						// AutoTable for Invoice rows
+						var rows = self.rows;	
+						var pdfRows = [];
+						for(var i = 0 ; i < rows.length; i++){
+							var row = rows[i];
+							var pdfRow = [(row.id), (row.name_nl).slice(0,30), (row.stock_real),(row.product_pp_cz_ex_vat).toFixed(2)];
+							pdfRows.push(pdfRow);
+						}
+										
+						var columns = ["Product Id.", "Omschrijving", "Aantal", "IKP./st. Ex."];
+						doc.autoTable(columns, pdfRows, {
+							theme: 'grid',
+							headerStyles: {
+								fillColor: [211, 211, 211],
+								textColor: 0
+							},
+							columnStyles: {
+								0: {halign: 'right'},
+								2: {halign: 'right'},
+								3: {halign: 'right'},
+								4: {halign: 'right', fontStyle: 'bold'}
+							},				
+							tableWidth: 550,
+							margin: {
+								top: 250,
+								left: 30
+							},
+						});
+						let finalY = doc.autoTable.previous.finalY; // The y position on the page
+						doc.text(300, finalY + 20, "Netto Producten:");
+			//			doc.writeText(0, finalY + 20 , ((self.total_products_ex_vat).toFixed(2)), { align: 'right',width:575 });
+						doc.text(300, finalY + 34, "Verzending ex. BTW:");
+			//			doc.writeText(0, finalY + 34, (self.total_shipping_amount_ex_vat).toFixed(2), { align: 'right',width:575 });
+						doc.text(300, finalY + 48, "Geschenkverpakking ex. BTW:");
+			//			doc.writeText(0, finalY + 48,'0,00', { align: 'right',width:575 });
+						doc.text(300, finalY + 62, "Totaal ex. BTW");
+			//			doc.writeText(0, finalY + 62, (self.total_invoice_ex_vat).toFixed(2), { align: 'right',width:575 });
+						doc.text(300, finalY + 76, "BTW bedrag:");
+			//			doc.writeText(0, finalY + 76, (self.total_invoice_in_vat - self.total_invoice_ex_vat).toFixed(2), { align: 'right',width:575 });
+						doc.setFontType('bold');
+						doc.text(300, finalY + 90, "TOTAAL INCL. BTW:");
+			//			doc.writeText(0, finalY + 90, (self.total_invoice_in_vat).toFixed(2), { align: 'right',width:575 });
+						doc.text(300, finalY + 104, "(Factuur opgemaakt in euro.)");
+						doc.save('invoice.pdf');
+					}, margins);					
+				}
+			},
+		})
+	</script>
+@endsection
+
+
+
+

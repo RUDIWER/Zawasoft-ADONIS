@@ -5,6 +5,7 @@
 	"unique": "Dit veld moet UNIEK zijn !",
 	"number": "Dit veld moet numeriek zijn (bv. 12.50)",
 	"max": "Dit veld bevat te veel karakters",
+	"regex": "Er staan niet toegelaten karakters in dit veld !",
 	"not_equals": "Er moet een keuze gemaakt worden uit deze lijst",
 	"first_name.max": "Voornaam mag max. 30 kar. lang zijn",
 	"last_name.max": "Familienaam mag max. 30 kar. lang zijn",

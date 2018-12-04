@@ -9,7 +9,7 @@
 	<!-- TITLE BAR  -->
 				<div class="card-header text-white bg-primary">
 					<b>	
-						<i class="fas fa-fw fa-gift"></i> Product toevoegen / wijzigen  		
+						<i class="fas fa-fw fa-gift"></i> Product toevoegen / wijzigen	
 					</b>
 				</div>
 	<!-- BUTTON BAR  -->
@@ -395,7 +395,7 @@
 				appRoot: '{{{ appRoot }}}',
 				image_source: $('.img1 img').attr('src'),
 				id_product: '{{{product.id}}}',
-				name_product: '{{{product.name_nl}}}',
+				name_product: ("{{{product.name_nl}}}"),  
 			},
 			methods: {
     			createPdf: function () {

@@ -11,12 +11,16 @@ const BolCategory = use('App/Models/BolCategory');
 const Env = use('Env');
 const BolApi = use('App/ZawaClasses/BolApi.js');
 const Helpers = use('Helpers');
+const Database = use('Database');
 const fs = require('fs');
 
 class ProductController {
 	async index({ view }) {
 		const products = (await Product.all()).toJSON();
-		return view.render('admin.products.productList', { products });
+		const count = await Database.from('products').count();
+		const records = count[0]['count(*)'];
+		//return 'aantal records : ' + records;
+		return view.render('admin.products.productList', { products, records });
 	}
 
 	async create({ view }) {
@@ -69,6 +73,7 @@ class ProductController {
 		const stockPlace3 = await StockPlace.query().where('place_level', '=', '3');
 		const stockPlace4 = await StockPlace.query().where('place_level', '=', '4');
 		const stockPlace5 = await StockPlace.query().where('place_level', '=', '5');
+
 		return view.render('admin.products.productForm', {
 			isNew,
 			product,
@@ -105,7 +110,6 @@ class ProductController {
 			'id_bol_category_in_db',
 			'group'
 		]);
-		//	return productData;
 		// Optimize productData
 		if (!productData.margin_factor_cz_web_be) {
 			productData.margin_factor_cz_web_be = '0';
@@ -259,7 +263,6 @@ class ProductController {
 						.delete();
 				}
 			}
-
 			// Get images and move them to the img-prd map
 			// If PRODUCT_PIC is changed (then clientName is name of new downloaded image on client site)
 

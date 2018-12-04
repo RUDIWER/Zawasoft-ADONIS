@@ -14,6 +14,8 @@
 							@each(place1 in stockPlace1)
 								@if(place1.id == product.stock_place_1)
 									<option value="{{ place1.id }}" selected="selected" inBox>{{ place1.name }}</option>
+								@elseif(place1.id == old('stock_place_1'))
+									<option value="{{ place1.id }}" selected="selected" inBox>{{ place1.name }}</option>
 								@else
 									<option value="{{ place1.id }}">{{ place1.name }}</option> 
 								@endif
@@ -32,6 +34,8 @@
 							<option value="0" selected="selected disabled">Selecteer...</option>
 							@each(place2 in stockPlace2)
 								@if(place2.id == product.stock_place_2)
+									<option value="{{ place2.id }}" selected="selected">{{ place2.name }}</option>
+								@elseif(place2.id == old('stock_place_2'))
 									<option value="{{ place2.id }}" selected="selected">{{ place2.name }}</option>
 								@else
 									<option value="{{ place2.id }}">{{ place2.name }}</option> 
@@ -52,6 +56,8 @@
 							@each(place3 in stockPlace3)
 								@if(place3.id == product.stock_place_3)
 									<option value="{{ place3.id }}" selected="selected">{{ place3.name }}</option>
+								@elseif(place3.id == old('stock_place_3'))
+									<option value="{{ place3.id }}" selected="selected">{{ place3.name }}</option>
 								@else
 									<option value="{{ place3.id }}">{{ place3.name }}</option> 
 								@endif
@@ -70,6 +76,8 @@
 							<option value="0" selected="selected disabled">Selecteer...</option>
 							@each(place4 in stockPlace4)
 								@if(place4.id == product.stock_place_4)
+									<option value="{{ place4.id }}" selected="selected">{{ place4.name }}</option>
+								@elseif(place4.id == old('stock_place_4'))
 									<option value="{{ place4.id }}" selected="selected">{{ place4.name }}</option>
 								@else
 									<option value="{{ place4.id }}">{{ place4.name }}</option> 
@@ -90,6 +98,8 @@
 							<option value="0" selected="selected disabled">Selecteer...</option>
 							@each(place5 in stockPlace5)
 								@if(place5.id == product.stock_place_5)
+									<option value="{{ place5.id }}" selected="selected">{{ place5.name }}</option>
+								@elseif(place5.id == old('stock_place_5'))
 									<option value="{{ place5.id }}" selected="selected">{{ place5.name }}</option>
 								@else
 									<option value="{{ place5.id }}">{{ place5.name }}</option> 
