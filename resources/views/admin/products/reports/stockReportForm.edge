@@ -8,7 +8,7 @@
 	<!-- TITLE BAR  -->
 				<div class="card-header text-white bg-primary">
 					<b>  			  
-						<i class="nav-icon icon-settings"></i> Voorraad rapporten	
+						<i class="fas fa-list-alt"></i> Voorraad rapporten	
 					</b>
 				</div>
 	<!-- BUTTON BAR  -->
@@ -29,7 +29,7 @@
 					<div class="form-group col-md-10 ml-auto">
 						<div class="checkbox">
 							<label> 
-								<input type="checkbox" id="zeroStock" name="zeroStock"/>  
+								<input type="checkbox" id="zeroStock" name="zeroStock" v-model="zeroStock"/>  
 								Producten met nul voorraad afdrukken?
 							</label>
 						</div>
@@ -39,7 +39,7 @@
 					<div class="form-group col-md-10 ml-auto">
 						<div class="checkbox">
 							<label> 
-								<input type="checkbox" id="printSp" name="printSp"/>  
+								<input type="checkbox" id="printSp" name="printSp" v-model="printSp"/>  
 								Verkoopprijzen afdrukken?
 							</label>
 						</div>
@@ -66,73 +66,87 @@
 		});
 		
 		var stockReportApp = new Vue({	
-			el: '#salesInvoiceApp',
+			el: '#stockReportApp',
 			data: { 
-				rows: {{{ toJSON(products) }}}
+				rows: {{{ toJSON(products) }}},
+				zeroStock:'',
+				printSp:''
 			},
 
 			methods:{
 				createPdf: function(){
 					var self = this;
 					var doc = new jsPDF('p', 'pt', 'A4');
-					margins = {
-						top: 30,
-						bottom: 30,
-						left: 30,
-						width: 500
-					};
-					doc.fromHTML(
-						source, 
-						margins.left, 
-						margins.top, {
-							"width" : margins.width
-					}, function (dispose) {
-						doc.text(30, 110, 'Voorraadlijst');
-						// AutoTable for Invoice rows
-						var rows = self.rows;	
-						var pdfRows = [];
-						for(var i = 0 ; i < rows.length; i++){
-							var row = rows[i];
-							var pdfRow = [(row.id), (row.name_nl).slice(0,30), (row.stock_real),(row.product_pp_cz_ex_vat).toFixed(2)];
-							pdfRows.push(pdfRow);
+					doc.text(30, 30, 'Voorraadlijst');
+					// AutoTable for Invoice rows
+					var rows = self.rows;	
+					var pdfRows = [];
+					var total_pp = 0;
+					var rowTotal_pp = 0;
+					var total_sp_cz = 0;
+					var rowTotal_sp_sz = 0;
+					var total_sp_bol_be = 0;
+					var rowTotal_sp_bol_be= 0;
+					var total_sp_bol_nl= 0;
+					var rowTotal_sp_bol_nl= 0;
+					for(var i = 0 ; i < rows.length; i++){
+						var row = rows[i];
+						if(row.stock_real < 1 && !self.zeroStock){
+							continue;
 						}
-										
-						var columns = ["Product Id.", "Omschrijving", "Aantal", "IKP./st. Ex."];
-						doc.autoTable(columns, pdfRows, {
-							theme: 'grid',
-							headerStyles: {
-								fillColor: [211, 211, 211],
-								textColor: 0
-							},
-							columnStyles: {
-								0: {halign: 'right'},
-								2: {halign: 'right'},
-								3: {halign: 'right'},
-								4: {halign: 'right', fontStyle: 'bold'}
-							},				
-							tableWidth: 550,
-							margin: {
-								top: 250,
-								left: 30
-							},
-						});
-						let finalY = doc.autoTable.previous.finalY; // The y position on the page
-						doc.text(300, finalY + 20, "Netto Producten:");
-			//			doc.writeText(0, finalY + 20 , ((self.total_products_ex_vat).toFixed(2)), { align: 'right',width:575 });
-						doc.text(300, finalY + 34, "Verzending ex. BTW:");
-			//			doc.writeText(0, finalY + 34, (self.total_shipping_amount_ex_vat).toFixed(2), { align: 'right',width:575 });
-						doc.text(300, finalY + 48, "Geschenkverpakking ex. BTW:");
-			//			doc.writeText(0, finalY + 48,'0,00', { align: 'right',width:575 });
-						doc.text(300, finalY + 62, "Totaal ex. BTW");
-			//			doc.writeText(0, finalY + 62, (self.total_invoice_ex_vat).toFixed(2), { align: 'right',width:575 });
-						doc.text(300, finalY + 76, "BTW bedrag:");
-			//			doc.writeText(0, finalY + 76, (self.total_invoice_in_vat - self.total_invoice_ex_vat).toFixed(2), { align: 'right',width:575 });
-						doc.setFontType('bold');
-						doc.text(300, finalY + 90, "TOTAAL INCL. BTW:");
-			//			doc.writeText(0, finalY + 90, (self.total_invoice_in_vat).toFixed(2), { align: 'right',width:575 });
-						doc.text(300, finalY + 104, "(Factuur opgemaakt in euro.)");
-						doc.save('invoice.pdf');
-					}, margins);					
+						rowTotal_pp = ((row.stock_real) * (row.pp_ex_vat_cz));
+						rowTotal_sp_cz = ((row.stock_real) * (row.sp_ex_vat_cz));
+						console.log('Verkoopprijs :' + (row.sp_ex_vat_cz));
+						console.log('Stock :' + (row.stock_real));
+						console.log('RowTotal :' + rowTotal_sp_cz);
+						rowTotal_sp_bol_be = ((row.stock_real) * (row.sp_ex_vat_bol_be));
+						rowTotal_sp_bol_nl = ((row.stock_real) * (row.sp_ex_vat_bol_nl));
+						if(self.printSp){
+							var pdfRow = [(row.id), (row.name_nl).slice(0,30), (row.stock_real), (row.pp_ex_vat_cz).toFixed(2), (row.sp_in_vat_cz).toFixed(2), (row.sp_in_vat_bol_be).toFixed(2),  (row.sp_in_vat_bol_nl).toFixed(2)];
+							var columns = ["Product Id.", "Omschrijving", "Aantal", "IKP/st. Ex.", "VKP/st. CZ-IN.", "VKP/st. BOL-BE IN", "VKP/st. BOL-NL IN"];
+						}else{
+							var pdfRow = [(row.id), (row.name_nl).slice(0,30), (row.stock_real),(row.pp_ex_vat_cz).toFixed(2), (rowTotal_pp).toFixed(2)];	
+							var columns = ["Product Id.", "Omschrijving", "Aantal", "IKP./st. Ex.", "Totaal"];			
+						}
+						total_pp = total_pp + rowTotal_pp;
+						total_sp_cz = total_sp_cz + rowTotal_sp_cz;
+						total_sp_bol_be = total_sp_bol_be + rowTotal_sp_bol_be;
+						total_sp_bol_nl = total_sp_bol_nl + rowTotal_sp_bol_nl;
+						pdfRows.push(pdfRow);
+						
+					}									
+					doc.autoTable(columns, pdfRows, {
+						theme: 'grid',
+						headerStyles: {
+							fillColor: [211, 211, 211],
+							textColor: 0
+						},
+						columnStyles: {
+							0: {halign: 'right'},
+							2: {halign: 'right'},
+							3: {halign: 'right'},
+							4: {halign: 'right', fontStyle: 'bold'},
+							5: {halign: 'right'},
+							6: {halign: 'right'},
+							7: {halign: 'right'},
+						},				
+						tableWidth: 550,
+						margin: {
+							top: 50,
+							left: 30
+						},
+					});
+					let finalY = doc.autoTable.previous.finalY; // The y position on the page
+					doc.setFontSize(10);
+					doc.text(300, finalY + 20, "Totale inkoopwaarde:");
+					doc.writeText(0, finalY + 20 , ((total_pp).toFixed(2)), { align: 'right',width:575 });
+					doc.text(300, finalY + 34, "Totale verkoopwaarde CZ. (ex. btw):");
+					doc.writeText(0, finalY + 34, ((total_sp_cz).toFixed(2)), { align: 'right',width:575 });
+					doc.text(300, finalY + 48, "Totale verkoopwaarde BOL-BE (ex. btw):");
+					doc.writeText(0, finalY + 48,((total_sp_bol_be).toFixed(2)), { align: 'right',width:575 });
+					doc.text(300, finalY + 62, "Totale verkoopwaarde BOL-NL (ex. btw):");
+					doc.writeText(0, finalY + 62, ((total_sp_bol_be).toFixed(2)), { align: 'right',width:575 });
+					doc.save('invoice.pdf');					
 				}
 			},
 		})
