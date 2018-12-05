@@ -124,7 +124,7 @@
 						var newState = 6;
 					}
 					var formData = {
-						"_token": "{{ csrf_token() }}",
+						"_token": "{{ csrfField() }}",
 						"newState": newState,
 					}
 					// Jquery spinner code when loading ajax

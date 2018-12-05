@@ -157,8 +157,8 @@ Route.get('admin/sales/invoice/pdf/:id', 'Admin/Sales/InvoiceController.getPdf')
 */
 
 // BOL ORDERS
-Route.get('admin/sales/open-orders/bolbe', 'Admin/Sales/BolBeController.openOrders')
-	.as('admin-sales-open-orders-bolbe')
+Route.get('admin/sales/open-orders/bol/:country', 'Admin/Sales/BolOrderController.openOrders')
+	.as('admin-sales-open-orders-bol')
 	.middleware([ 'auth' ]);
 
 // TEST Routes

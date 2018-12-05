@@ -2,11 +2,12 @@
 
 const Schema = use('Schema');
 
-class SalesOrderBolBeSchema extends Schema {
+class SalesOrderBolSchema extends Schema {
 	up() {
-		this.create('sales_orders_bol_be', (table) => {
+		this.create('sales_orders_bol', (table) => {
 			table.increments();
-			table.string('id_order_bol_be').notNullable();
+			table.string('id_order_bol').notNullable();
+			table.string('id_country_bol').notNullable();
 			table.string('date_time_order', 50).notNullable();
 			table.integer('id_title_delivery').unsigned();
 			table.string('customer_first_name_delivery', 50).notNullable();
@@ -41,8 +42,8 @@ class SalesOrderBolBeSchema extends Schema {
 	}
 
 	down() {
-		this.drop('sales_orders_bol_be');
+		this.drop('sales_orders_bol');
 	}
 }
 
-module.exports = SalesOrderBolBeSchema;
+module.exports = SalesOrderBolSchema;
