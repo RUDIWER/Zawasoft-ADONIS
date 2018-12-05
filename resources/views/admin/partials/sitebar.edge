@@ -121,12 +121,24 @@
 			<li class="nav-title">Overige</li>
 			<li class="nav-item">
 				<a class="nav-link" href="{{route('admin-param')}}">
-					<i class="nav-icon icon-settings"></i> Parameters
-				</a>
-				<a class="nav-link" href="{{route('admin-test')}}">
-					<i class="nav-icon icon-settings"></i>Test
+					<i class="nav-icon icon-settings"></i> Instellingen
 				</a>
 			</li>
+			<li class="nav-item nav-dropdown">
+				<a class="nav-link nav-dropdown-toggle" href="#">
+					<i class="nav-icon icon-layers"></i> Hulp bestanden
+				</a>
+				<ul class="nav-dropdown-items">
+					<li class="nav-item">
+						
+						<li class="nav-item float-right">
+							<a class="nav-link" href="{{route('admin-product-groups')}}">Product groepen</a>
+						</li>
+					
+					</li>
+				</ul>
+			</li>
+		
 			<li class="divider"></li>
 			<li class="nav-item">
 				<a class="nav-link nav-link-danger" href="{{route('home')}}" target="_top">

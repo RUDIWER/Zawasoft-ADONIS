@@ -41,7 +41,6 @@ class BolApi {
 		var bol_date = dateFormat(now, this.dateTemplate) + 'GMT';
 		var path = this.http_uri + endPoint + params;
 		if (httpMethod == 'GET') {
-			/*
 			const curlResult = await curl
 				.setHeaders([
 					'Content-type: ' + this.contentType,
@@ -57,7 +56,8 @@ class BolApi {
 				.catch((e) => {
 					console.log(e);
 				});
-			*/
+
+			/*    TEST INPUT
 			const statuscode = 200;
 			const body =
 				'<?xml version="1.0" encoding="UTF-8"?>' +
@@ -171,9 +171,9 @@ class BolApi {
 				'</OrderItem>' +
 				'</OrderItems>' +
 				'</Order>' +
-				'</Orders>';
-
+				'</Orders>';	
 			const curlResult = [ statuscode, body ];
+			*/
 			return curlResult;
 		} else if (httpMethod == 'PUT') {
 			const curlResult = await curl

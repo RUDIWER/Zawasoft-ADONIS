@@ -96,9 +96,6 @@
 						}
 						rowTotal_pp = ((row.stock_real) * (row.pp_ex_vat_cz));
 						rowTotal_sp_cz = ((row.stock_real) * (row.sp_ex_vat_cz));
-						console.log('Verkoopprijs :' + (row.sp_ex_vat_cz));
-						console.log('Stock :' + (row.stock_real));
-						console.log('RowTotal :' + rowTotal_sp_cz);
 						rowTotal_sp_bol_be = ((row.stock_real) * (row.sp_ex_vat_bol_be));
 						rowTotal_sp_bol_nl = ((row.stock_real) * (row.sp_ex_vat_bol_nl));
 						if(self.printSp){
@@ -146,7 +143,7 @@
 					doc.writeText(0, finalY + 48,((total_sp_bol_be).toFixed(2)), { align: 'right',width:575 });
 					doc.text(300, finalY + 62, "Totale verkoopwaarde BOL-NL (ex. btw):");
 					doc.writeText(0, finalY + 62, ((total_sp_bol_be).toFixed(2)), { align: 'right',width:575 });
-					doc.save('invoice.pdf');					
+					doc.save('stockList.pdf');					
 				}
 			},
 		})
