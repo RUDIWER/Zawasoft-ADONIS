@@ -10,7 +10,7 @@ class SalesOrderBol extends Model {
 
 	// RELATIONS
 	rows() {
-		return this.hasMany('App/Models/SalesOrderBolRow', 'id', 'id_sales_order_bol');
+		return this.hasMany('App/Models/SalesOrderRowBol', 'id', 'id_sales_order_bol');
 	}
 }
 
