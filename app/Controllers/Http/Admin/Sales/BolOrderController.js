@@ -151,7 +151,7 @@ class BolOrderController {
 						} else {
 							orderItem.id_country_bol = '1';
 						}
-						orderItem.id_order_bol_be_item = bolOrderItem.OrderItemId;
+						orderItem.id_order_bol_item = bolOrderItem.OrderItemId;
 						orderItem.ean13 = bolOrderItem.EAN;
 						orderItem.id_product = bolOrderItem.OfferReference;
 						const product = await Product.find(orderItem.id_product);
