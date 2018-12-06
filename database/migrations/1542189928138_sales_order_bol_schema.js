@@ -7,6 +7,7 @@ class SalesOrderBolSchema extends Schema {
 		this.create('sales_orders_bol', (table) => {
 			table.increments();
 			table.string('id_order_bol').notNullable();
+			table.integer('current_status').notNullable();
 			table.string('id_country_bol').notNullable();
 			table.string('date_time_order', 50).notNullable();
 			table.integer('id_title_delivery').unsigned();

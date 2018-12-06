@@ -11,7 +11,8 @@ const parseString = require('xml2js').parseString;
 
 class BolOrderController {
 	async openOrders({ view, params }) {
-		if (params.country == 'be') {
+		var bolCountry = params.country;
+		if (bolCountry == 'be') {
 			var bolApi = new BolApi(Env.get('BOL_BE_PUBLIC_KEY'), Env.get('BOL_BE_PRIVATE_KEY'));
 		} else {
 			var bolApi = new BolApi(Env.get('BOL_NL_PUBLIC_KEY'), Env.get('BOL_NL_PRIVATE_KEY'));
@@ -27,10 +28,8 @@ class BolOrderController {
 			}
 			json = result;
 		});
-		//const orderId = json.Orders.Order[0].OrderId[0];
-		//const orderDate = json.Orders.Order[0].DateTimeCustomer[0];
 		const bolOrders = json.Orders.Order;
-		// If there are new orders do get from BOL
+		// If there are new orders  from BOL
 		if (bolOrders) {
 			let ordersLength = bolOrders.length;
 			for (let counter1 = 0; counter1 < ordersLength; counter1++) {
@@ -39,7 +38,8 @@ class BolOrderController {
 				const bolOrder = json.Orders.Order[counter1];
 				const order = await new Order();
 				order.id_order_bol = bolOrder.OrderId;
-				if (params.country == 'be') {
+				order.current_status = 1;
+				if (bolCountry == 'be') {
 					order.id_country_bol = '2';
 				} else {
 					order.id_country_bol = '1';
@@ -131,7 +131,6 @@ class BolOrderController {
 					? bolOrder.CustomerDetails[0].BillingDetails[0].Email
 					: '';
 				await order.save();
-				//	return response.send(bolOrder);
 				console.log('ORDERNR : ' + order.id_order_bol);
 				const bolOrderItems = bolOrder.OrderItems;
 				let bolOrderItemsLength = bolOrderItems.length;
@@ -146,13 +145,14 @@ class BolOrderController {
 						const orderItem = await new OrderItem();
 						orderItem.id_sales_order_bol = order.id;
 						orderItem.id_order_bol = order.id_order_bol;
-						if (params.country == 'be') {
+						if (bolCountry == 'be') {
 							orderItem.id_country_bol = '2';
 						} else {
 							orderItem.id_country_bol = '1';
 						}
 						orderItem.id_order_bol_item = bolOrderItem.OrderItemId;
 						orderItem.ean13 = bolOrderItem.EAN;
+						console.log('Interne Referentie :' + bolOrderItem.OfferReference);
 						orderItem.id_product = bolOrderItem.OfferReference;
 						const product = await Product.find(orderItem.id_product);
 						orderItem.product_name_nl = bolOrderItem.Title;
@@ -164,13 +164,13 @@ class BolOrderController {
 							Number(bolOrderItem.Quantity) * Number(orderItem.product_sp_in_vat);
 						console.log(bolOrderItem.quantity);
 						orderItem.transaction_fee = bolOrderItem.TransactionFee;
-						if (params.country == 'be') {
+						if (bolCountry == 'be') {
 							orderItem.calc_cost_bol = product.total_cost_ex_vat_bol_be;
 						} else {
 							orderItem.calc_cost_bol = product.total_cost_ex_vat_bol_nl;
 						}
 						orderItem.latest_delivery_date = bolOrderItem.LatestDeliveryDate;
-						if (params.country == 'be') {
+						if (bolCountry == 'be') {
 							orderItem.shipping_cost_ex_vat_bol = product.shipping_cost_ex_vat_bol_be;
 						} else {
 							orderItem.shipping_cost_ex_vat_bol = product.shipping_cost_ex_vat_bol_nl;
@@ -188,8 +188,24 @@ class BolOrderController {
 				}
 			}
 		}
-		const orders = (await Order.query().with('rows').fetch()).toJSON();
-		return view.render('admin.sales.orderBolList', { orders });
+		const orders = (await Order.query().with('rows').orderBy('id', 'desc').fetch()).toJSON();
+		return view.render('admin.sales.order.orderListBol', { orders, bolCountry });
+	}
+
+	async changeStatus({ params }) {
+		const order = await Order.find(params.id);
+		// Order will be changed from received to start Handling
+		if (params.status == '2') {
+			// 1) Change stock of products Real stock - to invoice +
+			// 2) Send new stock to bol be
+			// 3) Send new stock to bol nl
+			// 4) Change order status
+			order.current_status = params.status;
+			await order.save();
+			// 5) Send email to Customer
+
+			return;
+		}
 	}
 }
 

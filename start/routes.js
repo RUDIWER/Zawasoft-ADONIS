@@ -161,5 +161,9 @@ Route.get('admin/sales/open-orders/bol/:country', 'Admin/Sales/BolOrderControlle
 	.as('admin-sales-open-orders-bol')
 	.middleware([ 'auth' ]);
 
+Route.get('/admin/sales/open-orders/bol/change-state/:id/:status', 'Admin/Sales/BolOrderController.changeStatus')
+	.as('admin-sales-open-orders-bol-change-status')
+	.middleware([ 'auth' ]);
+
 // TEST Routes
 Route.get('admin/test', 'Admin/TestController.getInvoiceRows').as('admin-test').middleware([ 'auth' ]);

@@ -4,14 +4,18 @@
 @endsection
 
 @section('content')
-	<div id="BolBeOrderApp">
+	<div id="BolOrderApp">
 		<div class="row">  
 			<div class="col-lg-12">
 				<div class="card card-primary">
 		<!-- TITLE BAR -->
 					<div class="card-header text-white bg-primary">
 						<b>	
-							<i class="fas fa-futbol"></i> Orders Bol-BE	
+							@if(bolCountry == 'nl')
+								<i class="fas fa-futbol"></i> Orders Bol-NL
+							@elseif(bolCountry == 'be')
+								<i class="fas fa-futbol"></i> Orders Bol-BE
+							@endif
 						</b>
 					</div>
 		<!-- BUTTON BAR  -->
@@ -29,12 +33,17 @@
 							<!-- TITLE BAR -->
 								<div class="card-header text-grey">
 									<b>	
-										Ordernr : {{order.id_order_bol_be}}&nbsp&nbsp&nbsp<b>Datum Order : {{order.date_time_order}}</b>
+										Ordernr : {{order.id_order_bol}}&nbsp&nbsp&nbsp<b>Datum Order : {{order.date_time_order}}</b>
 									</b>
-									<button class="btn btn-danger float-right">
-										<span id="spinner-{{order.id}}" class="spinner fas fa-spinner fa-spin"></span>
-										Voorbereiding starten</button>	
+									<button class="btn btn-danger float-right" @click="setState({{order.id}}, {{order.current_status}})">
+										<span id="spinner-{{order.id}}" 
+											v-if="viewSpinner === 1"
+											class="spinner fas fa-spinner fa-spin">
+										</span>
+										Voorbereiding starten
+									</button>	
 								</div>
+								{{ csrfField() }}
 								<div class="card-body">
 									<div class="form-row">		
 										<div class="form-group col-md-4">
@@ -57,6 +66,7 @@
 											<table id="orderTable" class="dn table table-bordered table-hover" cellspacing="0" width="100%">
 												<thead class="thead-default">
 													<tr>
+														<th scope="col">ID</th>
 														<th scope="col">Omschr.</th>
 														<th scope="col">Aantal</th>
 														<th scope="col">Eenh. Pr.</th>
@@ -68,12 +78,13 @@
 												<tbody>
 													@each(row in order.rows)
 														<tr>
+															<td>{{row.id_product}}</td>
 															<td>{{row.product_name_nl}}</td>
 															<td>{{row.quantity}}</td>
 															<td>{{row.product_sp_in_vat}}</td>
 															<td>{{row.row_total_sp_in_vat}}</td>
 															<td>{{row.transaction_fee}}</td>
-															<td>{{row.calc_cost_bol_be}}</td>
+															<td>{{row.calc_cost_bol}}</td>
 														</tr>
 													@endeach
 												</tbody>
@@ -81,7 +92,7 @@
 											<div class="form-row">	
 										
 												<div class="form-group col-md-6">
-													test
+												
 												</div>
 											</div>		
 										</div>
@@ -98,69 +109,42 @@
 @section('scripts')	
 	<script src="/vendor/vue/vue.js"></script>
 	<script type="text/javascript" charset="utf-8">
-		$( document ).ready(function() {
-			$('span.spinner').hide();    
-		});
-
-
-		var BolBeOrderApp = new Vue({
-			el: '#BolBeOrderApp',
+	
+		var BolOrderApp = new Vue({
+			el: '#BolOrderApp',
 			data: {
+				viewSpinner: 0
+
 			},
 			methods: 
 			{
-				setState: function (id_order, event) 
+				setState: function (id_order, status) 
 				{
-					var currentState = event.target.id;
-					if (currentState == "btn-1"){
-						var newState = 3;
-					}else if (currentState == "btn-2"){
-						var newState = 4;
-					}else if (currentState == "btn-3") {
-						var newState = 5;
-					}else if (currentState == "btn-4") {
-						var newState = 19;
-					}else if (currentState == "btn-annuleer") {
-						var newState = 6;
+					this.viewSpinner = 1;
+					if (status === 1){
+						var newStatus = 2;
+					}else if (status === 2){
+						var newStatus = 3;
+					}else if (status === 3) {
+						var newStatus = 4;
+					}else if (status === 4) {
+						var newStatus = 5;
 					}
-					var formData = {
-						"_token": "{{ csrfField() }}",
-						"newState": newState,
-					}
-					// Jquery spinner code when loading ajax
-					var spinId = "#spinner_" + id_order; 
-					$.ajaxSetup({
-						beforeSend: function() 
-						{
-							if (currentState == "btn-annuleer"){
-								$("#spinner2_" + id_order).show();
-							}
-							else
-							{
-								$(spinId).show();
-							}
-						},
-					});
+				
 					$.ajax({
-						type: "post",
-						url: "./nieuwe-orders/wijzig-status/" + id_order + "/" + newState,
-						data: formData,
-						cache: false,
+						type: "get",
+						url: "/admin/sales/open-orders/bol/change-state/" + id_order + "/" + newStatus,
 						error: function (xhr, ajaxOptions, thrownError, data) 
 						{
 							console.log('data : ' + data);
-						//alert(ajaxOptions);
-						// alert(xhr.status);
-						//   alert(thrownError);
 						}
 					})
 					.done(function(data){     
 					location.reload();
-					$(location ).ready(function() {
-						toastr["success"]("Status werd succesvol aangepast !");
-						$(spinId).hide();
-					});
-					}); // End Done
+						$(location ).ready(function() {
+							this.viewSpinner = 0;
+						});
+					}); 		
 				} // end set state
 			}  // End methods
 		})
