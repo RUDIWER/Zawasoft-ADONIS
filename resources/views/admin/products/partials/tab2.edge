@@ -121,7 +121,7 @@
 				@endif
 			</div>
 
-			<div class="form-group  col-md-6"> 					<!--    GROUP 1  :   INKOOPRIJZEN -->
+			<div class="form-group  col-md-6"> 
 				<h5>Voorraad</h5>
 				<div class="form-row">
 					<div class="form-group  col-md-12">
@@ -144,6 +144,13 @@
 						<label class="control-label">Werkelijke Voorraad</label>
 						<input type="number" step="1" class="form-control form-control-sm" 
 						name="stock_real" id="stock_real" value="{{ old('stock_real', !product.stock_real? 0:product.stock_real ) }}">
+					</div> <!-- class -->
+				</div> <!-- row -->
+					<div class="form-row">
+					<div class="form-group  col-md-12">
+						<label class="control-label">aantal nog te faktureren</label>
+						<input type="number" step="1" class="form-control form-control-sm" 
+						name="quantity_to_invoice" id="quantity_to_invoice" value="{{ old('quantity_to_invoice', !product.quantity_to_invoice? 0:product.quantity_to_invoice ) }}">
 					</div> <!-- class -->
 				</div> <!-- row -->
 			</div>

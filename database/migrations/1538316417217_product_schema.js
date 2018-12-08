@@ -63,6 +63,7 @@ class ProductSchema extends Schema {
 			table.decimal('netto_profit_amount_bol_be', 12, 2).defaultTo(0);
 			table.decimal('netto_profit_amount_bol_nl', 12, 2).defaultTo(0);
 			table.decimal('stock_start', 12, 2).defaultTo(0);
+			table.decimal('quantity_to_invoice', 12, 2).defaultTo(0);
 			table.decimal('stock_real', 12, 2).defaultTo(0);
 			table.decimal('stock_accounting', 12, 2).defaultTo(0);
 			table.integer('stock_place_1').unsigned().nullable();

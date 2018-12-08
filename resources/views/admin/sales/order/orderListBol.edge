@@ -35,13 +35,43 @@
 									<b>	
 										Ordernr : {{order.id_order_bol}}&nbsp&nbsp&nbsp<b>Datum Order : {{order.date_time_order}}</b>
 									</b>
-									<button class="btn btn-danger float-right" @click="setState({{order.id}}, {{order.current_status}})">
-										<span id="spinner-{{order.id}}" 
-											v-if="viewSpinner === 1"
-											class="spinner fas fa-spinner fa-spin">
-										</span>
-										Voorbereiding starten
-									</button>	
+									<a href="{{ route('admin-sales-open-orders-bol-change-status',{id: order.id, newStatus:5 }) }}">
+									  TEST	
+									</a>
+
+									@if(order.current_status == 1 )
+										<button class="btn btn-danger float-right" @click="setState({{order.id}}, {{order.current_status}})">
+											<span id="spinner-{{order.id}}" 
+												v-if="viewSpinner === {{order.id}}"
+												class="spinner fas fa-spinner fa-spin">
+											</span>
+											Orderverwerking starten {{order.id}}
+										</button>	
+									@elseif(order.current_status == 2)
+										<button class="btn btn-warning float-right" @click="setState({{order.id}}, {{order.current_status}})">
+											<span id="spinner-{{order.id}}" 
+												v-if="viewSpinner === {{order.id}}"
+												class="spinner fas fa-spinner fa-spin">
+											</span>
+											Verzending bevestigen
+										</button>
+									@elseif(order.current_status == 3)
+										<button class="btn btn-info float-right" @click="setState({{order.id}}, {{order.current_status}})">
+											<span id="spinner-{{order.id}}" 
+												v-if="viewSpinner === {{order.id}}"
+												class="spinner fas fa-spinner fa-spin">
+											</span>
+											Aflevering bevestigen
+										</button>
+									@elseif(order.current_status == 4)
+										<button class="btn btn-success float-right" @click="setState({{order.id}}, {{order.current_status}})">
+											<span id="spinner-{{order.id}}" 
+												v-if="viewSpinner === {{order.id}}"
+												class="spinner fas fa-spinner fa-spin">
+											</span>
+											Factuur maken
+										</button>
+									@endif
 								</div>
 								{{ csrfField() }}
 								<div class="card-body">
@@ -97,6 +127,9 @@
 											</div>		
 										</div>
 									</div>
+									<button class="btn btn-danger" @click="delOrder({{order.id}}, {{order.current_status}})">
+										Annuleer Order
+									</button>
 								</div>
 							</div>
 						@endeach
@@ -120,7 +153,8 @@
 			{
 				setState: function (id_order, status) 
 				{
-					this.viewSpinner = 1;
+					console.log(id_order);
+					this.viewSpinner = id_order;
 					if (status === 1){
 						var newStatus = 2;
 					}else if (status === 2){
@@ -136,7 +170,7 @@
 						url: "/admin/sales/open-orders/bol/change-state/" + id_order + "/" + newStatus,
 						error: function (xhr, ajaxOptions, thrownError, data) 
 						{
-							console.log('data : ' + data);
+							console.log(thrownError);
 						}
 					})
 					.done(function(data){     

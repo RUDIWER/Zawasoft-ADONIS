@@ -9,11 +9,11 @@ const Param = use('App/Models/Param');
 const Product = use('App/Models/Product');
 const CustomerType = use('App/Models/CustomerType');
 const Database = use('Database');
-const puppeteer = require('puppeteer');
+//const puppeteer = require('puppeteer');
 const Helpers = use('Helpers');
 const fs = use('fs');
-const Env = use('Env');
-const readFile = Helpers.promisify(fs.readFile);
+//const Env = use('Env');
+//const readFile = Helpers.promisify(fs.readFile);
 
 class InvoiceController {
 	async index({ view }) {

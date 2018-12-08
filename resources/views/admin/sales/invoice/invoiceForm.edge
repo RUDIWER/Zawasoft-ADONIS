@@ -212,6 +212,15 @@
 							</div>
 							<div class="form-row">
 								<div class="ml-auto form-group col-md-10">
+									<label class="control-label">Bol Order Ref.</label>
+									<input type="text" name="id_order_bol" id="id_order_bol" readonly tabindex= "-1"
+										class="form-control form-control-sm"
+										value = "{{ invoice.id_order_bol? invoice.id_order_bol : '' }}"
+									/>
+								</div>
+							</div>
+							<div class="form-row">
+								<div class="ml-auto form-group col-md-10">
 									<label class="control-label">Order Datum.</label>
 									@if(isNew)
 										<input type="date" name="order_date" id="order_date"
@@ -496,7 +505,12 @@
 								</div>
 								<div class="form-group col-md-6 ml-auto">
 									<label class="control-label">Totaal Betaald</label>
-									<input type="number" class="form-control  form-control-sm" name="amount_paid" id="amount_paid" value="" readonly tabindex="-1">
+									<input type="number" 
+										class="form-control  form-control-sm" name="amount_paid" 
+										id="amount_paid" 
+										value = "{{ invoice.amount_paid? invoice.amount_paid : '' }}"
+										readonly tabindex="-1"
+									/>
 								</div>
 							</div>
 						</div>
@@ -526,8 +540,8 @@
 			el: '#salesInvoiceApp',
 			data: 
 			{ 	
-				invoice_date: new Date().format("yyyy-m-dd"),
-				order_date: new Date().format("yyyy-m-dd"),
+				invoice_date: new Date().format("yyyy-mm-dd"),
+				order_date: new Date().format("yyyy-mm-dd"),
 				selectedCustomer: {{{ old('id_customer', !invoice.id_customer? 0 : invoice.id_customer ) }}},
 				selectedAddress: {{ old('id_invoice_address', !invoice.id_invoice_address? 0 : invoice.id_invoice_address )}},
 				selectedType:  {{{ old('id_invoice_type', !invoice.id_invoice_type? 0 : invoice.id_invoice_type ) }}},

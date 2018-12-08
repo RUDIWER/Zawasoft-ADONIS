@@ -5,9 +5,13 @@ const Param = use('App/Models/Param');
 const Product = use('App/Models/Product');
 const Order = use('App/Models/SalesOrderBol');
 const OrderItem = use('App/Models/SalesOrderRowBol');
+const SalesInvoice = use('App/Models/SalesInvoice');
+const SalesInvoiceRow = use('App/Models/SalesInvoiceRow');
 const Env = use('Env');
 const BolApi = use('App/ZawaClasses/BolApi.js');
 const parseString = require('xml2js').parseString;
+const Database = use('Database');
+const Mail = use('Mail');
 
 class BolOrderController {
 	async openOrders({ view, params }) {
@@ -188,24 +192,318 @@ class BolOrderController {
 				}
 			}
 		}
-		const orders = (await Order.query().with('rows').orderBy('id', 'desc').fetch()).toJSON();
+		if (bolCountry == 'be') {
+			var orders = (await Order.query()
+				.with('rows')
+				.where('id_country_bol', '=', '2')
+				.orderBy('id', 'desc')
+				.fetch()).toJSON();
+		} else {
+			var orders = (await Order.query()
+				.with('rows')
+				.where('id_country_bol', '=', '1')
+				.orderBy('id', 'desc')
+				.fetch()).toJSON();
+		}
 		return view.render('admin.sales.order.orderListBol', { orders, bolCountry });
 	}
 
-	async changeStatus({ params }) {
-		const order = await Order.find(params.id);
+	async changeStatus({ params, session }) {
+		var order = await Order.find(params.id);
+		var orderItems = (await OrderItem.query().where('id_sales_order_bol', params.id).fetch()).toJSON();
+		var mailData = {
+			order: order.toJSON(),
+			orderItems: orderItems
+		};
 		// Order will be changed from received to start Handling
-		if (params.status == '2') {
-			// 1) Change stock of products Real stock - to invoice +
-			// 2) Send new stock to bol be
-			// 3) Send new stock to bol nl
-			// 4) Change order status
-			order.current_status = params.status;
-			await order.save();
-			// 5) Send email to Customer
+		if (params.newStatus == '2') {
+			// 1) Change stock of products Real stock - to invoice
+			for (let counter in orderItems) {
+				var orderItem = orderItems[counter];
+				var product = await Product.find(orderItem.id_product);
+				product.stock_real = Number(product.stock_real) - Number(orderItem.quantity);
+				product.quantity_to_invoice = product.quantity_to_invoice + Number(orderItem.quantity);
+				await product.save();
 
-			return;
+				// 2) Send new stock to bol be
+				const bolApiBe = new BolApi(Env.get('BOL_BE_PUBLIC_KEY'), Env.get('BOL_BE_PRIVATE_KEY'));
+				await bolApiBe.setProduct(product.id);
+
+				// 3) Send new stock to bol nl
+				const bolApiNl = new BolApi(Env.get('BOL_NL_PUBLIC_KEY'), Env.get('BOL_NL_PRIVATE_KEY'));
+				await bolApiNl.setProduct(product.id);
+			}
+			// 4) Change order status
+			order.current_status = params.newStatus;
+			await order.save();
+
+			// 5) Send email to Customer   TODO
+			await Mail.send('admin.sales.emails.bolOrderReceived', mailData, (message) => {
+				message
+					.to(order.email_invoice, order.customer_first_name_delivery)
+					.from(Env.get('MAIL_USERNAME'), 'Cool-Zawadi (via bol)')
+					.replyTo(Env.get('MAIL_REPLY_USERNAME'), 'Het Cool-Zawadi Team')
+					.subject('We hebben uw order via bol.com ontvangen en gaan meteen aan de slag!');
+			});
+		} else if (params.newStatus == '3') {
+			// 1) Change order status to 'Verzonden'
+			order.current_status = params.newStatus;
+			await order.save();
+			// 5) Send email to Customer   TODO
+			await Mail.send('admin.sales.emails.bolOrderSend', mailData, (message) => {
+				message
+					.to(order.email_invoice, order.customer_first_name_delivery)
+					.from(Env.get('MAIL_USERNAME'), 'Cool-Zawadi (via bol)')
+					.replyTo(Env.get('MAIL_REPLY_USERNAME'), 'Het Cool-Zawadi Team')
+					.subject('Uw order via bol.com werd door ons verstuurd!');
+			});
+		} else if (params.newStatus == '4') {
+			// 1) Change order status to 'Afgeleverd'
+			order.current_status = params.newStatus;
+			await order.save();
+			// 5) Send email to Customer   TODO
+			await Mail.send('admin.sales.emails.bolOrderArrived', mailData, (message) => {
+				message
+					.to(order.email_invoice, order.customer_first_name_delivery)
+					.from(Env.get('MAIL_USERNAME'), 'Cool-Zawadi (via bol)')
+					.replyTo(Env.get('MAIL_REPLY_USERNAME'), 'Het Cool-Zawadi Team')
+					.subject('Uw order via bol.com werd door ons verstuurd!');
+			});
+		} else if (params.newStatus == '5') {
+			// Change status to 'Gefactureerd'
+			// 1) Create invoice
+			// Start Transaction
+			const param = await Param.find(1);
+			const trx = await Database.beginTransaction();
+			var invoice = new SalesInvoice();
+			invoice.invoice_number = param.last_sales_invoice_nr + 1;
+			try {
+				// Set invoice values to invoice Data
+				invoice.id_sales_order = 0;
+				invoice.order_reference = '';
+				invoice.id_order_bol = order.id_order_bol;
+				invoice.invoice_date = new Date();
+				invoice.order_date = order.date_time_order;
+				// Search customer or create new one
+
+				const customerExist = (await Address.query()
+					.where('first_name', 'LIKE', '%' + order.customer_first_name_invoice + '%')
+					.where('last_name', 'LIKE', '%' + order.customer_last_name_invoice + '%')
+					.where('street', 'LIKE', '%' + order.street_invoice + '%')
+					.where('number', 'LIKE', '%' + order.number_invoice + '%')
+					.where('city', 'LIKE', '%' + order.city_invoice + '%')
+					.fetch()).toJSON();
+				if (typeof customerExist !== 'undefined' && customerExist.length > 0) {
+					invoice.id_customer = customerExist[0].id_customer;
+					invoice.id_invoice_address = customerExist[0].id;
+				} else {
+					// Create new customer and Address
+					var customer = new Customer();
+					customer.id_title = order.id_title_invoice;
+					if (order.country_delivery == 'NL') {
+						customer.id_type = 5;
+					} else {
+						customer.id_type = 4;
+					}
+					customer.id_origin = 6;
+					customer.id_lang = 1;
+					customer.first_name = order.customer_first_name_invoice;
+					customer.last_name = order.customer_last_name_invoice;
+					customer.email_1 = order.email_delivery;
+					customer.email_2 = order.email_invoice;
+					if (order.company_invoice) {
+						customer.company = order.company_invoice;
+					} else {
+						customer.company = '';
+					}
+					order.vat_number_invoice
+						? (customer.vat_number = order.vat_number_invoice)
+						: (customer.vat_number = '');
+					customer.bank_account = '';
+					customer.website = '';
+					customer.birthday = null;
+					customer.phone_1 = '';
+					customer.phone_2 = '';
+					customer.phone_3 = '';
+					customer.phone_descr_1 = '';
+					customer.phone_descr_2 = '';
+					customer.phone_descr_3 = '';
+					customer.newsletter = 2; // Newsletter type 2 is specially for BOL clients !!!!
+					await customer.save(trx);
+					// Create Customer addresses
+					// 1) Delivery Address
+					var address = new Address();
+					address.id_customer = customer.id;
+					address.id_supplier = 0;
+					if (order.country_delivery == 'NL') {
+						address.country = 'Nederland';
+					} else {
+						address.country = 'België';
+					}
+					address.state = '';
+					address.postcode = order.postcode_delivery;
+					address.alias = 'Leveringsadres';
+					address.company = order.company_delivery;
+					address.street = order.street_delivery;
+					address.number = order.number_delivery;
+					address.bus = order.bus_delivery;
+					address.city = order.city_delivery;
+					address.other = '';
+					address.phone = '';
+					address.mobile = '';
+					address.fax = '';
+					address.email = '';
+					address.vat_number = '';
+					address.first_name = order.customer_first_name_delivery;
+					address.last_name = order.customer_last_name_delivery;
+					await address.save(trx);
+					// ) Invoice Address
+					var address = new Address();
+					address.id_customer = customer.id;
+					address.id_supplier = 0;
+					if (order.country_invoice == 'NL') {
+						address.country = 'Nederland';
+					} else {
+						address.country = 'Belgie';
+					}
+					address.state = '';
+					address.postcode = order.postcode_invoice;
+					address.alias = 'Facturatie adres';
+					address.company = order.company_invoice;
+					address.street = order.street_invoice;
+					address.number = order.number_invoice;
+					address.bus = order.bus_invoice;
+					address.city = order.city_invoice;
+					address.other = '';
+					address.phone = '';
+					address.mobile = '';
+					address.fax = '';
+					address.email = '';
+					address.vat_number = '';
+					address.first_name = order.customer_first_name_invoice;
+					address.last_name = order.customer_last_name_invoice;
+					await address.save(trx);
+					invoice.id_customer = customer.id;
+					invoice.id_invoice_address = address.id;
+				}
+				if (order.id_country_bol == '1') {
+					// NL
+					invoice.id_payment_method = '5';
+					invoice.id_invoice_type = '5';
+					invoice.shipping_cost_ex_vat = param.shipping_cost_ex_vat_bol_nl;
+				} else {
+					// BE
+					invoice.id_payment_method = '4';
+					invoice.id_invoice_type = '4';
+					invoice.shipping_cost_ex_vat = param.shipping_cost_ex_vat_bol_be;
+				}
+				invoice.customer_first_name = order.customer_first_name_invoice;
+				invoice.customer_last_name = order.customer_last_name_invoice;
+				invoice.company = order.company_invoice;
+				if (order.country_invoice == 'BE') {
+					invoice.country = 'België';
+				} else if (order.country_invoice == 'NL') {
+					invoice.country = 'Nederland';
+				}
+				invoice.state = '';
+				invoice.postcode = order.postcode_invoice;
+				invoice.alias = 'Facturatie adres';
+				invoice.street = order.street_invoice;
+				invoice.number = order.number_invoice;
+				invoice.bus = order.bus_invoice;
+				invoice.city = order.city_invoice;
+				invoice.email = order.email_invoice;
+				invoice.phone = '';
+				invoice.vat_number = order.vat_number_invoice;
+				invoice.shipping_vat_procent = param.stand_shipping_vat_procent;
+				invoice.shipping_amount_ex_vat = 0;
+				invoice.shipping_amount_in_vat = 0;
+				invoice.wrapping_cost_ex_vat = 0;
+				invoice.wrapping_amount_ex_vat = 0;
+				invoice.wrapping_amount_in_vat = 0;
+				var costs_ex_vat_bol = 0;
+				var products_sp_ex_vat = 0;
+				var products_sp_in_vat = 0;
+				var products_pp_ex_vat = 0;
+				var costs_ex_vat_bol = 0;
+				for (let counter in orderItems) {
+					const orderItem = orderItems[counter];
+					product = await Product.find(orderItem.id_product);
+					products_sp_ex_vat =
+						Number(products_sp_ex_vat) + Number(orderItem.product_sp_ex_vat) * Number(orderItem.quantity);
+					console.log('Producten' + products_sp_ex_vat);
+					products_sp_in_vat =
+						Number(products_sp_in_vat) + Number(orderItem.product_sp_in_vat) * Number(orderItem.quantity);
+					products_pp_ex_vat = products_pp_ex_vat + Number(product.pp_ex_vat_cz) * Number(orderItem.quantity);
+					costs_ex_vat_bol = costs_ex_vat_bol + Number(orderItem.transaction_fee);
+				}
+				invoice.products_ex_vat = products_sp_ex_vat;
+				invoice.products_in_vat = products_sp_in_vat;
+				invoice.pp_ex_vat_cz = products_pp_ex_vat;
+				invoice.cost_ex_vat_bol = costs_ex_vat_bol;
+				invoice.invoice_ex_vat = products_sp_ex_vat;
+				invoice.invoice_in_vat = products_sp_in_vat;
+				invoice.amount_paid = invoice.invoice_in_vat;
+				var total_cost = invoice.pp_ex_vat_cz + costs_ex_vat_bol + invoice.shipping_cost_ex_vat;
+				invoice.netto_margin_ex_vat = invoice.invoice_ex_vat - total_cost;
+				invoice.margin_procent = (invoice.invoice_ex_vat / total_cost - 1) * 100;
+				await invoice.save(trx);
+				// Create Invoice Rows
+				for (let counter in orderItems) {
+					const orderItem = orderItems[counter];
+					product = await Product.find(orderItem.id_product);
+					const invoiceRow = new SalesInvoiceRow();
+					invoiceRow.id_invoice = invoice.id;
+					invoiceRow.invoice_number = invoice.invoice_number;
+					invoiceRow.id_supplier = product.id_supplier;
+					invoiceRow.id_bol_category = product.id_bol_category;
+					invoiceRow.id_product_brand = product.id_brand;
+					invoiceRow.id_sales_order = 0;
+					invoiceRow.id_invoice_type = invoice.id_invoice_type;
+					invoiceRow.order_reference = '';
+					invoiceRow.id_order_bol = invoice.id_order_bol;
+					invoiceRow.id_product = product.id;
+					invoiceRow.id_product_supplier = product.id_product_supplier;
+					invoiceRow.ean13 = orderItem.ean13;
+					invoiceRow.description = orderItem.product_name_nl;
+					invoiceRow.quantity = Number(orderItem.quantity);
+					invoiceRow.product_pp_ex_vat = product.pp_ex_vat_cz;
+					invoiceRow.product_sp_ex_vat = Number(orderItem.product_sp_ex_vat);
+					invoiceRow.product_sp_in_vat = Number(orderItem.product_sp_in_vat);
+					invoiceRow.row_total_pp_ex_vat = invoiceRow.product_pp_ex_vat * invoiceRow.quantity;
+					invoiceRow.row_total_sp_ex_vat = invoiceRow.product_sp_ex_vat * invoiceRow.quantity;
+					invoiceRow.row_total_sp_in_vat = invoiceRow.product_sp_in_vat * invoiceRow.quantity;
+					invoiceRow.vat_procent = product.vat_procent;
+					if (order.id_country_bol == '1') {
+						invoiceRow.row_total_cost_ex_vat_bol_nl = Number(orderItem.transaction_fee);
+						invoiceRow.cost_ex_vat_bol_nl = product.total_cost_ex_vat_bol_nl;
+					} else if (order.id_country_bol == '2') {
+						invoiceRow.row_total_cost_ex_vat_bol_be = Number(orderItem.transaction_fee);
+						invoiceRow.cost_ex_vat_bol_be = product.total_cost_ex_vat_bol_be;
+					}
+					invoiceRow.amazon_cost_ex_vat = 0;
+					await invoiceRow.save(trx);
+					// Change stock for products to invoice -x  //  boekhoudkundige voorraad -x
+					product.stock_accounting = product.stock_accounting - invoiceRow.quantity;
+					product.quantity_to_invoice = product.quantity_to_invoice - invoiceRow.quantity;
+					await product.save(trx);
+					// Commit complete transaction
+					trx.commit();
+					// Update Invoice Number in Parameters
+					param.last_sales_invoice_nr += 1;
+					await param.save();
+				}
+			} finally {
+				session.flash({
+					notification: {
+						type: 'success',
+						message: 'De factuur werd aangemaakt !'
+					}
+				});
+			}
 		}
+
+		return;
 	}
 }
 

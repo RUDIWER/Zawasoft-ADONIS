@@ -1,0 +1,69 @@
+<h1> Hallo {{ order.customer_first_name_delivery }}, </h1>
+
+<p>
+    Wij hebben uw order via bol.com in goede orde ontvangen.<br>
+	Vooreerst willen wij U bedanken voor het vertrouwen in bol.com en Cool-Zawadi.<br>
+	<br>
+	Hieronder vindt U nogmaals een detail van de bestelling.
+
+	<table border="1" cellspacing="0" width="100%">
+		<thead class="thead-default">
+			<tr>
+				<th scope="col">ID</th>
+				<th scope="col">EAN code</th>
+				<th scope="col">Omschr.</th>
+				<th scope="col">Aantal</th>
+				<th scope="col">Eenh. Pr.</th>
+				<th scope="col">Totaal</th>
+			</tr>
+		</thead>
+		<tbody>
+			@each(row in orderItems)
+				<tr>
+					<td>{{row.id_product}}</td>
+					<td>{{row.ean13}}</td>
+					<td>{{row.product_name_nl}}</td>
+					<td style="text-align: right;">{{row.quantity}}</td>
+					<td style="text-align: right;">{{row.product_sp_in_vat}}</td>
+					<td style="text-align: right;">{{row.row_total_sp_in_vat}}</td>
+				</tr>
+			@endeach
+		</tbody>
+	</table>
+	<p><b>We versturen het order naar:</b></p>
+	{{ order.customer_first_name_delivery}} {{order.customer_last_name_delivery}}<br>
+	{{ order.company_delivery}}<br>
+	{{ order.street_delivery }} {{ order.number_delivery }} {{ order.bus_delivery }},<br>
+	{{ order.postcode_delivery }} {{ order.city_delivery }} ({{ order.country_delivery }})<br>
+	<br>
+	@if(order.address_info_delivery || order.address_extra_info_delivery )
+	<p><b>met eventuele extra informatie :</b></p>
+	{{ order.address_info_delivery }}
+	{{ order.address_extra_info_delivery }}
+	<br>
+	@endif
+	<p><b>Facturatie adres is het volgende:</b></p>
+	{{ order.customer_first_name_invoice}} {{ order.customer_last_name_invoice }}<br>
+	{{ order.company_invoice}}
+	{{ order.vat_number_invoice}}<br>
+	{{ order.street_invoice }} {{ order.number_invoice }} {{ order.bus_invoice }},<br>
+	{{ order.postcode_invoice }} {{ order.city_invoice }} ({{ order.country_invoice }})<br>
+	<br>
+	@if( order.address_info_invoice || order.address_extra_info_invoice )
+	<p><b>met eventuele extra informatie :</b></p>
+	{{ order.address_info_invoice }}
+	{{ order.address_extra_info_invoice }}
+	<br>
+	@endif
+	<br>
+	<br>
+	We gaan nu meteen voor U aan de slag en houden U van het verdere verloop van uw order op de hoogte.<br>
+	<br>
+	<br>
+	<br>
+	
+	Het Cool-Zawadi team.<br>
+	<b>Met plezier tot UW dienst !</b>
+
+</p>
+    

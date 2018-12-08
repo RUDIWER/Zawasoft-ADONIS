@@ -13,6 +13,7 @@ class SalesInvoiceRowSchema extends Schema {
 			table.integer('id_product_brand').unsigned();
 			table.integer('id_sales_order').unsigned().defaultTo(0);
 			table.integer('id_invoice_type').unsigned().notNullable(); // Comes from customer_type
+			table.string('id_order_bol', 20).nullable();
 			table.string('order_reference', 20).defaultTo(0);
 			table.integer('id_product').unsigned().defaultTo(0);
 			table.string('id_product_supplier', 20);

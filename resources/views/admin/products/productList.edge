@@ -44,6 +44,7 @@
 							<thead class="thead-default" style="width:100%">
 								<tr>
 									<th scope="col">Id</th>
+									<th scope="col">EAN 13</th>
 									<th scope="col">Omschr.</th>
 									<th scope="col">Voorraad</th>
 									<th scope="col">Ik.Prijs CZ ex.</th>
@@ -54,6 +55,7 @@
 								@each(product in products)
 									<tr>
 										<td>{{ product.id }}</td>
+										<td>{{ product.ean13 }}</td>
 										<td>{{ product.name_nl }}</td>
 										<td>{{ product.stock_real }}</td>
 										<td>{{ product.pp_ex_vat_cz }}</td>
@@ -80,7 +82,7 @@
 				fixedHeader: true,
 				order : [[ 1, "asc" ]],
 				columnDefs: [
-					{ className: "text-right", "targets": [0,2,3,4] },
+					{ className: "text-right", "targets": [0,3,4,5] },
 				],
 				paging : false,
 				language: {

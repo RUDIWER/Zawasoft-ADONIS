@@ -161,7 +161,7 @@ Route.get('admin/sales/open-orders/bol/:country', 'Admin/Sales/BolOrderControlle
 	.as('admin-sales-open-orders-bol')
 	.middleware([ 'auth' ]);
 
-Route.get('/admin/sales/open-orders/bol/change-state/:id/:status', 'Admin/Sales/BolOrderController.changeStatus')
+Route.get('/admin/sales/open-orders/bol/change-state/:id/:newStatus', 'Admin/Sales/BolOrderController.changeStatus')
 	.as('admin-sales-open-orders-bol-change-status')
 	.middleware([ 'auth' ]);
 
