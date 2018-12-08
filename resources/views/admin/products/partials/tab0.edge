@@ -16,7 +16,6 @@
 		value="{{ old('ean13', !product.ean13? '':product.ean13 ) }}"/>
 		<div class="eanError"></div>
 		{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('ean13'), hasErrorFor('ean13')) }}
-		(5901234123457)
 	</div>
 	<div class="form-group col-md-2">
 		<label class="control-label">Referentie Lev.</label>

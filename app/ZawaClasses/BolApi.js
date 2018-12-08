@@ -49,8 +49,8 @@ class BolApi {
 				])
 				.get(path)
 				.then(({ statusCode, body, headers }) => {
-					console.log('Result from GET => OK : ' + statusCode, body, headers);
-					console.log(body);
+					//console.log('Result from GET => OK : ' + statusCode, body, headers);
+					//console.log(body);
 					return [ statusCode, body ];
 				})
 				.catch((e) => {
@@ -273,6 +273,11 @@ class BolApi {
 			'</DeleteBulkRequest>';
 
 		const result = await this.request('DELETE', '/offers/v2/', '', productXml);
+		return result;
+	}
+
+	async getCommission(ean) {
+		const result = await this.request('GET', '/commission/v2/' + ean, '');
 		return result;
 	}
 

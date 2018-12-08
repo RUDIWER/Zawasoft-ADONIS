@@ -32,7 +32,6 @@ class storeProduct {
 
 	get rules() {
 		const productId = this.ctx.params.id;
-		console.log(productId);
 		return {
 			name_nl: 'required|max:80',
 			name_fr: 'max:80',

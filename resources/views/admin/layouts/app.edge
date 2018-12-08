@@ -44,12 +44,52 @@
 			@include('admin.partials.footer')
 		</footer>	
 	</body>
+	@include('admin.products.modals.calcModal')
+
 <!-- Scripts -->
 	<script src="/js/app.js"></script>
  	<script src="/admin-panel/js/pace.min.js"></script>
     <script src="/admin-panel/js/perfect-scrollbar.min.js"></script> 
 	<script src="/admin-panel/js/coreui.min.js"></script>
 	<script src="/admin-panel/js/custom-tooltips.min.js"></script>
+	<script>
+		$(document).ready(function() {
+			// Modal to display Bol commissions on a specific product
+			$('#calcLink').on('click', function(){
+				$('#costDisplay').hide();
+				$('#calcForm input[name=ean]').val('');
+				$('#calcForm input[name=fixedCost]').val('');
+				$('#calcForm input[name=procentCost]').val('');
+				$('#calcForm input[name=costReduction]').val('');
+				$('#calcForm input[name=maxPrice]').val('');
+				$('#calcForm input[name=startDate]').val('');
+				$('#calcForm input[name=endDate]').val('');
+				$('#calcModal').modal('show');	
+			});
+
+			$('#calcButton').on('click', function(){
+				var ean = $('#calcForm input[name=ean]').val();
+				if(ean){
+					$.ajax({
+						url: "/admin/bol/calculate/ean/" + ean,
+						method: 'GET'
+					}).done(function(data) {
+						$('#calcForm input[name=fixedCost]').val(data.fixedAmount);
+						$('#calcForm input[name=procentCost]').val(data.procent);
+						if(Object.keys(data.reductions).length > 0){
+							$('#costDisplay').show();
+							$('#calcForm input[name=costReduction]').val(data.reductions.Reduction[0].CostReduction[0]);	
+							$('#calcForm input[name=maxPrice]').val(data.reductions.Reduction[0].MaximumPrice[0]);
+							$('#calcForm input[name=startDate]').val(data.reductions.Reduction[0].StartDate[0]);
+							$('#calcForm input[name=endDate]').val(data.reductions.Reduction[0].EndDate[0]);
+						}
+					});	
+				}		
+			});  
+
+			
+		});
+	</script>	
 
 	@!section('scripts')
 </html>

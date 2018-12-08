@@ -28,6 +28,7 @@
 						</b>
 					</div>
 					<div class="card-body"> 
+						@include('partials.notifications')
 						@each(order in orders)
 							<div class="card card-primary">
 							<!-- TITLE BAR -->
@@ -35,17 +36,13 @@
 									<b>	
 										Ordernr : {{order.id_order_bol}}&nbsp&nbsp&nbsp<b>Datum Order : {{order.date_time_order}}</b>
 									</b>
-									<a href="{{ route('admin-sales-open-orders-bol-change-status',{id: order.id, newStatus:5 }) }}">
-									  TEST	
-									</a>
-
 									@if(order.current_status == 1 )
 										<button class="btn btn-danger float-right" @click="setState({{order.id}}, {{order.current_status}})">
 											<span id="spinner-{{order.id}}" 
 												v-if="viewSpinner === {{order.id}}"
 												class="spinner fas fa-spinner fa-spin">
 											</span>
-											Orderverwerking starten {{order.id}}
+											Orderverwerking starten
 										</button>	
 									@elseif(order.current_status == 2)
 										<button class="btn btn-warning float-right" @click="setState({{order.id}}, {{order.current_status}})">
@@ -120,18 +117,19 @@
 												</tbody>
 											</table>
 											<div class="form-row">	
-										
 												<div class="form-group col-md-6">
-												
+												  TO DO  TOTAL PRICES
 												</div>
 											</div>		
 										</div>
 									</div>
-									<button class="btn btn-danger" @click="delOrder({{order.id}}, {{order.current_status}})">
-										Annuleer Order
-									</button>
+									<a href="{{ route('admin-sales-open-orders-bol-del-order',{ id: order.id, status: order.current_status, country: bolCountry }) }}">
+										<button class="btn btn-danger">Annuleer Order</button>
+									</a>
 								</div>
 							</div>
+						@else
+							<h3>Ooops... U hebt momenteel geen open orders !</h3>
 						@endeach
 					</div>
 				</div>
@@ -142,45 +140,48 @@
 @section('scripts')	
 	<script src="/vendor/vue/vue.js"></script>
 	<script type="text/javascript" charset="utf-8">
-	
-		var BolOrderApp = new Vue({
-			el: '#BolOrderApp',
-			data: {
-				viewSpinner: 0
+	//(RW) Slide UP  alert success messages
+	$(".alert-success").fadeTo(2000, 500).slideUp(500, function(){
+		$(".alert-success").alert('close');
+	});
 
-			},
-			methods: 
-			{
-				setState: function (id_order, status) 
-				{
-					console.log(id_order);
-					this.viewSpinner = id_order;
-					if (status === 1){
-						var newStatus = 2;
-					}else if (status === 2){
-						var newStatus = 3;
-					}else if (status === 3) {
-						var newStatus = 4;
-					}else if (status === 4) {
-						var newStatus = 5;
+	var BolOrderApp = new Vue({
+		el: '#BolOrderApp',
+		data: {
+			viewSpinner: 0
+
+		},
+		methods: 
+		{
+			setState: function (id_order, status) {
+				console.log(id_order);
+				this.viewSpinner = id_order;
+				if (status === 1){
+					var newStatus = 2;
+				}else if (status === 2){
+					var newStatus = 3;
+				}else if (status === 3) {
+					var newStatus = 4;
+				}else if (status === 4) {
+					var newStatus = 5;
+				}
+			
+				$.ajax({
+					type: "get",
+					url: "/admin/sales/open-orders/bol/change-state/" + id_order + "/" + newStatus,
+					error: function (xhr, ajaxOptions, thrownError, data) 
+					{
+						console.log(thrownError);
 					}
-				
-					$.ajax({
-						type: "get",
-						url: "/admin/sales/open-orders/bol/change-state/" + id_order + "/" + newStatus,
-						error: function (xhr, ajaxOptions, thrownError, data) 
-						{
-							console.log(thrownError);
-						}
-					})
-					.done(function(data){     
-					location.reload();
-						$(location ).ready(function() {
-							this.viewSpinner = 0;
-						});
-					}); 		
-				} // end set state
-			}  // End methods
-		})
-	</script>
+				})
+				.done(function(data){     
+				location.reload();
+					$(location ).ready(function() {
+						this.viewSpinner = 0;
+					});
+				}); 		
+			} // end set state
+		}  // End methods
+	})
+</script>
 @endsection

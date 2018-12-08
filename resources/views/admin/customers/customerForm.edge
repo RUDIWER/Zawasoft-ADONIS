@@ -196,7 +196,6 @@
 		
 	
 		// Edit existing Address with modal addressform
-		//	$('#customerAddressTable td').not('.sorting_1').click(function(){
 			$('#customerAddressTable').on('click', 'td:not(.sorting_1)', function () {
 				$('#addressModal').modal('show');
 				var index = customerAddressTable.cell( this ).index();

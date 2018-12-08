@@ -29,6 +29,13 @@ class ProductController {
 		return view.render('admin.products.productList', { products, records });
 	}
 
+	async noEan({ view }) {
+		const products = await Product.query().where('ean13', '=', '');
+		const count = await Database.from('products').count();
+		const records = count[0]['count(*)'];
+		return view.render('admin.products.productList', { products, records });
+	}
+
 	async notBolBe({ view }) {
 		const products = await Product.query().where('active_bol_be', '<', '1');
 		const count = await Database.from('products').count();

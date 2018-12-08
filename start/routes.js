@@ -33,7 +33,7 @@ Route.post('password/email', 'Auth/PasswordResetController.sendResetLinkEmail');
 Route.get('password/reset/:token', 'Auth/PasswordResetController.showresetForm');
 Route.post('password/reset', 'Auth/PasswordResetController.reset');
 
-// Pofile
+// Profile
 Route.get('profile/create', 'Profile/ProfileController.create').middleware([ 'auth' ]);
 Route.get('profile/edit', 'Profile/ProfileController.edit').middleware([ 'auth' ]);
 Route.post('profile', 'Profile/ProfileController.store').validator('storeProfile').middleware([ 'auth' ]).as('profile');
@@ -43,6 +43,7 @@ Route.get('/locale/:locale', 'Locale/LocaleController.changeLocale').as('locale'
 
 //ADMIN PANEL
 Route.get('admin', 'Admin/HomeController.index').as('admin').middleware([ 'auth' ]);
+Route.get('admin/bol/calculate/ean/:ean', 'Admin/HomeController.getEan').middleware([ 'auth' ]);
 
 // PARAM
 Route.get('admin/param', 'Admin/ParamController.showParamForm').as('admin-param').middleware([ 'auth' ]);
@@ -56,6 +57,7 @@ Route.get('admin/products', 'Admin/ProductController.index').as('admin-products'
 Route.get('admin/products/no-stock', 'Admin/ProductController.noStock')
 	.as('admin-products-no-stock')
 	.middleware([ 'auth' ]);
+Route.get('admin/products/no-ean', 'Admin/ProductController.noEan').as('admin-products-no-ean').middleware([ 'auth' ]);
 Route.get('admin/products/not-in-bol-be', 'Admin/ProductController.notBolBe')
 	.as('admin-products-not-in-bol-be')
 	.middleware([ 'auth' ]);
@@ -163,6 +165,10 @@ Route.get('admin/sales/open-orders/bol/:country', 'Admin/Sales/BolOrderControlle
 
 Route.get('/admin/sales/open-orders/bol/change-state/:id/:newStatus', 'Admin/Sales/BolOrderController.changeStatus')
 	.as('admin-sales-open-orders-bol-change-status')
+	.middleware([ 'auth' ]);
+
+Route.get('/admin/sales/open-orders/bol/del-order/:id/:status/:country', 'Admin/Sales/BolOrderController.delOrder')
+	.as('admin-sales-open-orders-bol-del-order')
 	.middleware([ 'auth' ]);
 
 // TEST Routes

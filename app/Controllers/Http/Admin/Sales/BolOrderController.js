@@ -502,8 +502,48 @@ class BolOrderController {
 				});
 			}
 		}
-
 		return;
+	}
+	async delOrder({ params, session, response }) {
+		const status = params.status;
+		const id_order = params.id;
+		const country = params.country;
+		if (status == '1') {
+			// Order jsut comes in no handlings done just delete order ! STATUS =1
+			const order = await Order.find(id_order);
+			await order.delete();
+			await OrderItem.query().where('id_sales_order_bol', id_order).delete();
+		} else {
+			const trx = await Database.beginTransaction();
+			const order = await Order.find(id_order);
+			const orderItems = (await OrderItem.query().where('id_sales_order_bol', id_order).fetch()).toJSON();
+			for (let counter in orderItems) {
+				const orderItem = orderItems[counter];
+				const product = await Product.find(orderItem.id_product);
+				product.stock_real = Number(product.stock_real) + Number(orderItem.quantity);
+				product.quantity_to_invoice = product.quantity_to_invoice - Number(orderItem.quantity);
+				await product.save(trx);
+
+				// 2) Send new stock to bol be
+				const bolApiBe = new BolApi(Env.get('BOL_BE_PUBLIC_KEY'), Env.get('BOL_BE_PRIVATE_KEY'));
+				await bolApiBe.setProduct(product.id);
+
+				// 3) Send new stock to bol nl
+				const bolApiNl = new BolApi(Env.get('BOL_NL_PUBLIC_KEY'), Env.get('BOL_NL_PRIVATE_KEY'));
+				await bolApiNl.setProduct(product.id);
+			}
+			await order.delete(trx);
+			await OrderItem.query().where('id_sales_order_bol', id_order).delete(trx);
+			// Commit complete transaction
+			trx.commit();
+		}
+		session.flash({
+			notification: {
+				type: 'success',
+				message: 'Het order werd geannuleerd en de voorraden werd aangepast en doorgestuurd naar Bol !'
+			}
+		});
+		return response.route('admin-sales-open-orders-bol', { country: country });
 	}
 }
 
