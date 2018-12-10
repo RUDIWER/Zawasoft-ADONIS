@@ -56,7 +56,7 @@ class storeProduct {
 			id_supplier: 'not_equals:0',
 			id_bol_category: 'required',
 			id_product_supplier: 'max:20',
-			ean13: 'required_if:active_bol_be|required_if:active_bol_nl|max:20'
+			ean13: `unique:products,ean13,id,${productId}|required_if:active_bol_be|required_if:active_bol_nl|max:20`
 		};
 	}
 

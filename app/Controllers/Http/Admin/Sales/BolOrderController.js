@@ -41,7 +41,8 @@ class BolOrderController {
 				// Create Order records
 				const bolOrder = json.Orders.Order[counter1];
 				const bolOrderId = bolOrder.OrderId;
-				const orderExist = Order.query().where('id_order_bol', bolOrderId).fetch().toJSON();
+				const orderExist = (await Order.query().where('id_order_bol', bolOrderId).fetch()).toJSON();
+
 				if (typeof orderExist !== 'undefined' && orderExist.length > 0) {
 					continue;
 				}
