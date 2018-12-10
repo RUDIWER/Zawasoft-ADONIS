@@ -40,8 +40,13 @@ class BolOrderController {
 				// Loop over orders (ORDERS)
 				// Create Order records
 				const bolOrder = json.Orders.Order[counter1];
+				const bolOrderId = bolOrder.OrderId;
+				const orderExist = Order.query().where('id_order_bol', bolOrderId).fetch().toJSON();
+				if (typeof orderExist !== 'undefined' && orderExist.length > 0) {
+					continue;
+				}
 				const order = await new Order();
-				order.id_order_bol = bolOrder.OrderId;
+				order.id_order_bol = bolOrderId;
 				order.current_status = 1;
 				if (bolCountry == 'be') {
 					order.id_country_bol = '2';

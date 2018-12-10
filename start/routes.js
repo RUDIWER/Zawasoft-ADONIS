@@ -71,6 +71,10 @@ Route.post('/admin/product/save/:id', 'Admin/ProductController.save')
 	.as('admin-product-save')
 	.validator('storeProduct')
 	.middleware([ 'auth' ]);
+
+// PRODUCT GROUPS
+Route.get('admin/product-group', 'Admin/ProductGroupController.index').as('admin-product-group').middleware([ 'auth' ]);
+
 // PRODUCT REPORTS
 Route.get('admin/products/reports/stock-report', 'Admin/ProductReportController.stockReport')
 	.as('admin-products-reports-stockreport')
