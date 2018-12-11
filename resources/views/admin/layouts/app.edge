@@ -57,6 +57,7 @@
 			// Modal to display Bol commissions on a specific product
 			$('#calcLink').on('click', function(){
 				$('#costDisplay').hide();
+				$('#calcForm input[name=id]').val('');
 				$('#calcForm input[name=ean]').val('');
 				$('#calcForm input[name=fixedCost]').val('');
 				$('#calcForm input[name=procentCost]').val('');
@@ -69,9 +70,12 @@
 
 			$('#calcButton').on('click', function(){
 				var ean = $('#calcForm input[name=ean]').val();
-				if(ean){
+				var id = $('#calcForm input[name=id]').val();
+				if(ean || id){
+					if(!ean){ean = 0};
+					if(!id){id = 0};
 					$.ajax({
-						url: "/admin/bol/calculate/ean/" + ean,
+						url: "/admin/bol/calculate/ean/" + ean + "/id/" + id,
 						method: 'GET'
 					}).done(function(data) {
 						$('#calcForm input[name=fixedCost]').val(data.fixedAmount);

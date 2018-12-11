@@ -119,6 +119,31 @@ class ProductController {
 		});
 	}
 
+	async modal({ params }) {
+		const product = await Product.find(params.id);
+		const stockPlace1 = await StockPlace.find(product.stock_place_1);
+		const stockPlace2 = await StockPlace.find(product.stock_place_2);
+		const stockPlace3 = await StockPlace.find(product.stock_place_3);
+		const stockPlace4 = await StockPlace.find(product.stock_place_4);
+		const stockPlace5 = await StockPlace.find(product.stock_place_5);
+		const stockName1 = stockPlace1 ? stockPlace1.name : '';
+		const stockName2 = stockPlace2 ? stockPlace2.name : '';
+		const stockName3 = stockPlace3 ? stockPlace3.name : '';
+		const stockName4 = stockPlace4 ? stockPlace4.name : '';
+		const stockName5 = stockPlace5 ? stockPlace5.name : '';
+		return {
+			ean: product.ean13,
+			id: product.id,
+			name: product.name_nl,
+			picture: product.product_pic,
+			stock_place_1: stockName1,
+			stock_place_2: stockName2,
+			stock_place_3: stockName3,
+			stock_place_4: stockName4,
+			stock_place_5: stockName5
+		};
+	}
+
 	async save({ request, response, params, session, antl }) {
 		// Flash old values to the session
 		session.flashAll();

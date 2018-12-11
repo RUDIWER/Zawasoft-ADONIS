@@ -105,7 +105,7 @@
 												<tbody>
 													@each(row in order.rows)
 														<tr>
-															<td>{{row.id_product}}</td>
+															<td><a href="javascript:void(0);" @click="getProduct({{row.id_product}})">{{row.id_product}}</a></td>
 															<td>{{row.product_name_nl}}</td>
 															<td>{{row.quantity}}</td>
 															<td>{{row.product_sp_in_vat}}</td>
@@ -136,52 +136,85 @@
 			</div>
 		</div>
 	</div>
+@include('admin.products.modals.productModal')	
 @endsection
 @section('scripts')	
 	<script src="/vendor/vue/vue.js"></script>
 	<script type="text/javascript" charset="utf-8">
-	//(RW) Slide UP  alert success messages
-	$(".alert-success").fadeTo(2000, 500).slideUp(500, function(){
-		$(".alert-success").alert('close');
-	});
+		//(RW) Slide UP  alert success messages
+		$(".alert-success").fadeTo(2000, 500).slideUp(500, function(){
+			$(".alert-success").alert('close');
+		});
 
-	var BolOrderApp = new Vue({
-		el: '#BolOrderApp',
-		data: {
-			viewSpinner: 0
+		var BolOrderApp = new Vue({
+			el: '#BolOrderApp',
+			data: {
+				viewSpinner: 0
 
-		},
-		methods: 
-		{
-			setState: function (id_order, status) {
-				console.log(id_order);
-				this.viewSpinner = id_order;
-				if (status === 1){
-					var newStatus = 2;
-				}else if (status === 2){
-					var newStatus = 3;
-				}else if (status === 3) {
-					var newStatus = 4;
-				}else if (status === 4) {
-					var newStatus = 5;
-				}
-			
-				$.ajax({
-					type: "get",
-					url: "/admin/sales/open-orders/bol/change-state/" + id_order + "/" + newStatus,
-					error: function (xhr, ajaxOptions, thrownError, data) 
-					{
-						console.log(thrownError);
+			},
+			methods: 
+			{
+				setState: function (id_order, status) {
+					console.log(id_order);
+					this.viewSpinner = id_order;
+					if (status === 1){
+						var newStatus = 2;
+					}else if (status === 2){
+						var newStatus = 3;
+					}else if (status === 3) {
+						var newStatus = 4;
+					}else if (status === 4) {
+						var newStatus = 5;
 					}
-				})
-				.done(function(data){     
-				location.reload();
-					$(location ).ready(function() {
-						this.viewSpinner = 0;
+				
+					$.ajax({
+						type: "get",
+						url: "/admin/sales/open-orders/bol/change-state/" + id_order + "/" + newStatus,
+						error: function (xhr, ajaxOptions, thrownError, data) 
+						{
+							console.log(thrownError);
+						}
+					})
+					.done(function(data){     
+					location.reload();
+						$(location ).ready(function() {
+							this.viewSpinner = 0;
+						});
+					}); 		
+				}, // end set state
+				getProduct: function(id_product){
+					$('#calcForm input[name=id]').val('');
+					$('#calcForm input[name=ean]').val('');
+					$('#calcForm input[name=name]').val('');
+					$('#calcForm input[name=stockPlace1]').val('');
+					$('#calcForm input[name=stockPlace2]').val('');
+					$('#calcForm input[name=stockPlace3]').val('');
+					$('#calcForm input[name=stockPlace4]').val('');
+					$('#calcForm input[name=stockPlace5]').val('');
+					$("#productPic").attr("src",'');	
+					
+					$('#productModal').modal('show');
+					$.ajax({
+						type: "get",
+						url: "/admin/product/modal/" + id_product,
+						error: function (xhr, ajaxOptions, thrownError, data) 
+						{
+							console.log(thrownError);
+						}
+					})
+					.done(function(data){     
+						$('#productForm input[name=id]').val(data.id);
+						$('#productForm input[name=ean').val(data.ean);
+							$('#productForm input[name=name').val(data.name);
+						$('#productForm input[name=stockPlace1').val(data.stock_place_1);
+						$('#productForm input[name=stockPlace2').val(data.stock_place_2);
+						$('#productForm input[name=stockPlace3').val(data.stock_place_3);
+						$('#productForm input[name=stockPlace4').val(data.stock_place_4);
+						$('#productForm input[name=stockPlace5').val(data.stock_place_5);
+						$("#productPic").attr("src", data.picture)		
 					});
-				}); 		
-			} // end set state
-		}  // End methods
-	})
+				}		
+			}  // End methods
+		})
 </script>
 @endsection

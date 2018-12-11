@@ -43,7 +43,7 @@ Route.get('/locale/:locale', 'Locale/LocaleController.changeLocale').as('locale'
 
 //ADMIN PANEL
 Route.get('admin', 'Admin/HomeController.index').as('admin').middleware([ 'auth' ]);
-Route.get('admin/bol/calculate/ean/:ean', 'Admin/HomeController.getEan').middleware([ 'auth' ]);
+Route.get('admin/bol/calculate/ean/:ean/id/:id', 'Admin/HomeController.getEan').middleware([ 'auth' ]);
 
 // PARAM
 Route.get('admin/param', 'Admin/ParamController.showParamForm').as('admin-param').middleware([ 'auth' ]);
@@ -66,6 +66,8 @@ Route.get('admin/products/not-in-bol-nl', 'Admin/ProductController.notBolNl')
 	.middleware([ 'auth' ]);
 
 Route.get('admin/product/edit/:id', 'Admin/ProductController.edit').as('admin-product-edit').middleware([ 'auth' ]);
+Route.get('admin/product/modal/:id', 'Admin/ProductController.modal').as('admin-product-modal').middleware([ 'auth' ]);
+
 Route.get('admin/product/create', 'Admin/ProductController.create').as('admin-product-create').middleware([ 'auth' ]);
 Route.post('/admin/product/save/:id', 'Admin/ProductController.save')
 	.as('admin-product-save')
@@ -176,4 +178,4 @@ Route.get('/admin/sales/open-orders/bol/del-order/:id/:status/:country', 'Admin/
 	.middleware([ 'auth' ]);
 
 // TEST Routes
-Route.get('admin/test', 'Admin/TestController.getInvoiceRows').as('admin-test').middleware([ 'auth' ]);
+Route.get('admin/test', 'Admin/TestController.prestaProducts').as('admin-test').middleware([ 'auth' ]);
