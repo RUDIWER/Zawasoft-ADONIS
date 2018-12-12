@@ -47,7 +47,7 @@ class ParamController {
 		//return bulkData;
 		// select shop to set
 		if (bulkData.id_shop == 'bol_be') {
-			var bolApi = new BolApiBe(Env.get('BOL_BE_PUBLIC_KEY'), Env.get('BOL_BE_PRIVATE_KEY'));
+			var bolApiBe = new BolApi(Env.get('BOL_BE_PUBLIC_KEY'), Env.get('BOL_BE_PRIVATE_KEY'));
 			// Loop over products and set delivery Time
 			const products = await Product.all();
 			for (let i in products.rows) {
@@ -64,7 +64,7 @@ class ParamController {
 				}
 			}
 		} else if (bulkData.id_shop == 'bol_nl') {
-			var bolApi = new BolApiNl(Env.get('BOL_NL_PUBLIC_KEY'), Env.get('BOL_NL_PRIVATE_KEY'));
+			var bolApiNl = new BolApi(Env.get('BOL_NL_PUBLIC_KEY'), Env.get('BOL_NL_PRIVATE_KEY'));
 			for (let i in products.rows) {
 				const product = products.rows[i];
 				if (product.active_bol_nl == 1 && product.ean13 != '') {
