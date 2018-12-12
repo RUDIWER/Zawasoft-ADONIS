@@ -165,7 +165,7 @@ class BolOrderController {
 						console.log('Interne Referentie :' + bolOrderItem.OfferReference);
 						orderItem.id_product = bolOrderItem.OfferReference;
 						const product = await Product.find(orderItem.id_product);
-						orderItem.product_name_nl = bolOrderItem.Title;
+						orderItem.product_name_nl = bolOrderItem.Title.Substring(0, 50);
 						orderItem.quantity = bolOrderItem.Quantity;
 						orderItem.product_sp_in_vat = bolOrderItem.OfferPrice;
 						orderItem.product_sp_ex_vat = Number(bolOrderItem.OfferPrice) / (product.vat_procent / 100 + 1);
