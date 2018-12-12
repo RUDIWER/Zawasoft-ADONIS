@@ -85,7 +85,7 @@ class ParamController {
 		session.flash({
 			notification: {
 				type: 'success',
-				message: 'Gelukt !'
+				message: 'Gelukt ! - De wijzigen werden uitgevoerd!'
 			}
 		});
 		return response.redirect('/admin/bulk-changes');

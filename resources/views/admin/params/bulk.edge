@@ -59,3 +59,13 @@
 		</div>	
 	</div>	
 @endsection
+@section('scripts')
+	<script type="text/javascript" charset="utf-8">
+		$(document).ready(function() {
+    //(RW) Slide UP  alert success messages
+			$(".alert-success").fadeTo(2000, 500).slideUp(500, function(){
+				$(".alert-success").alert('close');
+			});
+        });
+</script>
+
