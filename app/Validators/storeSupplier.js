@@ -34,7 +34,10 @@ class storeSupplier {
 			number: 'max:10',
 			bus: 'max:10',
 			city: 'max:50',
-			memo: 'max:100'
+			memo: 'max:100',
+			meta_title: 'alpha|max:125',
+			meta_keywords: 'max:255',
+			meta_description: 'alpha|max:255',
 		};
 	}
 

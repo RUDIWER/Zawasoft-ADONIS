@@ -6,10 +6,9 @@ const Database = use('Database');
 
 class ProductGroupController {
 	async index({ view }) {
-		const groups = (await ProductGroup.all()).toJSON();
-		const count = await Database.from('product_groups').count();
-		const records = count[0]['count(*)'];
-		return view.render('admin.productGroups.productGroupList', { groups, records });
+		const isParent = 1;
+		const parentGroups = await Database.table('product_groups').where('id_parent','=','2');
+		return view.render('admin.productGroups.productGroupList', { isParent, parentGroups });
 	}
 }
 

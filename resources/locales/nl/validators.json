@@ -1,5 +1,6 @@
 {
 	"required": "Dit veld is verplicht !",
+	"alpha": "Enkel A-Z / a-z is toegestaan! (geen leestekens)",
 	"requiredWithoutAll": "Eén van deze velden moet ingevuld worden !",
 	"required_if": "Dit veld is verplicht!",
 	"unique": "Dit veld moet UNIEK zijn !",

@@ -4,7 +4,7 @@
 	<div class="form-group col-md-12">
 		<label class="control-label">Meta titel (enkel A-Z / a-z geen leestekens!)</label>
 		<input type="text" 
-			class="form-control form-control-sm{{ elIf('is-invalid','', hasErrorFor('meta_title')) }}"
+			class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('meta_title')) }}"
 			name="meta_title" id="meta_title"
 			value="{{ old('meta_title', !supplier.meta_title? '':supplier.meta_title) }}"/>
 			{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('meta_title'), hasErrorFor('meta_title')) }}
@@ -13,7 +13,7 @@
 	<div class="form-group col-md-12">
 		<label class="control-label">Zoekwoorden (gescheiden door komma)</label>
 		<input type="text" 
-			class="form-control form-control-sm{{ elIf('is-invalid','', hasErrorFor('meta_keywords')) }}"
+			class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('meta_keywords')) }}"
 			name="meta_keywords" id="meta_keywords"
 			value="{{ old('meta_keywords', !supplier.meta_keywords? '':supplier.meta_keywords) }}"/>
 			{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('meta_keywords'), hasErrorFor('meta_keywords')) }}
@@ -22,7 +22,7 @@
 	<div class="form-group col-md-12">
 		<label class="control-label">Meta Omschrijving (enkel A-Z / a-z geen leestekens!)</label>
 		<input type="text" 
-			class="form-control form-control-sm{{ elIf('is-invalid','', hasErrorFor('meta_description')) }}"
+			class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('meta_description')) }}"
 			name="meta_description" id="meta_description"
 			value="{{ old('meta_description', !supplier.meta_description? '':supplier.meta_description) }}"/>
 			{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('meta_description'), hasErrorFor('meta_description')) }}

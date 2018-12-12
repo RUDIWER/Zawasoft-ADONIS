@@ -49,8 +49,8 @@ class BolApi {
 				])
 				.get(path)
 				.then(({ statusCode, body, headers }) => {
-					console.log('Result from GET => OK : ' + statusCode, body, headers);
-					console.log(body);
+					//console.log('Result from GET => OK : ' + statusCode, body, headers);
+					//console.log(body);
 					return [ statusCode, body ];
 				})
 				.catch((e) => {

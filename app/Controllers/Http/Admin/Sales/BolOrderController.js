@@ -141,7 +141,7 @@ class BolOrderController {
 					? bolOrder.CustomerDetails[0].BillingDetails[0].Email
 					: '';
 				await order.save();
-				console.log('ORDERNR : ' + order.id_order_bol);
+				//console.log('ORDERNR : ' + order.id_order_bol);
 				const bolOrderItems = bolOrder.OrderItems;
 				let bolOrderItemsLength = bolOrderItems.length;
 				for (let counter2 = 0; counter2 < bolOrderItemsLength; counter2++) {
@@ -179,7 +179,7 @@ class BolOrderController {
 						} else {
 							orderItem.calc_cost_bol = product.total_cost_ex_vat_bol_nl;
 						}
-						orderItem.latest_delivery_date = bolOrderItem.LatestDeliveryDate;
+						orderItem.latest_delivery_date = bolOrderItem.PromisedDeliveryDate;
 						if (bolCountry == 'be') {
 							orderItem.shipping_cost_ex_vat_bol = product.shipping_cost_ex_vat_bol_be;
 						} else {
@@ -192,8 +192,8 @@ class BolOrderController {
 						}
 						await orderItem.save();
 
-						console.log('ORDER :' + counter1 + ' ITEMs : ' + counter2 + ' ITEM' + counter3);
-						console.log(bolOrderItem);
+						//console.log('ORDER :' + counter1 + ' ITEMs : ' + counter2 + ' ITEM' + counter3);
+						//console.log(bolOrderItem);
 					}
 				}
 			}
@@ -437,7 +437,7 @@ class BolOrderController {
 					product = await Product.find(orderItem.id_product);
 					products_sp_ex_vat =
 						Number(products_sp_ex_vat) + Number(orderItem.product_sp_ex_vat) * Number(orderItem.quantity);
-					console.log('Producten' + products_sp_ex_vat);
+					//console.log('Producten' + products_sp_ex_vat);
 					products_sp_in_vat =
 						Number(products_sp_in_vat) + Number(orderItem.product_sp_in_vat) * Number(orderItem.quantity);
 					products_pp_ex_vat = products_pp_ex_vat + Number(product.pp_ex_vat_cz) * Number(orderItem.quantity);

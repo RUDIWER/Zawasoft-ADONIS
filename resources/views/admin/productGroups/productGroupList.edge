@@ -8,9 +8,12 @@
 		<div class="col-lg-12">
 			<div class="card card-primary">
 	<!-- TITLE BAR -->
+
 				<div class="card-header text-white bg-primary">
 					<b>	
-						<i class="fas fa-fw fa-gift"></i> Product Groepen   (aantal: {{ records }})	 		
+						@if(isParent)
+							<i class="fas fa-fw fa-gift"></i> Hoofd Groepen
+						@endif			
 					</b>
 				</div>
 	<!-- BUTTON BAR  -->
@@ -27,26 +30,22 @@
 				</div>
 				<div class="card-body"> 
 					<div id="dataTableWrapper" style="width:100%" class="dataTableParentHidden">
-						<table id="productTable" class="dn table table-bordered table-hover dt-responsive nowrap" cellspacing="0" width="100%">
+						<table id="productGroupTable" class="dn table table-bordered table-hover nowrap" cellspacing="0" width="100%">
 							<thead class="thead-default" style="width:100%">
 								<tr>
 									<th scope="col">Id</th>
-									<th scope="col">EAN 13</th>
 									<th scope="col">Omschr.</th>
-									<th scope="col">Voorraad</th>
-									<th scope="col">Ik.Prijs CZ ex.</th>
-									<th scope="col">Vk.Prijs CZ incl.</th>
+									<th scope="col">Naar Sub-groepen</th>
 								</tr>
 							</thead>
 							<tbody>
-								@each(product in products)
+								@each(parentGroup in parentGroups)
 									<tr>
-										<td>{{ product.id }}</td>
-										<td>{{ product.ean13 }}</td>
-										<td>{{ product.name_nl }}</td>
-										<td>{{ product.stock_real }}</td>
-										<td>{{ product.pp_ex_vat_cz }}</td>
-										<td>{{ product.sp_in_vat_cz }}</td>
+										<td>{{ parentGroup.id }}</td>
+										<td>{{ parentGroup.name }}</td>
+										<td>
+											<i class="fas fa-fw fa-arrow-circle-right">
+										</td>
 									</tr>
 								@endeach
 							</tbody>
@@ -61,7 +60,7 @@
     <script type="text/javascript" charset="utf-8">
       	$(document).ready( function () {
     // DataTables initialization         
-			var productTable = $('#productTable').DataTable({
+			var productGroupTable = $('#productGroupTable').DataTable({
 				dom :"<'myfilter'f><'mylength'l>t",
 				info: false,
 				responsive: true,
@@ -69,7 +68,7 @@
 				fixedHeader: true,
 				order : [[ 1, "asc" ]],
 				columnDefs: [
-					{ className: "text-right", "targets": [0,3,4,5] },
+					{ className: "text-right", "targets": [0] },
 				],
 				paging : false,
 				language: {
@@ -83,7 +82,7 @@
 			$('div.dataTables_filter input').focus();
 	//(RW) Click on table row
 			$('#productTable').on('click', 'tr', function () {
-				var row = productTable.row(this).data();
+				var row = productGroupTable.row(this).data();
 				var productId = row[0];
 				var path = "/admin/product-group/edit/" + productId;
 				window.location.href = path;

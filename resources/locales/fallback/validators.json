@@ -1,5 +1,6 @@
 {
 	"required": "This field must be filled in!",
+	"alpha": "Enkel A-Z / a-z is toegestaan! (geen leestekens)",
 	"required_if": "This field must be filled in!",
 	"regex": "Er staan niet toegelaten karakters in dit veld !",
 	"first_name.max": "First name can be max. 30 char.",

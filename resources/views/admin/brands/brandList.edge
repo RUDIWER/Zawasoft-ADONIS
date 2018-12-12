@@ -10,7 +10,7 @@
 	<!-- TITLE BAR -->
 				<div class="card-header text-white bg-primary">
 					<b>	
-						<i class="nav-icon icon-user-follow"></i> Merken   		
+						<i class="nav-icon icon-diamond"></i> Merken   		
 					</b>
 				</div>
 	<!-- BUTTON BAR  -->
@@ -27,7 +27,7 @@
 				</div>
 				<div class="card-body"> 
 					<div id="dataTableWrapper" style="width:100%" class="dataTableParentHidden">
-						<table id="brandTable" class="dn table table-bordered table-hover table-responsive" cellspacing="0" width="100%">
+						<table id="brandTable" class="dn table table-bordered table-hover" cellspacing="0" width="100%">
 							<thead class="thead-default">
 								<tr>
 									<th scope="col">Id</th>
@@ -35,7 +35,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								@each(customer in customers)
+								@each(brand in brands)
 									<tr>
 										<td>{{ brand.id }}</td>
 										<td>{{ brand.name_nl }}</td>
@@ -53,7 +53,7 @@
     <script type="text/javascript" charset="utf-8">
       	$(document).ready( function () {
     // DataTables initialization         
-			var customerTable = $('#brandTable').DataTable({
+			var brandTable = $('#brandTable').DataTable({
 				dom :"<'myfilter'f><'mylength'l>t",
 				info: false,
 				responsive: true,

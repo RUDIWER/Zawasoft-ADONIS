@@ -80,15 +80,22 @@ Route.post('/admin/product/save/:id', 'Admin/ProductController.save')
 	.middleware([ 'auth' ]);
 
 // PRODUCT GROUPS
-Route.get('admin/product-group', 'Admin/ProductGroupController.index').as('admin-product-group').middleware([ 'auth' ]);
+Route.get('admin/product-parent-groups', 'Admin/ProductGroupController.index').as('admin-product-parent-groups').middleware([ 'auth' ]);
 
 // BRANDS
-Route.get('admin/brands', 'Admin/BrandController.index').as('admin-brands').middleware([ 'auth' ]);
+Route.get('admin/brands', 'Admin/ProductBrandController.index').as('admin-brands').middleware([ 'auth' ]);
+Route.get('admin/brand/create', 'Admin/ProductBrandController.create').as('admin-brand-create').middleware([ 'auth' ]);
+Route.get('admin/brand/edit/:id', 'Admin/ProductBrandController.edit').as('admin-brand-edit').middleware([ 'auth' ]);
+Route.post('/admin/brand/save/:id', 'Admin/ProductBrandController.save')
+	.as('admin-brand-save')
+	.validator('storeBrand')
+	.middleware([ 'auth' ]);
 
 // PRODUCT REPORTS
 Route.get('admin/products/reports/stock-report', 'Admin/ProductReportController.stockReport')
 	.as('admin-products-reports-stockreport')
 	.middleware([ 'auth' ]);
+
 
 // OLD PRODUCTS
 Route.get('admin/old-products', 'Admin/OldProductController.index').as('admin-old-products').middleware([ 'auth' ]);
