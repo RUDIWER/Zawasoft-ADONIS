@@ -51,6 +51,11 @@ Route.post('/admin/param/save', 'Admin/ParamController.save')
 	.validator('storeParam')
 	.as('admin-param-save')
 	.middleware([ 'auth' ]);
+Route.get('admin/bulk-changes', 'Admin/ParamController.showBulkForm').as('admin-bulk-changes').middleware([ 'auth' ]);
+Route.post('/admin/bulk-changes/save', 'Admin/ParamController.bulkSave')
+	.validator('storeBulk')
+	.as('admin-bulk-changes-save')
+	.middleware([ 'auth' ]);
 
 // PRODUCT
 Route.get('admin/products', 'Admin/ProductController.index').as('admin-products').middleware([ 'auth' ]);
@@ -76,6 +81,9 @@ Route.post('/admin/product/save/:id', 'Admin/ProductController.save')
 
 // PRODUCT GROUPS
 Route.get('admin/product-group', 'Admin/ProductGroupController.index').as('admin-product-group').middleware([ 'auth' ]);
+
+// BRANDS
+Route.get('admin/brands', 'Admin/BrandController.index').as('admin-brands').middleware([ 'auth' ]);
 
 // PRODUCT REPORTS
 Route.get('admin/products/reports/stock-report', 'Admin/ProductReportController.stockReport')

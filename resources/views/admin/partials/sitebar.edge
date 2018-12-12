@@ -119,10 +119,24 @@
 				</ul>
 			</li>
 			<li class="nav-title">Overige</li>
-			<li class="nav-item">
-				<a class="nav-link" href="{{route('admin-param')}}">
-					<i class="nav-icon icon-settings"></i> Instellingen
+			<li class="nav-item nav-dropdown">
+				<a class="nav-link nav-dropdown-toggle" href="#">
+					<i class="nav-icon icon-book-open"></i> Instellingen
 				</a>
+				<ul class="nav-dropdown-items">
+					<li class="nav-item">	
+						<li class="nav-item float-right">
+							<a class="nav-link" href="{{route('admin-param')}}">
+								<i class="nav-icon icon-settings"></i> Instellingen
+							</a>
+						</li>
+						<li class="nav-item float-right">
+							<a class="nav-link" href="{{route('admin-bulk-changes')}}">
+								<i class="nav-icon icon-settings"></i> Bulk wijzigingen
+							</a>
+						</li>
+					</li>
+				</ul>
 			</li>
 			<li class="nav-item nav-dropdown">
 				<a class="nav-link nav-dropdown-toggle" href="#">
@@ -133,6 +147,9 @@
 						
 						<li class="nav-item float-right">
 							<a class="nav-link" href="{{route('admin-product-group')}}">Product groepen</a>
+						</li>
+						<li class="nav-item float-right">
+							<a class="nav-link" href="{{route('admin-brands')}}">Merknamen</a>
 						</li>
 					
 					</li>

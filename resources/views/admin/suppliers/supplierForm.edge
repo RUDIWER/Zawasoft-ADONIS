@@ -1,6 +1,8 @@
 @layout('admin.layouts.app')
 
 @section('content')
+	<script src="/vendor/ckeditor5/translations/nl.js"></script>
+	<script src="/vendor/ckeditor5/ckeditor.js"></script>
 
 	<div class="row">  
 		<div class="col-lg-12">
@@ -37,7 +39,7 @@
 						<a class="nav-link" id="historyTab" data-toggle="tab" href="#tab-2" role="tab" aria-controls="tab-2" aria-selected="false" >Historiek</a>
 					</li>
 						<li  class="nav-item">
-						<a class="nav-link" id="othersTab" data-toggle="tab" href="#tab-3" role="tab" aria-controls="tab-3" aria-selected="false" >Overige</a>
+						<a class="nav-link" id="othersTab" data-toggle="tab" href="#tab-3" role="tab" aria-controls="tab-3" aria-selected="false" >Webshop</a>
 					</li>
 				</ul>
 				@if(isNew)
@@ -73,6 +75,16 @@
 		$(".alert-success").fadeTo(2000, 500).slideUp(500, function(){
 			$(".alert-success").alert('close');
 		});
+
+	// Config CK editor
+	ClassicEditor
+    .create( document.querySelector( '#description' ),{
+		toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'insertTable', 'undo', 'redo'],
+		 language: 'nl'
+	})
+    .catch( error => {
+        console.error( error );
+    } );
 	
 	</script>
 @endsection

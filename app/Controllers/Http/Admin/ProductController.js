@@ -338,7 +338,7 @@ class ProductController {
 			// Set product info in BOL.BE
 			const bolApiBe = new BolApi(Env.get('BOL_BE_PUBLIC_KEY'), Env.get('BOL_BE_PRIVATE_KEY'));
 			if (product.active_bol_be == 1 && product.ean13 != '') {
-				var result = await bolApiBe.setProduct(product.id);
+				var result = await bolApiBe.setProductBe(product.id);
 			} else if (product.active_bol_be == 0 && product.ean13 != '' && oldBolBe == 1) {
 				var result = await bolApiBe.delProduct(product.id);
 			}
@@ -363,7 +363,7 @@ class ProductController {
 			// Set product info in BOL.NL
 			const bolApiNl = new BolApi(Env.get('BOL_NL_PUBLIC_KEY'), Env.get('BOL_NL_PRIVATE_KEY'));
 			if (product.active_bol_nl == 1 && product.ean13 != '') {
-				var result = await bolApiNl.setProduct(product.id);
+				var result = await bolApiNl.setProductNl(product.id);
 			} else if (product.active_bol_nl == 0 && product.ean13 != '' && oldBolNl == 1) {
 				var result = await bolApiNl.delProduct(product.id);
 			}

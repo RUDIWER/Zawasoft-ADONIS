@@ -226,7 +226,7 @@ class BolApi {
 		}
 	}
 
-	async setProduct(id) {
+	async setProductBe(id) {
 		const product = await Product.find(id);
 		const available = product.stock_real > 0 ? 'true' : 'false';
 		const productXml =
@@ -239,7 +239,45 @@ class BolApi {
 			'<Price>' +
 			product.sp_in_vat_bol_be +
 			'</Price>' +
-			'<DeliveryCode>1-2d</DeliveryCode>' +
+			'<DeliveryCode>' +
+			product.bol_be_delivery_time +
+			'</DeliveryCode>' +
+			'<QuantityInStock>' +
+			product.stock_real +
+			'</QuantityInStock>' +
+			'<Publish>' +
+			available +
+			'</Publish>' +
+			'<ReferenceCode>' +
+			product.id +
+			'</ReferenceCode>' +
+			'<Description>NOT NEW</Description>' +
+			'<Title>' +
+			product.name_nl +
+			'</Title>' +
+			'<FulfillmentMethod>FBR</FulfillmentMethod>' +
+			'</RetailerOffer>' +
+			'</UpsertRequest>';
+		const result = await this.request('PUT', '/offers/v2/', '', productXml);
+		return result;
+	}
+
+	async setProductNl(id) {
+		const product = await Product.find(id);
+		const available = product.stock_real > 0 ? 'true' : 'false';
+		const productXml =
+			'<UpsertRequest xmlns="https://plazaapi.bol.com/offers/xsd/api-2.0.xsd">' +
+			'<RetailerOffer>' +
+			'<EAN>' +
+			product.ean13 +
+			'</EAN>' +
+			'<Condition>NEW</Condition>' +
+			'<Price>' +
+			product.sp_in_vat_bol_nl +
+			'</Price>' +
+			'<DeliveryCode>' +
+			product.bol_nl_delivery_time +
+			'</DeliveryCode>' +
 			'<QuantityInStock>' +
 			product.stock_real +
 			'</QuantityInStock>' +

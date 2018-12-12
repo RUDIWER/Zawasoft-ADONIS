@@ -1,0 +1,61 @@
+@layout('admin.layouts.app')
+
+@section('content')
+	<div class="row">  
+		<div class="col-lg-12">
+			<div class="card card-primary">
+	<!-- TITLE BAR  -->
+				<div class="card-header text-white bg-primary">
+					<b>  			  
+						<i class="nav-icon icon-settings"></i> Bulk wijzigingen	
+					</b>
+				</div>
+	<!-- BUTTON BAR  -->
+				<div class="card-header">                      
+					<b>     
+						<a href="{{ route('admin') }}">
+							<i class="fas fa-fw fa-arrow-circle-left"></i> Terug	
+						</a>
+						&nbsp
+						<a class="float-right" href="javascript:{}" onclick="document.getElementById('bulkForm').submit(); return false;">
+							<i class="fas fa-fw fa-check-circle"></i> Wijzigingen Uitvoeren
+						</a> 
+					</b>
+				</div>
+				<div class="card-body"> 
+					@include('partials.notifications')
+					<form action="/admin/bulk-changes/save" name="bulkForm" id="bulkForm" method="post">
+					{{ csrfField() }}
+						<div class="form-row">		
+							<div class="form-group col-md-8">
+								<label class="control-label">Aan te passen Winkel</label>
+								<select 
+								class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('id_shop')) }}" 
+								title="Kies een winkel..." name="id_shop" id="id_shop">
+									<option value="" selected="selected disabled">Selecteer...</option>
+									<option value="bol_be">Bol - Belgie</option>
+									<option value="bol_nl">Bol - Nederland</option> 		
+								</select>
+								{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('id_shop'), hasErrorFor('id_shop')) }}
+							</div>
+						</div>
+						<div class="form-row">		
+							<div class="form-group col-md-8">
+								<label class="control-label">Leveringstermijn</label>
+								<select 
+								class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('id_delivery_time')) }}" 
+								title="Selecteer uw leveringstermijn..." name="id_delivery_time" id="id_delivery_time">
+									<option value="" selected="selected disabled">Selecteer...</option>
+									<option value="1-2d">1-2 werkdagen</option>
+									<option value="2-3d">2-3 werkdagen</option> 
+									<option value="3-5d">3-5 werkdagen</option>		
+								</select>
+								{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('id_delivery_time'), hasErrorFor('id_delivery_time')) }}
+							</div>
+						</div>
+					</form>	
+				</div>
+			</div>	 
+		</div>	
+	</div>	
+@endsection

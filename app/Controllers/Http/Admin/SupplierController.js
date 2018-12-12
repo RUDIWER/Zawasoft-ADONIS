@@ -1,6 +1,8 @@
 'use strict';
 
 const Supplier = use('App/Models/Supplier');
+const PrestaApi = use('App/ZawaClasses/PrestaApi');
+const Env = use('Env');
 
 class SupplierController {
 	async index({ view }) {
@@ -44,6 +46,10 @@ class SupplierController {
 			console.log('there was an error on saving Supplier Data');
 			console.log(e);
 		} finally {
+			if (Env.get('APP_PRESTA')) {
+				const prestaApi = new PrestaApi();
+				const result = await prestaApi.setSupplier(supplier.id);
+			}
 			session.flash({
 				notification: {
 					type: 'success',

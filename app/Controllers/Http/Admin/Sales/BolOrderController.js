@@ -233,11 +233,11 @@ class BolOrderController {
 
 				// 2) Send new stock to bol be
 				const bolApiBe = new BolApi(Env.get('BOL_BE_PUBLIC_KEY'), Env.get('BOL_BE_PRIVATE_KEY'));
-				await bolApiBe.setProduct(product.id);
+				await bolApiBe.setProductBe(product.id);
 
 				// 3) Send new stock to bol nl
 				const bolApiNl = new BolApi(Env.get('BOL_NL_PUBLIC_KEY'), Env.get('BOL_NL_PRIVATE_KEY'));
-				await bolApiNl.setProduct(product.id);
+				await bolApiNl.setProductNl(product.id);
 			}
 			// 4) Change order status
 			order.current_status = params.newStatus;
@@ -532,11 +532,11 @@ class BolOrderController {
 
 				// 2) Send new stock to bol be
 				const bolApiBe = new BolApi(Env.get('BOL_BE_PUBLIC_KEY'), Env.get('BOL_BE_PRIVATE_KEY'));
-				await bolApiBe.setProduct(product.id);
+				await bolApiBe.setProductBe(product.id);
 
 				// 3) Send new stock to bol nl
 				const bolApiNl = new BolApi(Env.get('BOL_NL_PUBLIC_KEY'), Env.get('BOL_NL_PRIVATE_KEY'));
-				await bolApiNl.setProduct(product.id);
+				await bolApiNl.setProductNl(product.id);
 			}
 			await order.delete(trx);
 			await OrderItem.query().where('id_sales_order_bol', id_order).delete(trx);

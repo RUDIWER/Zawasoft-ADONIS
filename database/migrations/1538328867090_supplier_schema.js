@@ -7,6 +7,7 @@ class SupplierSchema extends Schema {
 		this.create('suppliers', (table) => {
 			table.increments();
 			table.string('company', 50).unique();
+			table.text('description');
 			table.string('email_1', 60);
 			table.string('email_1_descr', 50);
 			table.string('email_2', 60);
@@ -29,6 +30,9 @@ class SupplierSchema extends Schema {
 			table.string('number', 10);
 			table.string('bus', 10);
 			table.string('city', 50);
+			table.string('meta_title', 125);
+			table.string('meta_keywords', 255);
+			table.string('meta_description', 255);
 			table.text('memo', 100);
 			table.timestamps();
 		});

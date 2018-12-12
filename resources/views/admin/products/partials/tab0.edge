@@ -119,7 +119,7 @@
 					</label>
 				</div>
 			</div>
-		</div>
+		</div>	
 		<div class="form-row">
 			<div class="form-group col-md-10 ml-auto">
 				<div class="checkbox ml-auto">
@@ -141,19 +141,35 @@
 					</label> 
 				</div>
 			</div>	
-		</div>		
+		</div>	
 	</div>
 	<div class="col-md-4">
-		@if(product.product_pic)
-			<div class="form-row">
-				Afbeelding :
-				<div class="form-group">
-					<div class="img1">
-						<img src="{{product.product_pic}}" alt="product afbeelding" class="img-fluid" alt="Responsive image" img style="border:1px solid grey"/>
-					</div>
-				</div>
+		<div class="form-row">		
+			<div class="form-group col-md-8">
+				<label class="control-label">Leveringstermijn BOL.BE</label>
+				<select 
+				class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('bol_be_delivery_time')) }}" 
+				title="Selecteer uw leveringstermijn..." name="bol_be_delivery_time" id="bol_be_delivery_time">
+					<option value="1-2d" selected="selected">1-2 werkdagen</option>
+					<option value="2-3d">2-3 werkdagen</option> 
+					<option value="3-5d">3-5 werkdagen</option>		
+				</select>
+				{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('bol_be_delivery_time'), hasErrorFor('bol_be_delivery_time')) }}
 			</div>
-		@endif
+		</div>
+		<div class="form-row">		
+			<div class="form-group col-md-8">
+				<label class="control-label">Leveringsterm. BOL_NL</label>
+				<select 
+				class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('bol_nl_delivery_time')) }}" 
+				title="Selecteer uw leveringstermijn..." name="bol_nl_delivery_time" id="bol_nl_delivery_time">
+					<option value="1-2d">1-2 werkdagen</option>
+					<option value="2-3d" selected="selected">2-3 werkdagen</option> 
+					<option value="3-5d">3-5 werkdagen</option>		
+				</select>
+				{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('bol_nl_delivery_time'), hasErrorFor('bol_nl_delivery_time')) }}
+			</div>
+		</div>
 	</div>
 </div>
 

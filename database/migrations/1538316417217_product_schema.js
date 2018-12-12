@@ -32,6 +32,8 @@ class ProductSchema extends Schema {
 			table.boolean('active').defaultTo(0);
 			table.boolean('active_bol_be').defaultTo(0);
 			table.boolean('active_bol_nl').defaultTo(0);
+			table.string('bol_be_delivery_time', 15);
+			table.string('bol_nl_delivery_time', 15);
 			table.decimal('cost_factor', 6, 2).defaultTo(0);
 			table.decimal('cost_amount', 12, 2).defaultTo(0);
 			table.decimal('pp_ex_vat_supplier', 12, 2).defaultTo(0);
