@@ -65,6 +65,8 @@ class ParamController {
 			}
 		} else if (bulkData.id_shop == 'bol_nl') {
 			var bolApiNl = new BolApi(Env.get('BOL_NL_PUBLIC_KEY'), Env.get('BOL_NL_PRIVATE_KEY'));
+			// Loop over products and set delivery Time
+			const products = await Product.all();
 			for (let i in products.rows) {
 				const product = products.rows[i];
 				if (product.active_bol_nl == 1 && product.ean13 != '') {
