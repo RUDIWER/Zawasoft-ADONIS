@@ -100,6 +100,7 @@
 														<th scope="col">Totaal</th>
 														<th scope="col">eff. Bol Cost</th>
 														<th scope="col">Calc. Bol Cost</th>
+														<th scope="col">Uiterste Leverdatum</th>
 													</tr>
 												</thead>
 												<tbody>
@@ -112,6 +113,7 @@
 															<td>{{row.row_total_sp_in_vat}}</td>
 															<td>{{row.transaction_fee}}</td>
 															<td>{{row.calc_cost_bol}}</td>
+															<td>{{row.latest_delivery_date}}</td>
 														</tr>
 													@endeach
 												</tbody>
