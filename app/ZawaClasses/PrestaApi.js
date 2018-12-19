@@ -13,6 +13,7 @@ const ps_ManufacturerShop = use('App/Models/ps_ManufacturerShop');
 const ps_Category = use('App/Models/ps_Category');
 const ps_CategoryProduct = use('App/Models/ps_CategoryProduct');
 const ps_CategoryLang = use('App/Models/ps_CategoryLang');
+const ps_CategoryGroup = use('App/Models/ps_CategoryGroup');
 const ps_CategoryShop = use('App/Models/ps_CategoryShop');
 const ps_Group = use('App/Models/ps_Group');
 const ps_Image = use('App/Models/ps_Image');
