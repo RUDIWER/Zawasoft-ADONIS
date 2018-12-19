@@ -365,17 +365,19 @@ class ProductController {
 			await product.save();
 
 			// Set product in PRESTASHOP
-			if (Env.get('APP_PRESTA') && product.active == 1) {
-				const prestaApi = new PrestaApi();
-				await prestaApi.setProduct(product.id);
-				// If Image changed in Zawasoft kopie to PRESTASHOP
-				if (product_pic.clientName) {
-					console.log('IMAGE GEWIJZIGD !!!!!!!!!!');
-					await prestaApi.setProductPic(product.id, product_pic);
+			if (Env.get('APP_PRESTA')) {
+				if (product.active == 1) {
+					const prestaApi = new PrestaApi();
+					await prestaApi.setProduct(product.id);
+					// If Image changed in Zawasoft kopie to PRESTASHOP
+					if (product_pic.clientName) {
+						console.log('IMAGE GEWIJZIGD !!!!!!!!!!');
+						await prestaApi.setProductPic(product.id, product_pic);
+					}
+				} else {
+					const prestaApi = new PrestaApi();
+					await prestaApi.setProductStock(product.id, 0);
 				}
-			} else {
-				const prestaApi = new PrestaApi();
-				await prestaApi.setProductStock(product.id, 0);
 			}
 
 			// Set product info in BOL.BE
