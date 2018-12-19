@@ -225,7 +225,7 @@ class PrestaApi {
 		}
 		// modify PS_PRODUCT
 		let ps_product = await ps_Product.find(id);
-		if (ps_products) {
+		if (ps_product) {
 			ps_product.active = 0;
 			ps_product.quantity = quantity;
 			await ps_product.save();
