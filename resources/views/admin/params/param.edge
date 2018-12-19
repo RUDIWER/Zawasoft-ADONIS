@@ -51,7 +51,7 @@
 												<label class="control-label">Verzend Kost CZ Belgie ex. BTW</label>
 												<input type="number" min="0" step="0.01" 
 													class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('shipping_cost_ex_vat_cz_be')) }}"  required name="shipping_cost_ex_vat_cz_be" id="shipping_cost_ex_vat_cz_be" 
-													value="{{ old('shipping_cost_ex_vat_cz_be', !param.shipping_cost_ex_vat_cz_be? '':param.shipping_cost_ex_vat_cz_be ) }}"/> 
+													value="{{ old('shipping_cost_ex_vat_cz_be', !param.shipping_cost_ex_vat_cz_be? '': param.shipping_cost_ex_vat_cz_be ) }}"/> 
 												{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('shipping_cost_ex_vat_cz_be'), hasErrorFor('shipping_cost_ex_vat_cz_be')) }} 
 											</div>
 										</div>
@@ -59,7 +59,7 @@
 											<div class="form-group col-md-8">
 												<label class="control-label">Verzend Kost CZ NL ex. BTW</label>
 												<input type="number" step="0.01" class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('shipping_cost_ex_vat_cz_nl')) }}" required name="shipping_cost_ex_vat_cz_nl" id="shipping_cost_ex_vat_cz_nl" 
-												value="{{ old('shipping_cost_ex_vat_cz_nl', !param.shipping_cost_ex_vat_cz_nl ? '':param.shipping_cost_ex_vat_cz_nl ) }}"/>
+												value="{{ old('shipping_cost_ex_vat_cz_nl', !param.shipping_cost_ex_vat_cz_nl ? '': param.shipping_cost_ex_vat_cz_nl ) }}"/>
 											{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('shipping_cost_ex_vat_cz_nl'), hasErrorFor('shipping_cost_ex_vat_cz_nl')) }} 
 
 											</div>
@@ -70,7 +70,7 @@
 											<div class="form-group col-md-8">
 												<label class="control-label">Min. bedrag voor gratis verzending CZ (Incl. BTW)</label>
 												<input type="number" step="0.01" class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('min_order_amount_in_vat_free_shipping'))}}" name="min_order_amount_in_vat_free_shipping" id="min_order_amount_in_vat_free_shipping" 
-												value="{{ old('min_order_amount_in_vat_free_shipping', !param.min_order_amount_in_vat_free_shipping? '':param.min_order_amount_in_vat_free_shipping ) }}"/>
+												value="{{ old('min_order_amount_in_vat_free_shipping', !param.min_order_amount_in_vat_free_shipping? '': param.min_order_amount_in_vat_free_shipping ) }}"/>
 											{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('min_order_amount_in_vat_free_shipping'), hasErrorFor('min_order_amount_in_vat_free_shipping')) }} 
 											</div>
 										</div>
@@ -78,14 +78,14 @@
 											<div class="form-group col-md-8">
 												<label class="control-label">Stand. aangerekend verzend bedrag via CZ - Belgie (ex. BTW)</label>
 												<input type="number" step="0.01" class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('shipping_amount_ex_vat_cz_be'))}}" required name="shipping_amount_ex_vat_cz_be" id="shipping_amount_ex_vat_cz_be" 
-												value="{{ old('shipping_amount_ex_vat_cz_be', !param.shipping_amount_ex_vat_cz_be? '':param.shipping_amount_ex_vat_cz_be) }}"/> 
+												value="{{ old('shipping_amount_ex_vat_cz_be', !param.shipping_amount_ex_vat_cz_be? '': param.shipping_amount_ex_vat_cz_be) }}"/> 
 											</div>
 										</div>
 										<div class="form-row">
 											<div class="form-group col-md-8">
 												<label class="control-label">Stand. aangerekend verzend bedrag via CZ - NL(ex. BTW)</label>
 												<input type="number" step="0.01" class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('shipping_amount_ex_vat_cz_nl'))}}" required name="shipping_amount_ex_vat_cz_nl" id="shipping_amount_ex_vat_cz_nl" 
-												value="{{ old('shipping_amount_ex_vat_cz_nl', !param.shipping_amount_ex_vat_cz_nl? '':param.shipping_amount_ex_vat_cz_nl ) }}"/> 
+												value="{{ old('shipping_amount_ex_vat_cz_nl', !param.shipping_amount_ex_vat_cz_nl? '': param.shipping_amount_ex_vat_cz_nl ) }}"/> 
 											{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('shipping_amount_ex_vat_cz_nl'), hasErrorFor('shipping_amount_ex_vat_cz_nl')) }} 
 											</div>
 										</div>
@@ -93,7 +93,7 @@
 											<div class="form-group col-md-8">
 												<label class="control-label">Stand. aangerekend verzend bedrag via Dropshipping - BE(ex. BTW)</label>
 												<input type="number" step="0.01" class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('shipping_amount_ex_vat_dropshipping_be'))}}" required name="shipping_amount_ex_vat_dropshipping_be" id="shipping_amount_ex_vat_dropshipping_be" 
-												value="{{ old('shipping_amount_ex_vat_dropshipping_be', !param.shipping_amount_ex_vat_dropshipping_be? '':param.shipping_amount_ex_vat_dropshipping_be ) }}"/> 
+												value="{{ old('shipping_amount_ex_vat_dropshipping_be', !param.shipping_amount_ex_vat_dropshipping_be? '': param.shipping_amount_ex_vat_dropshipping_be ) }}"/> 
 											{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('shipping_amount_ex_vat_dropshipping_be'), hasErrorFor('shipping_amount_ex_vat_dropshipping_be')) }} 
 											</div>
 										</div>
@@ -101,7 +101,7 @@
 											<div class="form-group col-md-8">
 												<label class="control-label">Stand. aangerekend verzend bedrag via Dropshipping - NL(ex. BTW)</label>
 												<input type="number" step="0.01" class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('shipping_amount_ex_vat_dropshipping_nl'))}}" required name="shipping_amount_ex_vat_dropshipping_nl" id="shipping_amount_ex_vat_dropshipping_nl" 
-												value="{{ old('shipping_amount_ex_vat_dropshipping_nl', !param.shipping_amount_ex_vat_dropshipping_nl? '':param.shipping_amount_ex_vat_dropshipping_nl ) }}"/> 
+												value="{{ old('shipping_amount_ex_vat_dropshipping_nl', !param.shipping_amount_ex_vat_dropshipping_nl? '': param.shipping_amount_ex_vat_dropshipping_nl ) }}"/> 
 											{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('shipping_amount_ex_vat_dropshipping_nl'), hasErrorFor('shipping_amount_ex_vat_dropshipping_nl')) }} 
 											</div>
 										</div>
@@ -109,7 +109,7 @@
 											<div class="form-group col-md-8">
 												<label class="control-label">Stand. aangerekend verzend bedrag via Groothandel - BE(ex. BTW)</label>
 												<input type="number" step="0.01" class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('shipping_amount_ex_vat_wholesale_be'))}}" required name="shipping_amount_ex_vat_wholesale_be" id="shipping_amount_ex_vat_wholesale_be" 
-												value="{{ old('shipping_amount_ex_vat_wholesale_be', !param.shipping_amount_ex_vat_wholesale_be? '':param.shipping_amount_ex_vat_wholesale_be ) }}"/> 
+												value="{{ old('shipping_amount_ex_vat_wholesale_be', !param.shipping_amount_ex_vat_wholesale_be? '': param.shipping_amount_ex_vat_wholesale_be ) }}"/> 
 											{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('shipping_amount_ex_vat_wholesale_be'), hasErrorFor('shipping_amount_ex_vat_wholesale_be')) }} 
 											</div>
 										</div>
@@ -117,7 +117,7 @@
 											<div class="form-group col-md-8">
 												<label class="control-label">Stand. aangerekend verzend bedrag via Groothandel - NL(ex. BTW)</label>
 												<input type="number" step="0.01" class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('shipping_amount_ex_vat_wholesale_nl'))}}" required name="shipping_amount_ex_vat_wholesale_nl" id="shipping_amount_ex_vat_wholesale_nl" 
-												value="{{ old('shipping_amount_ex_vat_wholesale_nl', !param.shipping_amount_ex_vat_wholesale_nl? '':param.shipping_amount_ex_vat_wholesale_nl ) }}"/> 
+												value="{{ old('shipping_amount_ex_vat_wholesale_nl', !param.shipping_amount_ex_vat_wholesale_nl? '': param.shipping_amount_ex_vat_wholesale_nl ) }}"/> 
 											{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('shipping_amount_ex_vat_wholesale_nl'), hasErrorFor('shipping_amount_ex_vat_wholesale_nl')) }} 
 											</div>
 										</div>
@@ -129,13 +129,13 @@
 											<div class="form-group col-md-6">
 												<label class="control-label">Verzend Kost BOL Belgie ex. BTW</label>
 												<input type="number" step="0.01" class="form-control form-control-sm input-required {{ elIf('is-invalid',getErrorFor('shipping_cost_ex_vat_bol_be'), hasErrorFor('shipping_cost_ex_vat_bol_be'))}}" required name="shipping_cost_ex_vat_bol_be" id="shipping_cost_ex_vat_bol_be" 
-												value="{{ old('shipping_cost_ex_vat_bol_be', !param.shipping_cost_ex_vat_bol_be? '':param.shipping_cost_ex_vat_bol_be ) }}"/> 
+												value="{{ old('shipping_cost_ex_vat_bol_be', !param.shipping_cost_ex_vat_bol_be? '': param.shipping_cost_ex_vat_bol_be ) }}"/> 
 											{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('shipping_cost_ex_vat_bol_be'), hasErrorFor('shipping_cost_ex_vat_bol_be')) }} 	
 											</div>											
 											<div class="form-group col-md-6">
 												<label class="control-label">Retour Kost BOL Belgie ex. BTW</label>
 												<input type="number" step="0.01" class="form-control form-control-sm input-required {{ elIf('is-invalid',getErrorFor('return_cost_ex_vat_bol_be'), hasErrorFor('return_cost_ex_vat_bol_be'))}}" required name="return_cost_ex_vat_bol_be" id="return_cost_ex_vat_bol_be" 
-												value="{{ old('return_cost_ex_vat_bol_be', !param.return_cost_ex_vat_bol_be? '':param.return_cost_ex_vat_bol_be ) }}"/> 
+												value="{{ old('return_cost_ex_vat_bol_be', !param.return_cost_ex_vat_bol_be? '': param.return_cost_ex_vat_bol_be ) }}"/> 
 											{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('return_cost_ex_vat_bol_be'), hasErrorFor('return_cost_ex_vat_bol_be')) }} 	
 											</div>											
 										</div>
@@ -143,13 +143,13 @@
 											<div class="form-group col-md-6">
 												<label class="control-label">Verzend Kost BOL NL ex. BTW</label>
 												<input type="number" step="0.01" class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('shipping_cost_ex_vat_bol_nl'))}}" required name="shipping_cost_ex_vat_bol_nl" id="shipping_cost_ex_vat_bol_nl" 
-												value="{{ old('shipping_cost_ex_vat_bol_nl ', !param.shipping_cost_ex_vat_bol_nl ? '':param.shipping_cost_ex_vat_bol_nl  ) }}"/> 
+												value="{{ old('shipping_cost_ex_vat_bol_nl ', !param.shipping_cost_ex_vat_bol_nl ? '': param.shipping_cost_ex_vat_bol_nl  ) }}"/> 
 											{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('shipping_cost_ex_vat_bol_nl'), hasErrorFor('shipping_cost_ex_vat_bol_nl')) }} 
 											</div>
 											<div class="form-group col-md-6">
 												<label class="control-label">Retour Kost BOL NL ex. BTW</label>
 												<input type="number" step="0.01" class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('return_cost_ex_vat_bol_nl'))}}" required name="return_cost_ex_vat_bol_nl" id="return_cost_ex_vat_bol_nl" 
-												value="{{ old('return_cost_ex_vat_bol_nl ', !param.return_cost_ex_vat_bol_nl ? '':param.return_cost_ex_vat_bol_nl  ) }}"/> 
+												value="{{ old('return_cost_ex_vat_bol_nl ', !param.return_cost_ex_vat_bol_nl ? '': param.return_cost_ex_vat_bol_nl  ) }}"/> 
 											{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('return_cost_ex_vat_bol_nl'), hasErrorFor('return_cost_ex_vat_bol_nl')) }} 
 											</div>
 										</div>

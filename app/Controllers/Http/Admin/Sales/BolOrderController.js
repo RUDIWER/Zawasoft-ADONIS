@@ -162,7 +162,6 @@ class BolOrderController {
 						}
 						orderItem.id_order_bol_item = bolOrderItem.OrderItemId;
 						orderItem.ean13 = bolOrderItem.EAN;
-						console.log('Interne Referentie :' + bolOrderItem.OfferReference);
 						orderItem.id_product = bolOrderItem.OfferReference;
 						const product = await Product.find(orderItem.id_product);
 						const longTitle = String(bolOrderItem.Title);
@@ -174,7 +173,6 @@ class BolOrderController {
 						orderItem.vat_procent = product.vat_procent;
 						orderItem.row_total_sp_in_vat =
 							Number(bolOrderItem.Quantity) * Number(orderItem.product_sp_in_vat);
-						console.log(bolOrderItem.quantity);
 						orderItem.transaction_fee = bolOrderItem.TransactionFee;
 						if (bolCountry == 'be') {
 							orderItem.calc_cost_bol = product.total_cost_ex_vat_bol_be;
@@ -521,6 +519,7 @@ class BolOrderController {
 		const status = params.status;
 		const id_order = params.id;
 		const country = params.country;
+		const param = await Param.find(1);
 		if (status == '1') {
 			// Order jsut comes in no handlings done just delete order ! STATUS =1
 			const order = await Order.find(id_order);
@@ -544,9 +543,23 @@ class BolOrderController {
 				// 3) Send new stock to bol nl
 				const bolApiNl = new BolApi(Env.get('BOL_NL_PUBLIC_KEY'), Env.get('BOL_NL_PRIVATE_KEY'));
 				await bolApiNl.setProductNl(product.id);
+
+				// Recalc Order row set quantity - salesprice - bol cost to NUL // Add return transport cost
+				const orderRow = await OrderItem.find(orderItem.id);
+				orderRow.quantity = 0;
+				orderRow.row_total_sp_in_vat = 0;
+				orderRow.transaction_fee = 0;
+				if (country == 'be') {
+					orderRow.return_shipping_cost_ex_vat_bol = param.return_cost_ex_vat_bol_be;
+				} else {
+					orderRow.return_shipping_cost_ex_vat_bol = param.return_cost_ex_vat_bol_nl;
+				}
+				orderRow.cancel_request = 1;
+				await orderRow.save(trx);
 			}
-			await order.delete(trx);
-			await OrderItem.query().where('id_sales_order_bol', id_order).delete(trx);
+			//Set order status to 7 = Cancelled
+			order.current_status = 7;
+			await order.save(trx);
 			// Commit complete transaction
 			trx.commit();
 		}

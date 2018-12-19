@@ -22,6 +22,7 @@ class SalesOrderRowBolSchema extends Schema {
 			table.string('latest_delivery_date', 30);
 			table.decimal('vat_procent', 4, 2).defaultTo(0);
 			table.decimal('shipping_cost_ex_vat_bol', 12, 2).defaultTo(0);
+			table.decimal('return_shipping_cost_ex_vat_bol', 12, 2).defaultTo(0);
 			table.boolean('cancel_request').defaultTo(0);
 			table.timestamps();
 		});
