@@ -3,7 +3,7 @@
 		<li>
 			&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
 			<input type="checkbox" class="form-check-input" id="group-{{productGroup.id}}" name="group" value="{{productGroup.id}}">
-			&nbsp{{ productGroup.name }} - ({{productGroup.id}})
+			&nbsp{{ productGroup.name_nl }} - ({{productGroup.id}})
 			@if(!productGroup.childs.length < 1 || !productGroup.childs.length == undefined)
 				@include('admin.products.partials.subTree')
 			@endif

@@ -40,6 +40,7 @@ class storeProduct {
 			meta_title_nl: 'max:50',
 			descr_short_nl: 'max:1000',
 			descr_long_nl: 'max:2000',
+			meta_keywords_nl: 'max:255',
 			meta_descr_fr: 'max:50',
 			meta_title_fr: 'max:50',
 			descr_short_fr: 'max:400',

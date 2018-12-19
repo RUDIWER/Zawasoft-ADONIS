@@ -8,6 +8,7 @@ class ProductSchema extends Schema {
 			table.increments();
 			table.string('id_product_supplier', 20);
 			table.integer('id_supplier').unsigned().notNullable();
+			table.integer('id_stand_category').unsigned().nullable();
 			table.integer('id_bol_category').unsigned().notNullable();
 			table.integer('id_brand').unsigned().nullable();
 			table.string('ean13', 20).unique().nullable();
@@ -18,6 +19,7 @@ class ProductSchema extends Schema {
 			table.string('slug_fr');
 			table.string('slug_en');
 			table.string('meta_descr_nl', 50);
+			table.string('meta_keywords_nl', 255);
 			table.string('meta_title_nl', 50);
 			table.text('descr_short_nl', 1000);
 			table.text('descr_long_nl', 2000);

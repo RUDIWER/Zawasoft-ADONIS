@@ -11,40 +11,59 @@
 
 				<div class="card-header text-white bg-primary">
 					<b>	
-						@if(isParent)
-							<i class="fas fa-fw fa-gift"></i> Hoofd Groepen
-						@endif			
+						<i class="fas fa-fw fa-gift"></i> Product Groepen		
 					</b>
 				</div>
 	<!-- BUTTON BAR  -->
 				<div class="card-header">                      
 					<b>     
-						<a href="{{ route('admin') }}">
+						<a href="javascript:history.back()">
 							<i class="fas fa-fw fa-arrow-circle-left"></i>Terug	
 						</a>
 					
-						<a class="float-right" href="{{route('admin-product-create')}}">
-							<i class="fas fa-fw fa-plus-circle"></i>Nieuw
+						<a class="float-right" href="/admin/product-group/create/{{parentGroupId}}">
+							@if(isParent)
+								<i class="fas fa-fw fa-plus-circle"></i>Nieuwe Hoofdgroep
+							@else
+								<i class="fas fa-fw fa-plus-circle"></i>Nieuwe groep aanmaken op dit niveau
+							@endif
 						</a> 
 					</b>
 				</div>
+				<div class="card-header"> 
+					<b>	
+						Huidig niveau : {{ parentGroupName }}
+								
+					</b>
+				</div>   
 				<div class="card-body"> 
 					<div id="dataTableWrapper" style="width:100%" class="dataTableParentHidden">
 						<table id="productGroupTable" class="dn table table-bordered table-hover nowrap" cellspacing="0" width="100%">
 							<thead class="thead-default" style="width:100%">
 								<tr>
 									<th scope="col">Id</th>
+									<th scope="col">Positie</th>
 									<th scope="col">Omschr.</th>
-									<th scope="col">Naar Sub-groepen</th>
+									<th scope="col">		
+									</th>
 								</tr>
 							</thead>
 							<tbody>
-								@each(parentGroup in parentGroups)
+								@each(group in groups)
 									<tr>
-										<td>{{ parentGroup.id }}</td>
-										<td>{{ parentGroup.name }}</td>
+										<td>{{ group.id }}</td>
+										<td>{{ group.position }}</td>
+										<td>{{ group.name_nl }}</td>
 										<td>
-											<i class="fas fa-fw fa-arrow-circle-right">
+											@if(group.childs.length > 0)
+												<a class="float-right" href="/admin/product-child-groups/{{ group.id }}">
+													<i class="fas fa-fw fa-arrow-circle-right"></i>	
+												</a>
+											@else
+												<a class="float-right" href="/admin/product-group/create/{{group.id}}">
+													<i class="fas fa-fw fa-plus-circle icon-cog" style="color:red"></i>	
+												</a>
+											@endif
 										</td>
 									</tr>
 								@endeach
@@ -69,26 +88,32 @@
 				order : [[ 1, "asc" ]],
 				columnDefs: [
 					{ className: "text-right", "targets": [0] },
+					{ width: "5%", "targets": 3 },
 				],
 				paging : false,
 				language: {
 					search: "",
 					searchPlaceholder: "Zoeken...",
-					zeroRecords: "Geen data gevonden"
+					zeroRecords: "Nog geen sub-groepen ! (Druk bovenaan op '+' om een groep op dit niveau toe te voegen"
 				},
 				
 			});
 			$('#dataTableWrapper').removeClass('dataTableParentHidden');
 			$('div.dataTables_filter input').focus();
 	//(RW) Click on table row
-			$('#productTable').on('click', 'tr', function () {
+			$('#productGroupTable').on('click', 'tr', function () {
 				var row = productGroupTable.row(this).data();
-				var productId = row[0];
-				var path = "/admin/product-group/edit/" + productId;
+				var groupId = row[0];
+				var path = "/admin/product-group/edit/" + {{{parentGroupId}}} + "/" + groupId;
 				window.location.href = path;
 			});
+
 		});
     </script>
+
+
+	
+			
 @endsection
 
 

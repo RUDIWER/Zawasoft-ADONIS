@@ -2,7 +2,27 @@
 <div class="row">
 	<div class="col-md-12">
 		<div class="form-row justify-content-md-center">
-			<div class="form-group  col-md-6"> 					<!--    GROUP 1  :   INKOOPRIJZEN -->
+			<div class="form-group  col-md-6"> 	
+				<h5>Hoofd Categorie</h5>
+				<div class="form-row">		
+					<div class="form-group col-md-8">
+						<label class="control-label">Stand. HoofdCategorie</label>
+						<select 
+							class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('id_stand_category')) }}" 
+							title="Kies een categorie.." name="id_stand_category" id="id_stand_category"
+						>
+							<option value="0" selected="selected disabled">Selecteer...</option>
+							@each(standCategory in standGroups)
+								@if(standCategory.id === product.id_stand_category || standCategory.id == old('id_stand_category') )
+									<option value="{{ standCategory.id }}" selected="selected">{{ standCategory.name_nl }}</option>
+								@else
+									<option value="{{ standCategory.id }}">{{ standCategory.name_nl }}</option> 
+								@endif
+							@endeach 
+						</select>
+						{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('id_stand_category'), hasErrorFor('id_stand_category')) }}	
+					</div>
+				</div>
 				<h5>Categorieën</h5>
 	  			<div class="row">
 	  				<div class="col-md-12">
@@ -13,7 +33,7 @@
 										&nbsp&nbsp&nbsp
 										<input type="checkbox" class="form-check-input" name="group" id="group-{{productGroup.id}}" 
 										value="{{ productGroup.id }}"/>
-										{{ productGroup.name }} - ({{productGroup.id}})
+										{{ productGroup.name_nl }} - ({{productGroup.id}})
 										@if(!productGroup.childs.length < 1 || !productGroup.childs.length == undefined)
 											@include('admin.products.partials.subTree')
 										@endif

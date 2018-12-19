@@ -126,25 +126,37 @@
 										<br>				
 										<h5>Kosten BOL.com</h5>
 										<div class="form-row">
-											<div class="form-group col-md-8">
+											<div class="form-group col-md-6">
 												<label class="control-label">Verzend Kost BOL Belgie ex. BTW</label>
 												<input type="number" step="0.01" class="form-control form-control-sm input-required {{ elIf('is-invalid',getErrorFor('shipping_cost_ex_vat_bol_be'), hasErrorFor('shipping_cost_ex_vat_bol_be'))}}" required name="shipping_cost_ex_vat_bol_be" id="shipping_cost_ex_vat_bol_be" 
 												value="{{ old('shipping_cost_ex_vat_bol_be', !param.shipping_cost_ex_vat_bol_be? '':param.shipping_cost_ex_vat_bol_be ) }}"/> 
 											{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('shipping_cost_ex_vat_bol_be'), hasErrorFor('shipping_cost_ex_vat_bol_be')) }} 	
 											</div>											
+											<div class="form-group col-md-6">
+												<label class="control-label">Retour Kost BOL Belgie ex. BTW</label>
+												<input type="number" step="0.01" class="form-control form-control-sm input-required {{ elIf('is-invalid',getErrorFor('return_cost_ex_vat_bol_be'), hasErrorFor('return_cost_ex_vat_bol_be'))}}" required name="return_cost_ex_vat_bol_be" id="return_cost_ex_vat_bol_be" 
+												value="{{ old('return_cost_ex_vat_bol_be', !param.return_cost_ex_vat_bol_be? '':param.return_cost_ex_vat_bol_be ) }}"/> 
+											{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('return_cost_ex_vat_bol_be'), hasErrorFor('return_cost_ex_vat_bol_be')) }} 	
+											</div>											
 										</div>
 										<div class="form-row">
-											<div class="form-group col-md-8">
+											<div class="form-group col-md-6">
 												<label class="control-label">Verzend Kost BOL NL ex. BTW</label>
 												<input type="number" step="0.01" class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('shipping_cost_ex_vat_bol_nl'))}}" required name="shipping_cost_ex_vat_bol_nl" id="shipping_cost_ex_vat_bol_nl" 
 												value="{{ old('shipping_cost_ex_vat_bol_nl ', !param.shipping_cost_ex_vat_bol_nl ? '':param.shipping_cost_ex_vat_bol_nl  ) }}"/> 
 											{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('shipping_cost_ex_vat_bol_nl'), hasErrorFor('shipping_cost_ex_vat_bol_nl')) }} 
 											</div>
+											<div class="form-group col-md-6">
+												<label class="control-label">Retour Kost BOL NL ex. BTW</label>
+												<input type="number" step="0.01" class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('return_cost_ex_vat_bol_nl'))}}" required name="return_cost_ex_vat_bol_nl" id="return_cost_ex_vat_bol_nl" 
+												value="{{ old('return_cost_ex_vat_bol_nl ', !param.return_cost_ex_vat_bol_nl ? '':param.return_cost_ex_vat_bol_nl  ) }}"/> 
+											{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('return_cost_ex_vat_bol_nl'), hasErrorFor('return_cost_ex_vat_bol_nl')) }} 
+											</div>
 										</div>
 										<br>
 										<div class="form-row">
 											<div class="form-group col-md-8">
-												<label class="control-label">Fix Kost BOL / Product ex. BTW</label>
+												<label class="control-label">Stand. Fix Kost BOL / Product ex. BTW</label>
 												<input type="number" step="0.01" class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('fix_cost_ex_vat_bol'))}}" required name="fix_cost_ex_vat_bol" id="fix_cost_ex_vat_bol" 
 												value="{{ old('fix_cost_ex_vat_bol', !param.fix_cost_ex_vat_bol? '':param.fix_cost_ex_vat_bol ) }}"/> 
 											{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('fix_cost_ex_vat_bol'), hasErrorFor('fix_cost_ex_vat_bol')) }} 

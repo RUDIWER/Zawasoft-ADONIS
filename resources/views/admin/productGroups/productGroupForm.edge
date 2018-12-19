@@ -1,0 +1,196 @@
+@layout('admin.layouts.app')
+
+@section('content')
+	<script src="/vendor/ckeditor5/translations/nl.js"></script>
+	<script src="/vendor/ckeditor5/ckeditor.js"></script>
+
+	<div class="row">  
+		<div class="col-lg-12">
+			<div class="card card-primary">
+	<!-- TITLE BAR  -->
+				<div class="card-header text-white bg-primary">
+					<b>  			  
+						<i class="nav-icon icon-settings"></i> Product Groep toevoegen / wijzigen	
+					</b>
+				</div>
+	<!-- BUTTON BAR  -->
+				<div class="card-header">                      
+					<b>     
+						<a href="{{ route('admin') }}">
+							<i class="fas fa-fw fa-arrow-circle-left"></i> Terug	
+						</a>
+						&nbsp
+						<a class="float-right" href="javascript:{}" onclick="document.getElementById('productGroupForm').submit(); return false;">
+							<i class="fas fa-fw fa-check-circle"></i> Opslaan
+						</a> 
+					</b>
+				</div>
+				<div class="card-body"> 
+					@include('partials.notifications')
+					{{ csrfField() }}
+				
+					@if(isNew)
+						<form action="/admin/product-group/save/{{ parentGroupId }}/0" name="productGroupForm" id="productGroupForm" method="post">
+					@else
+						<form action="/admin/product-group/save/{{ parentGroupId }}/{{ group.id }}" name="productGroupForm" id="productGroupForm" method="post">
+					@endif
+						{{ csrfField() }}
+						<div class="form-row">
+							<div class="form-group col-md-2">
+								<label class="control-label">Groep ID</label><br>
+								@if(!isNew)
+									<input type="number" class="form-control form-control-sm" name="id" id="id" value="{{ group.id }}" required readonly tabindex="-1"/>
+								@else
+									<input type="text" class="form-control form-control-sm" placeholder="Nog niet toegekend..." readonly tabindex="-1"/>
+								@endif
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="form-group col-md-8">
+								<label class="control-label">Omschrijving</label>
+								<input type="text" 
+								class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('name_nl')) }}"
+								required name="name_nl" id="name_nl"
+								value="{{ old('name_nl', !group.name_nl? '': group.name_nl ) }}"/>
+								{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('name_nl'), hasErrorFor('name_nl')) }}
+							</div> <!-- form-group -->
+						</div>
+						<hr>
+						<div class="form-row">
+							<div class="form-group col-md-10">
+								<div class="checkbox">
+									<label> 
+										<input type="checkbox" id="active" name="active" 
+										value="{{ old('active', !group.active? '':group.active ) }}">
+										Actief in de webshop ?
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="form-row">
+							<br>
+							<div class="form-group col-md-2">
+								<label class="control-label">Positie</label>
+								<input type="number" 
+									class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('position')) }}"
+									name="position" id="position"
+									value="{{ old('position', !group.position? 0 :group.position) }}"
+								/>
+								{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('position'), hasErrorFor('position')) }}
+								
+							</div> <!-- form-group -->
+							<div class="form-group col-md-12">
+								<label class="control-label">Vriendelijke URL (enkel A-Z / a-z / - )</label>
+								<input type="text" 
+									class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('slug')) }}"
+									name="slug" id="slug"
+									value="{{ old('slug', !group.slug? '':group.slug) }}"
+								/>
+								{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('slug'), hasErrorFor('slug')) }}
+
+							</div> <!-- form-group -->
+							
+							<div class="form-group col-md-12">
+								<label class="control-label">Meta titel (enkel A-Z / a-z geen leestekens!)</label>
+								<input type="text" 
+									class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('meta_title')) }}"
+									name="meta_title" id="meta_title"
+									value="{{ old('meta_title', !group.meta_title_nl? '':group.meta_title_nl) }}"
+								/>
+								{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('meta_title'), hasErrorFor('meta_title')) }}
+
+							</div> <!-- form-group -->
+							<br>
+							<div class="form-group col-md-12">
+								<label class="control-label">Zoekwoorden (gescheiden door komma)</label>
+								<input type="text" 
+									class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('meta_keywords')) }}"
+									name="meta_keywords" id="meta_keywords"
+									value="{{ old('meta_keywords', !group.meta_keywords_nl? '':group.meta_keywords_nl) }}"
+								/>
+								{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('meta_keywords'), hasErrorFor('meta_keywords')) }}
+							</div> <!-- form-group -->
+							<br>
+							<div class="form-group col-md-12">
+								<label class="control-label">Meta Omschrijving (enkel A-Z / a-z geen leestekens!)</label>
+								<input type="text" 
+									class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('meta_description')) }}"
+									name="meta_description" id="meta_description"
+									value="{{ old('meta_description', !group.meta_descr_nl? '':group.meta_descr_nl) }}"
+								/>
+								{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('meta_description'), hasErrorFor('meta_description')) }}
+							</div> <!-- form-group -->
+							<br><br>
+							<div class="form-group  col-md-12">
+								<label class="control-label">Korte omschrijving op de Webshop (NL)</label>
+								<textarea class="form-control {{ elIf('is-invalid','', hasErrorFor('short_description')) }}"  style=display:none;"
+									id="short_description" name="short_description">{{ old('short_description', !group.descr_nl? '': group.descr_nl ) }}
+								</textarea>
+								{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('short_description'), hasErrorFor('short_description')) }}
+							</div>   <!-- form-group -->  
+						</div>
+					</form>	
+				</div>
+			</div>	 
+		</div>	
+	</div>	
+@endsection
+@section('scripts')
+	<script type="text/javascript" charset="utf-8">
+		$(document).ready(function() {
+    //(RW) Slide UP  alert success messages
+			$(".alert-success").fadeTo(2000, 500).slideUp(500, function(){
+				$(".alert-success").alert('close');
+			});
+
+				// SLugify name
+			$("#name_nl").change(function(){
+    			$("#slug").val(slugify($('#name_nl').val()))
+			});
+
+			var active = $('#active').val();
+    		if(active){
+        		$('#active').prop('checked', true);
+    		}
+
+			// On change checkbox 'active'
+			$("#active").change(function(){
+				$('#active').val('0');
+				if($('#active').is(':checked')){
+					$('#active').val('1');	
+				}
+			});
+
+
+        });
+
+		// Config CK editor
+		ClassicEditor
+		.create( document.querySelector( '#short_description' ),{
+			toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'insertTable', 'undo', 'redo'],
+			language: 'nl'
+		})
+		.catch( error => {
+			console.error( error );
+		} );
+
+		function slugify(str) {
+			str = str.replace(/^\s+|\s+$/g, ''); // trim
+			str = str.toLowerCase();
+
+			// remove accents, swap ñ for n, etc
+			var from = 'ÁÄÂÀÃÅČÇĆĎÉĚËÈÊẼĔȆÍÌÎÏŇÑÓÖÒÔÕØŘŔŠŤÚŮÜÙÛÝŸŽáäâàãåčçćďéěëèêẽĕȇíìîïňñóöòôõøðřŕšťúůüùûýÿžþÞĐđßÆa·/_,:; ';
+			var to = 'AAAAAACCCDEEEEEEEEIIIINNOOOOOORRSTUUUUUYYZaaaaaacccdeeeeeeeeiiiinnooooooorrstuuuuuyyzbBDdBAa-------';
+			for (var i = 0, l = from.length; i < l; i++) {
+				str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+			}
+			str = str
+				.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+				.replace(/-+/g, '-'); // collapse dashes
+			return str;
+		}
+
+		
+	</script>
+@endsection
+

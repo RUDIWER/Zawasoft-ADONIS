@@ -80,7 +80,22 @@ Route.post('/admin/product/save/:id', 'Admin/ProductController.save')
 	.middleware([ 'auth' ]);
 
 // PRODUCT GROUPS
-Route.get('admin/product-parent-groups', 'Admin/ProductGroupController.index').as('admin-product-parent-groups').middleware([ 'auth' ]);
+Route.get('admin/product-parent-groups', 'Admin/ProductGroupController.index')
+	.as('admin-product-parent-groups')
+	.middleware([ 'auth' ]);
+Route.get('admin/product-child-groups/:id', 'Admin/ProductGroupController.childs')
+	.as('admin-product-parent-childs')
+	.middleware([ 'auth' ]);
+Route.get('admin/product-group/create/:parentId', 'Admin/ProductGroupController.create')
+	.as('admin-product-group-create')
+	.middleware([ 'auth' ]);
+Route.get('admin/product-group/edit/:parentId/:id', 'Admin/ProductGroupController.edit').as('admin-product-group-edit').middleware([ 'auth' ]);
+
+Route.post('/admin/product-group/save/:parentId/:id', 'Admin/ProductGroupController.save')
+	.as('admin-product-group-save')
+	.validator('storeProductGroup')
+	.middleware([ 'auth' ]);
+
 
 // BRANDS
 Route.get('admin/brands', 'Admin/ProductBrandController.index').as('admin-brands').middleware([ 'auth' ]);
@@ -95,7 +110,6 @@ Route.post('/admin/brand/save/:id', 'Admin/ProductBrandController.save')
 Route.get('admin/products/reports/stock-report', 'Admin/ProductReportController.stockReport')
 	.as('admin-products-reports-stockreport')
 	.middleware([ 'auth' ]);
-
 
 // OLD PRODUCTS
 Route.get('admin/old-products', 'Admin/OldProductController.index').as('admin-old-products').middleware([ 'auth' ]);
@@ -193,4 +207,4 @@ Route.get('/admin/sales/open-orders/bol/del-order/:id/:status/:country', 'Admin/
 	.middleware([ 'auth' ]);
 
 // TEST Routes
-Route.get('admin/test', 'Admin/TestController.prestaProducts').as('admin-test').middleware([ 'auth' ]);
+Route.get('admin/test', 'Admin/TestController.tree').as('admin-test').middleware([ 'auth' ]);

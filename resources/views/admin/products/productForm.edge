@@ -3,6 +3,7 @@
 @section('content')
     <link href="/vendor/treeview/treeview.css" rel="stylesheet"/>
 	<link href="/vendor/dropify/dropify.css" rel="stylesheet"/>
+	
 	<div class="row">  
 		<div class="col-lg-12">
 			<div class="card card-primary">
@@ -87,6 +88,8 @@
 	
 	<script src="/vendor/vue/vue.js"></script>
 	<script src="/vendor/dropify/dropify.js"></script>
+	<script src="/vendor/ckeditor5/translations/nl.js"></script>
+	<script src="/vendor/ckeditor5/ckeditor.js"></script>
 	<script src="/vendor/jspdf/jspdf.min.js"></script>
 	<script src="/vendor/jspdf/jspdf.plugin.text-align.js"></script>
 	<!-- code example https://itsolutionstuff.com/post/laravel-5-category-treeview-hierarchical-structure-example-with-demoexample.html -->
@@ -518,6 +521,26 @@
 			
 			return true;
 		}
+
+		// Config CK editor
+		ClassicEditor
+		.create( document.querySelector( '#descr_short_nl' ),{
+			toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'insertTable', 'undo', 'redo'],
+			language: 'nl'
+		})
+		.catch( error => {
+			console.error( error );
+		} );
+
+		ClassicEditor
+		.create( document.querySelector( '#descr_long_nl' ),{
+			toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'insertTable', 'undo', 'redo'],
+			language: 'nl'
+		})
+		.catch( error => {
+			console.error( error );
+		} );
+
 
 	</script>
 @endsection

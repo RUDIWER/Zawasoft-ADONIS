@@ -11,6 +11,8 @@ class storeParam {
 			shipping_cost_ex_vat_cz_be: 'required|number',
 			shipping_cost_ex_vat_cz_nl: 'required|number',
 			shipping_cost_ex_vat_bol_be: 'required|number',
+			return_cost_ex_vat_bol_be: 'required|number',
+			return_cost_ex_vat_bol_be: 'required|number',
 			shipping_cost_ex_vat_bol_nl: 'required|number',
 			min_order_amount_in_vat_free_shipping: 'required|number',
 			fix_cost_ex_vat_bol: 'required:number',

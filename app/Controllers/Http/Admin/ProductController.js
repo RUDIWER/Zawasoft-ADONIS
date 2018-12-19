@@ -10,9 +10,11 @@ const ProductProductGroup = use('App/Models/ProductProductGroup');
 const BolCategory = use('App/Models/BolCategory');
 const Env = use('Env');
 const BolApi = use('App/ZawaClasses/BolApi.js');
+const PrestaApi = use('App/ZawaClasses/PrestaApi');
 const Helpers = use('Helpers');
 const Database = use('Database');
 const fs = require('fs');
+//const request = require('request');
 
 class ProductController {
 	async index({ view }) {
@@ -61,6 +63,11 @@ class ProductController {
 		//loop over array and add field active
 		const productGroups = makeTree(productGroupsFlat, 0); // See function on bottom
 		const bolCategories = (await BolCategory.all()).toJSON();
+		const standGroups = (await ProductGroup.query()
+			.where('id_parent', 2)
+			.with('childs')
+			.orderBy('name_nl', 'asc')
+			.fetch()).toJSON();
 		const stockPlace1 = await StockPlace.query().where('place_level', '=', '1');
 		const stockPlace2 = await StockPlace.query().where('place_level', '=', '2');
 		const stockPlace3 = await StockPlace.query().where('place_level', '=', '3');
@@ -74,6 +81,7 @@ class ProductController {
 			param,
 			brands,
 			productGroups,
+			standGroups,
 			bolCategories,
 			stockPlace1,
 			stockPlace2,
@@ -94,6 +102,11 @@ class ProductController {
 		const array = (await ProductGroup.all()).toJSON();
 		const productGroups = makeTree(array, 0); // See functon on bottom
 		const bolCategories = (await BolCategory.all()).toJSON();
+		const standGroups = (await ProductGroup.query()
+			.where('id_parent', 2)
+			.with('childs')
+			.orderBy('name_nl', 'asc')
+			.fetch()).toJSON();
 		const activeGroups = await ProductProductGroup.query().where('product_id', '=', product.id);
 		const stockPlace1 = await StockPlace.query().where('place_level', '=', '1');
 		const stockPlace2 = await StockPlace.query().where('place_level', '=', '2');
@@ -107,6 +120,7 @@ class ProductController {
 			suppliers,
 			param,
 			productGroups,
+			standGroups,
 			brands,
 			bolCategories,
 			activeGroups,
@@ -226,6 +240,10 @@ class ProductController {
 		if (!productData.active_bol_nl) {
 			productData.active_bol_nl = '0';
 		}
+		if (productData.id_stand_category == 0) {
+			productData.id_stand_category = '2';
+		}
+
 		const product_pic = request.file('product_pic', {
 			maxSize: '2mb',
 			allowedExtension: [ 'png', 'jpg', 'jpeg', 'gif' ]
@@ -315,6 +333,18 @@ class ProductController {
 						.delete();
 				}
 			}
+			// Add Stand_category to product groupGroup if not already added
+			const standCatExist = await ProductProductGroup.query()
+				.where('product_id', product.id)
+				.where('product_group_id', productData.id_stand_category)
+				.first();
+			if (!standCatExist) {
+				const productProductGroup = new ProductProductGroup();
+				productProductGroup.product_id = product.id;
+				productProductGroup.product_group_id = productData.id_stand_category;
+				await productProductGroup.save();
+			}
+
 			// Get images and move them to the img-prd map
 			// If PRODUCT_PIC is changed (then clientName is name of new downloaded image on client site)
 
@@ -332,8 +362,21 @@ class ProductController {
 				}
 				product.product_pic = appRoot + '/img-prd/img-prd-' + product.id + '/' + fileName;
 			}
-
 			await product.save();
+
+			// Set product in PRESTASHOP
+			if (Env.get('APP_PRESTA') && product.active == 1) {
+				const prestaApi = new PrestaApi();
+				await prestaApi.setProduct(product.id);
+				// If Image changed in Zawasoft kopie to PRESTASHOP
+				if (product_pic.clientName) {
+					console.log('IMAGE GEWIJZIGD !!!!!!!!!!');
+					await prestaApi.setProductPic(product.id, product_pic);
+				}
+			} else {
+				const prestaApi = new PrestaApi();
+				await prestaApi.setProductStock(product.id, 0);
+			}
 
 			// Set product info in BOL.BE
 			const bolApiBe = new BolApi(Env.get('BOL_BE_PUBLIC_KEY'), Env.get('BOL_BE_PRIVATE_KEY'));
