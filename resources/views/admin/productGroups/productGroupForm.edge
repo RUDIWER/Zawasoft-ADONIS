@@ -93,6 +93,7 @@
 							<div class="form-group col-md-12">
 								<label class="control-label">Meta titel (enkel A-Z / a-z geen leestekens!)</label>
 								<input type="text" 
+									pattern="[a-zA-Z0-9\s]+"
 									class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('meta_title')) }}"
 									name="meta_title" id="meta_title"
 									value="{{ old('meta_title', !group.meta_title_nl? '':group.meta_title_nl) }}"
@@ -114,6 +115,7 @@
 							<div class="form-group col-md-12">
 								<label class="control-label">Meta Omschrijving (enkel A-Z / a-z geen leestekens!)</label>
 								<input type="text" 
+									pattern="[a-zA-Z0-9\s]+"
 									class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('meta_description')) }}"
 									name="meta_description" id="meta_description"
 									value="{{ old('meta_description', !group.meta_descr_nl? '':group.meta_descr_nl) }}"
