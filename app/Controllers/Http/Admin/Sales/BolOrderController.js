@@ -204,12 +204,14 @@ class BolOrderController {
 			var orders = (await Order.query()
 				.with('rows')
 				.where('id_country_bol', '=', '2')
+				.where('current_status', '<', '5')
 				.orderBy('id', 'desc')
 				.fetch()).toJSON();
 		} else {
 			var orders = (await Order.query()
 				.with('rows')
 				.where('id_country_bol', '=', '1')
+				.where('current_status', '<', '5')
 				.orderBy('id', 'desc')
 				.fetch()).toJSON();
 		}
@@ -495,6 +497,9 @@ class BolOrderController {
 					product.stock_accounting = product.stock_accounting - invoiceRow.quantity;
 					product.quantity_to_invoice = product.quantity_to_invoice - invoiceRow.quantity;
 					await product.save(trx);
+					// Change order status
+					order.current_status = params.newStatus;
+					await order.save(trx);
 					// Commit complete transaction
 					trx.commit();
 					// Update Invoice Number in Parameters
