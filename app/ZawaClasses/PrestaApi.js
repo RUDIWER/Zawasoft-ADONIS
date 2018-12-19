@@ -204,19 +204,18 @@ class PrestaApi {
 			console.log(ps_stock_available_data[0].id_stock_available);
 			var ps_stock_available = await ps_StockAvailable.find(ps_stock_available_data[0].id_stock_available);
 		}
-		if (!ps_stock_available) {
-			ps_stock_available = new ps_StockAvailable();
+		if (ps_stock_available) {
+			ps_stock_available.id_product = id;
+			ps_stock_available.id_product_attribute = 0;
+			ps_stock_available.id_shop = 1;
+			ps_stock_available.id_shop_group = 0;
+			ps_stock_available.quantity = quantity;
+			ps_stock_available.physical_quantity = quantity;
+			ps_stock_available.reserved_quantity = 0;
+			ps_stock_available.depends_on_stock = 0;
+			ps_stock_available.out_of_stock = 0;
+			await ps_stock_available.save();
 		}
-		ps_stock_available.id_product = id;
-		ps_stock_available.id_product_attribute = 0;
-		ps_stock_available.id_shop = 1;
-		ps_stock_available.id_shop_group = 0;
-		ps_stock_available.quantity = quantity;
-		ps_stock_available.physical_quantity = quantity;
-		ps_stock_available.reserved_quantity = 0;
-		ps_stock_available.depends_on_stock = 0;
-		ps_stock_available.out_of_stock = 0;
-		await ps_stock_available.save();
 		// modify PS_PRODUCT_SHOP
 		let ps_product_shop = await ps_ProductShop.find(id);
 		if (ps_product_shop) {
