@@ -89,13 +89,14 @@ Route.get('admin/product-child-groups/:id', 'Admin/ProductGroupController.childs
 Route.get('admin/product-group/create/:parentId', 'Admin/ProductGroupController.create')
 	.as('admin-product-group-create')
 	.middleware([ 'auth' ]);
-Route.get('admin/product-group/edit/:parentId/:id', 'Admin/ProductGroupController.edit').as('admin-product-group-edit').middleware([ 'auth' ]);
+Route.get('admin/product-group/edit/:parentId/:id', 'Admin/ProductGroupController.edit')
+	.as('admin-product-group-edit')
+	.middleware([ 'auth' ]);
 
 Route.post('/admin/product-group/save/:parentId/:id', 'Admin/ProductGroupController.save')
 	.as('admin-product-group-save')
 	.validator('storeProductGroup')
 	.middleware([ 'auth' ]);
-
 
 // BRANDS
 Route.get('admin/brands', 'Admin/ProductBrandController.index').as('admin-brands').middleware([ 'auth' ]);
@@ -204,6 +205,13 @@ Route.get('/admin/sales/open-orders/bol/change-state/:id/:newStatus', 'Admin/Sal
 
 Route.get('/admin/sales/open-orders/bol/del-order/:id/:status/:country', 'Admin/Sales/BolOrderController.delOrder')
 	.as('admin-sales-open-orders-bol-del-order')
+	.middleware([ 'auth' ]);
+
+Route.get(
+	'/admin/sales/open-orders/bol/problem-order/:id/:status/:country',
+	'Admin/Sales/BolOrderController.problemOrder'
+)
+	.as('admin-sales-open-orders-bol-problem-order')
 	.middleware([ 'auth' ]);
 
 // TEST Routes

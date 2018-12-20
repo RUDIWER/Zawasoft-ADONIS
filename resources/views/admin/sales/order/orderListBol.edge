@@ -36,38 +36,48 @@
 									<b>	
 										Ordernr : {{order.id_order_bol}}&nbsp&nbsp&nbsp<b>Datum Order : {{order.date_time_order}}</b>
 									</b>
-									@if(order.current_status == 1 )
-										<button class="btn btn-danger float-right" @click="setState({{order.id}}, {{order.current_status}})">
-											<span id="spinner-{{order.id}}" 
-												v-if="viewSpinner === {{order.id}}"
-												class="spinner fas fa-spinner fa-spin">
-											</span>
-											Orderverwerking starten
-										</button>	
-									@elseif(order.current_status == 2)
-										<button class="btn btn-warning float-right" @click="setState({{order.id}}, {{order.current_status}})">
-											<span id="spinner-{{order.id}}" 
-												v-if="viewSpinner === {{order.id}}"
-												class="spinner fas fa-spinner fa-spin">
-											</span>
-											Verzending bevestigen
-										</button>
-									@elseif(order.current_status == 3)
-										<button class="btn btn-info float-right" @click="setState({{order.id}}, {{order.current_status}})">
-											<span id="spinner-{{order.id}}" 
-												v-if="viewSpinner === {{order.id}}"
-												class="spinner fas fa-spinner fa-spin">
-											</span>
-											Aflevering bevestigen
-										</button>
-									@elseif(order.current_status == 4)
-										<button class="btn btn-success float-right" @click="setState({{order.id}}, {{order.current_status}})">
-											<span id="spinner-{{order.id}}" 
-												v-if="viewSpinner === {{order.id}}"
-												class="spinner fas fa-spinner fa-spin">
-											</span>
-											Factuur maken
-										</button>
+									@if(!order.is_problem)
+										@if(order.current_status == 1 )
+											<button class="btn btn-danger float-right" @click="setState({{order.id}}, {{order.current_status}})">
+												<span id="spinner-{{order.id}}" 
+													v-if="viewSpinner === {{order.id}}"
+													class="spinner fas fa-spinner fa-spin">
+												</span>
+												Orderverwerking starten
+											</button>	
+										@elseif(order.current_status == 2)
+											<button class="btn btn-warning float-right" @click="setState({{order.id}}, {{order.current_status}})">
+												<span id="spinner-{{order.id}}" 
+													v-if="viewSpinner === {{order.id}}"
+													class="spinner fas fa-spinner fa-spin">
+												</span>
+												Verzending bevestigen
+											</button>
+										@elseif(order.current_status == 3)
+											<button class="btn btn-info float-right" @click="setState({{order.id}}, {{order.current_status}})">
+												<span id="spinner-{{order.id}}" 
+													v-if="viewSpinner === {{order.id}}"
+													class="spinner fas fa-spinner fa-spin">
+												</span>
+												Aflevering bevestigen
+											</button>
+										@elseif(order.current_status == 4)
+											<button class="btn btn-success float-right" @click="setState({{order.id}}, {{order.current_status}})">
+												<span id="spinner-{{order.id}}" 
+													v-if="viewSpinner === {{order.id}}"
+													class="spinner fas fa-spinner fa-spin">
+												</span>
+												Factuur maken
+											</button>
+										@endif
+									@endif
+									@if(order.is_problem)
+										<div class="float-right">
+											<h5>
+												<i class="fas fa-exclamation-triangle" style="color:red"></i>
+												Er is een probleemmelding voor dit order! 
+											</h5>
+										</div>
 									@endif
 								</div>
 								{{ csrfField() }}
@@ -127,7 +137,19 @@
 									</div>
 									<a href="{{ route('admin-sales-open-orders-bol-del-order',{ id: order.id, status: order.current_status, country: bolCountry }) }}">
 										<button class="btn btn-danger">Annuleer Order</button>
-									</a>
+									@if(!order.is_problem)
+										</a>
+											<a href="{{ route('admin-sales-open-orders-bol-problem-order',{ id: order.id, status: order.current_status, country: bolCountry }) }}">
+											<button class="btn btn-default">Probleem melden!</button>
+										</a>
+									@else
+										</a>
+											<a href="{{ route('admin-sales-open-orders-bol-problem-order',{ id: order.id, status: order.current_status, country: bolCountry }) }}">
+											<button class="btn btn-default">Probleem opgelost!</button>
+										</a>
+									@endif
+
+
 								</div>
 							</div>
 						@else

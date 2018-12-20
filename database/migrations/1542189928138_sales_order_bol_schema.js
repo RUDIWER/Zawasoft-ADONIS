@@ -38,6 +38,7 @@ class SalesOrderBolSchema extends Schema {
 			table.string('address_extra_info_invoice', 200);
 			table.string('country_invoice', 50).notNullable();
 			table.string('email_invoice', 60).nullable();
+			table.boolean('is_problem').defaultTo(0);
 			table.timestamps();
 		});
 	}

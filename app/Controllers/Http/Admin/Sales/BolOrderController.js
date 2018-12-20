@@ -515,6 +515,7 @@ class BolOrderController {
 		}
 		return;
 	}
+
 	async delOrder({ params, session, response }) {
 		const status = params.status;
 		const id_order = params.id;
@@ -567,6 +568,24 @@ class BolOrderController {
 			notification: {
 				type: 'success',
 				message: 'Het order werd geannuleerd en de voorraden werd aangepast en doorgestuurd naar Bol !'
+			}
+		});
+		return response.route('admin-sales-open-orders-bol', { country: country });
+	}
+
+	async problemOrder({ params, session, response }) {
+		const status = params.status;
+		const id_order = params.id;
+		const country = params.country;
+		//const param = await Param.find(1);
+		const order = await Order.find(id_order);
+		order.is_problem = !order.is_problem;
+		await order.save();
+
+		session.flash({
+			notification: {
+				type: 'success',
+				message: 'Probleem melding werd aangepast voor order : ' + order.id_order_bol + '!'
 			}
 		});
 		return response.route('admin-sales-open-orders-bol', { country: country });
