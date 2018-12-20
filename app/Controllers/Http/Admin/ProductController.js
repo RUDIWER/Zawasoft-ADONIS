@@ -7,6 +7,7 @@ const StockPlace = use('App/Models/StockPlace');
 const ProductGroup = use('App/Models/ProductGroup');
 const ProductBrand = use('App/Models/ProductBrand');
 const ProductProductGroup = use('App/Models/ProductProductGroup');
+const ps_Image = use('App/Models/ps_Image');
 const BolCategory = use('App/Models/BolCategory');
 const Env = use('Env');
 const BolApi = use('App/ZawaClasses/BolApi.js');
@@ -366,16 +367,33 @@ class ProductController {
 
 			// Set product in PRESTASHOP
 			if (Env.get('APP_PRESTA')) {
+				const productPath = product.product_pic;
+				const cutLength = (appRoot + '/img-prd/img-prd-' + product.id + '/').length;
+				const imageName = productPath.substring(cutLength);
 				if (product.active == 1) {
 					const prestaApi = new PrestaApi();
 					await prestaApi.setProduct(product.id);
 					// If Image changed in Zawasoft kopie to PRESTASHOP
 					if (product_pic.clientName) {
-						console.log('IMAGE GEWIJZIGD !!!!!!!!!!');
-						await prestaApi.setProductPic(product.id, product_pic);
+						console.log('IN CONTROLLER IMAGE GEWIJZIGD CALL PRESTA API !!!!!!!!!!');
+						await prestaApi.setProductPic(product.id, imageName);
+					} else {
+						// If not image NOT changed in Zawa -> check if image exist in zawa and not in Presta. If not -> create in presta
+						console.log('IN CONTROLLER IMAGE NIET GEWIJZIGD CALL API !!!!!!!!!!!!!!');
+						const ps_image = ps_Image
+							.query()
+							.where('id_product', product.id)
+							.where('cover', '=', 1)
+							.fetch();
+						if (!ps_image.length > 0 && product.product_pic) {
+							// There is a image in Zawa and not in Presta
+							await prestaApi.setProductPic(product.id, imageName);
+						}
 					}
 				} else {
+					// If flag active in Zawa is not set -> set stock to 0 in presta !
 					const prestaApi = new PrestaApi();
+					console.log('IMAGE WORDT IN PRESTA TOEGEVOEGD !!!!!!!!!!');
 					await prestaApi.setProductStock(product.id, 0);
 				}
 			}

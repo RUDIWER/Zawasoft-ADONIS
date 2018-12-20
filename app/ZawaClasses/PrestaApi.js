@@ -231,36 +231,32 @@ class PrestaApi {
 		}
 	}
 
-	async setProductPic(id, picture) {
+	async setProductPic(id, imageName) {
 		// Load picture to Prestashop server
 		const coverImage = (await ps_Image.query().where('id_product', id).where('cover', '=', '1').fetch()).toJSON();
 		// If cover image in prestashop for this product then delete it
 		if (coverImage.length > 0) {
-			console.log('ER IS REEDS COVER IMAGE IN PRESTA');
 			const id_image = coverImage[0].id_image;
+			console.log('IN PRESTA API : ER IS REEDS COVER IMAGE IN PRESTA MET ID : ' + id_image);
 			const url = Env.get('PRESTA_PRODUCT_IMAGE_PATH') + id + '/' + id_image;
 			await request
 				.delete(url)
 				.on('response', function(response) {
-					console.log(response.statusCode); // 200
+					console.log('IN API : Delete gelukt : ' + response.statusCode); // 200
 				})
 				.on('error', function(err) {
-					console.log(err);
+					console.log('IN API : Error on delete : ' + err);
 				});
 		}
-		console.log('GEEN IMAGE IN PRESTA');
+		console.log('IN API NA DELETE : GEEN IMAGE IN PRESTA');
 		const url = Env.get('PRESTA_PRODUCT_IMAGE_PATH') + id;
-		console.log('url is : ' + url);
-		const fileName = 'product-' + id + '-pic_1.' + picture.subtype;
-		const localPicPath = Helpers.appRoot() + '/public/img-prd/img-prd-' + id + '/' + fileName;
-		console.log('localPicPath  : ' + localPicPath);
+		const localPicPath = Helpers.appRoot() + '/public/img-prd/img-prd-' + id + '/' + imageName;
 		const picData = { image: fs.createReadStream(localPicPath) };
-
 		await request.post({ url: url, formData: picData }, function optionalCallback(err, httpResponse, body) {
 			if (err) {
 				return console.error('upload failed:', err);
 			}
-			console.log('Upload successful!');
+			console.log('IN API - Upload successful!');
 		});
 	}
 
