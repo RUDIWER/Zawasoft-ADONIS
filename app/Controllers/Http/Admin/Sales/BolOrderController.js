@@ -216,6 +216,40 @@ class BolOrderController {
 		return view.render('admin.sales.order.orderListBol', { orders, bolCountry });
 	}
 
+	async getOrders({ params, request, view, session }) {
+		// Flash old values to the session
+		session.flashAll();
+		// Get id from form
+		const searchData = request.except([ '_csrf', 'submit' ]);
+		const searchField = searchData.search_field;
+		const bolCountry = params.country;
+		//return searchData;
+		if (bolCountry == 'be') {
+			var orders = (await Order.query()
+				.with('rows')
+				.where('id_country_bol', '=', '2')
+				.where('id_order_bol', searchField)
+				.orWhere('customer_last_name_delivery','like', searchField + '%')
+				.orWhere('customer_first_name_delivery','like', searchField + '%')
+				.orWhere('customer_last_name_invoice','like', searchField + '%')
+				.orWhere('customer_first_name_invoice','like', searchField + '%')
+				.orderBy('id', 'desc')
+				.fetch()).toJSON();
+		} else {
+			var orders = (await Order.query()
+				.with('rows')
+				.where('id_country_bol', '=', '1')
+				.where('id_order_bol', searchField)
+				.orWhere('customer_last_name_delivery','like', searchField + '%')
+				.orWhere('customer_first_name_delivery','like', searchField + '%')
+				.orWhere('customer_last_name_invoice','like', searchField + '%')
+				.orWhere('customer_first_name_invoice','like', searchField + '%')
+				.orderBy('id', 'desc')
+				.fetch()).toJSON();
+		}
+		return view.render('admin.sales.order.orderListBol', { orders, bolCountry });
+	}
+
 	async changeStatus({ params, session }) {
 		var order = await Order.find(params.id);
 		var orderItems = (await OrderItem.query().where('id_sales_order_bol', params.id).fetch()).toJSON();

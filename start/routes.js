@@ -214,5 +214,9 @@ Route.get(
 	.as('admin-sales-open-orders-bol-problem-order')
 	.middleware([ 'auth' ]);
 
+Route.post('/admin/sales/orders/bol/search/:country', 'Admin/Sales/BolOrderController.getOrders')
+	.as('admin-sales-orders-search')
+	.middleware([ 'auth' ]);
+
 // TEST Routes
-Route.get('admin/test', 'Admin/TestController.tree').as('admin-test').middleware([ 'auth' ]);
+//Route.get('admin/test', 'Admin/TestController.tree').as('admin-test').middleware([ 'auth' ]);
