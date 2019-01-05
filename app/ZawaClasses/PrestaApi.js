@@ -240,6 +240,7 @@ class PrestaApi {
 			const id_image = coverImage[0].id_image;
 			console.log('IN PRESTA API : ER IS REEDS COVER IMAGE IN PRESTA MET ID : ' + id_image);
 			const url = Env.get('PRESTA_PRODUCT_IMAGE_PATH') + id + '/' + id_image;
+			console.log('url is:' + url);
 			await request
 				.delete(url)
 				.on('response', function(response) {
