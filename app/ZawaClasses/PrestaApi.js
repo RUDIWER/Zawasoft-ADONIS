@@ -182,6 +182,7 @@ class PrestaApi {
 		await ps_stock_available.save();
 		// 5) Create || modify PS_CATEGORY_PRODUCT;
 		const product_product_groups = (await ProductProductGroup.query().where('product_id', id).fetch()).toJSON();
+		console.log(product_product_groups);
 		// 5.1 delete all product_groups for this id in prestashop.
 		await ps_CategoryProduct.query().where('id_product', id).delete();
 		if (product_product_groups.length > 0) {
