@@ -9,7 +9,7 @@ class AddressSchema extends Schema {
 			table.integer('id_customer').unsigned();
 			table.integer('id_supplier').unsigned();
 			table.string('country', 50).notNullable();
-			table.string('state', 50).Nullable();
+			table.string('state', 50).nullable();
 			table.string('postcode', 20).notNullable();
 			table.string('alias', 30).notNullable();
 			table.string('company', 50);

@@ -18,7 +18,6 @@ class ParamSchema extends Schema {
 			table.decimal('shipping_cost_ex_vat_bol_be', 6, 2).defaultTo(0);
 			table.decimal('shipping_cost_ex_vat_bol_nl', 6, 2).defaultTo(0);
 			table.decimal('return_cost_ex_vat_bol_be', 6, 2).defaultTo(0);
-			table.decimal('return_cost_ex_vat_bol_be', 6, 2).defaultTo(0);
 			table.decimal('fix_cost_ex_vat_bol', 6, 2).defaultTo(0);
 			table.decimal('stand_cost_procent_bol', 6, 2).defaultTo(0);
 			table.decimal('stand_vat_procent', 6, 2).defaultTo(0);

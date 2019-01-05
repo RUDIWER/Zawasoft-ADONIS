@@ -31,6 +31,7 @@
 							<thead class="thead-default">
 								<tr>
 									<th scope="col">Id</th>
+									<th scope="col">Date.</th>
 									<th scope="col">Fact. Nr.</th>
 									<th scope="col">Voornaam</th>
 									<th scope="col">Familienaam</th>
@@ -40,6 +41,7 @@
 								@each(invoice in invoices)
 									<tr>
 										<td>{{ invoice.id }}</td>
+										<td>{{ invoice.invoice_date }}</td>
 										<td>{{ invoice.invoice_number }}</td>
 										<td>{{ invoice.customer_first_name }}</td>
 										<td>{{ invoice.customer_last_name }}</td>

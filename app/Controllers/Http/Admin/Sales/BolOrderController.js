@@ -229,10 +229,12 @@ class BolOrderController {
 				.with('rows')
 				.where('id_country_bol', '=', '2')
 				.where('id_order_bol', searchField)
-				.orWhere('customer_last_name_delivery','like', searchField + '%')
-				.orWhere('customer_first_name_delivery','like', searchField + '%')
-				.orWhere('customer_last_name_invoice','like', searchField + '%')
-				.orWhere('customer_first_name_invoice','like', searchField + '%')
+				.orWhere('customer_last_name_delivery', 'like', searchField + '%')
+				.orWhere('customer_first_name_delivery', 'like', searchField + '%')
+				.orWhere('company_delivery', 'like', searchField + '%')
+				.orWhere('company_invoice', 'like', searchField + '%')
+				.orWhere('customer_last_name_invoice', 'like', searchField + '%')
+				.orWhere('customer_first_name_invoice', 'like', searchField + '%')
 				.orderBy('id', 'desc')
 				.fetch()).toJSON();
 		} else {
@@ -240,10 +242,12 @@ class BolOrderController {
 				.with('rows')
 				.where('id_country_bol', '=', '1')
 				.where('id_order_bol', searchField)
-				.orWhere('customer_last_name_delivery','like', searchField + '%')
-				.orWhere('customer_first_name_delivery','like', searchField + '%')
-				.orWhere('customer_last_name_invoice','like', searchField + '%')
-				.orWhere('customer_first_name_invoice','like', searchField + '%')
+				.orWhere('customer_last_name_delivery', 'like', searchField + '%')
+				.orWhere('customer_first_name_delivery', 'like', searchField + '%')
+				.orWhere('customer_last_name_invoice', 'like', searchField + '%')
+				.orWhere('company_delivery', 'like', searchField + '%')
+				.orWhere('company_invoice', 'like', searchField + '%')
+				.orWhere('customer_first_name_invoice', 'like', searchField + '%')
 				.orderBy('id', 'desc')
 				.fetch()).toJSON();
 		}
