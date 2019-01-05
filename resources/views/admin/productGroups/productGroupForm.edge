@@ -1,9 +1,10 @@
 @layout('admin.layouts.app')
 
 @section('content')
-	<script src="/vendor/ckeditor5/translations/nl.js"></script>
-	<script src="/vendor/ckeditor5/ckeditor.js"></script>
-
+	<!-- <script src="/vendor/ckeditor5/translations/nl.js"></script>
+	<script src="/vendor/ckeditor5/ckeditor.js"></script> -->
+	<link rel="stylesheet" href="/vendor/jodit/build/jodit.min.css">
+	<script src="/vendor/jodit/build/jodit.min.js"></script>
 	<div class="row">  
 		<div class="col-lg-12">
 			<div class="card card-primary">
@@ -167,6 +168,7 @@
         });
 
 		// Config CK editor
+		/*
 		ClassicEditor
 		.create( document.querySelector( '#short_description' ),{
 			toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'insertTable','imageTextAlternative', 'undo', 'redo'],
@@ -176,6 +178,9 @@
 			console.error( error );
 		} );
 
+		*/
+
+		var editor = new Jodit('#short_description');
 		function slugify(str) {
 			str = str.replace(/^\s+|\s+$/g, ''); // trim
 			str = str.toLowerCase();
