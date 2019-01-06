@@ -237,9 +237,7 @@ class PrestaApi {
 		// If cover image in prestashop for this product then delete it
 		if (coverImage.length > 0) {
 			const id_image = coverImage[0].id_image;
-			console.log('IN PRESTA API : ER IS REEDS COVER IMAGE IN PRESTA MET ID : ' + id_image);
 			const url = Env.get('PRESTA_PRODUCT_IMAGE_PATH') + id + '/' + id_image;
-			console.log('url is:' + url);
 			await request
 				.delete(url)
 				.on('response', function(response) {
@@ -249,18 +247,13 @@ class PrestaApi {
 					console.log('IN API : Error on delete : ' + err);
 				});
 		}
-		console.log('IN API NA DELETE : GEEN IMAGE IN PRESTA');
 		const url = Env.get('PRESTA_PRODUCT_IMAGE_PATH') + id + '/';
-		console.log('url is:' + url);
 		const localPicPath = Helpers.appRoot() + '/public/img-prd/img-prd-' + id + '/' + imageName;
-		console.log('Local image path is :' + localPicPath);
 		const picData = { image: fs.createReadStream(localPicPath) };
-		console.log('picdata is :' + picData);
 		await request.post({ url: url, formData: picData }, function(error, response, body) {
 			console.log('error on store image to presta:', error);
 			console.log('Response from presta:', response && response.statusCode);
 			console.log('Response headers :', response.headers);
-			console.log('body:', body);
 		});
 	}
 
