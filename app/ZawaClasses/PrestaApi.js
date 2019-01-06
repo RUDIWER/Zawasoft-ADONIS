@@ -256,11 +256,12 @@ class PrestaApi {
 		const localPicPath = Helpers.appRoot() + '/public/img-prd/img-prd-' + id + '/' + imageName;
 		console.log('Local image path is :' + localPicPath);
 		const picData = { image: fs.createReadStream(localPicPath) };
-		picData.on('error', (err) => {
+		let readStream = fs.createReadStream(localPicPath);
+		readStrem.on('error', (err) => {
 			console.log('ReadStream error :', err);
 		});
 		// Listen for data
-		picData.on('data', (chunk) => {
+		readStream.on('data', (chunk) => {
 			console.log('Readstrema data :' + chunk);
 		});
 		console.log('picdata is :' + picData);
