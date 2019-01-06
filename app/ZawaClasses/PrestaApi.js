@@ -255,11 +255,11 @@ class PrestaApi {
 		console.log('url is:' + url);
 		const localPicPath = Helpers.appRoot() + '/public/img-prd/img-prd-' + id + '/' + imageName;
 		const picData = { image: fs.createReadStream(localPicPath) };
-		await request.post({ url: url, formData: picData }, function optionalCallback(err, httpResponse, body) {
-			if (err) {
-				return console.error('upload failed:', err);
-			}
-			console.log('IN API - Upload successful!');
+		console.log('picdata is :' + picData);
+		await request.post({ url: url, formData: picData }, function(error, response, body) {
+			console.log('error:', error);
+			console.log('Response:', response && response.statusCode);
+			console.log('body:', body);
 		});
 	}
 

@@ -379,7 +379,7 @@ class ProductController {
 						await prestaApi.setProductPic(product.id, imageName);
 					} else {
 						// If not image NOT changed in Zawa -> check if image exist in zawa and not in Presta. If not -> create in presta
-						console.log('IN CONTROLLER IMAGE NIET GEWIJZIGD CALL API !!!!!!!!!!!!!!');
+						console.log('IN CONTROLLER IMAGE NIET GEWIJZIGD MAAR NIET IN PRESTA CALL API !!!!!!!!!!!!!!');
 						const ps_image = ps_Image
 							.query()
 							.where('id_product', product.id)
@@ -393,7 +393,6 @@ class ProductController {
 				} else {
 					// If flag active in Zawa is not set -> set stock to 0 in presta !
 					const prestaApi = new PrestaApi();
-					console.log('IMAGE WORDT IN PRESTA TOEGEVOEGD !!!!!!!!!!');
 					await prestaApi.setProductStock(product.id, 0);
 				}
 			}
