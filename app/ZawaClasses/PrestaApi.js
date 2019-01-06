@@ -257,7 +257,7 @@ class PrestaApi {
 		console.log('Local image path is :' + localPicPath);
 		const picData = { image: fs.createReadStream(localPicPath) };
 		let readStream = fs.createReadStream(localPicPath);
-		readStrem.on('error', (err) => {
+		readStream.on('error', (err) => {
 			console.log('ReadStream error :', err);
 		});
 		// Listen for data
