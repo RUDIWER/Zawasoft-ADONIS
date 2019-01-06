@@ -260,6 +260,7 @@ class PrestaApi {
 		await request.post({ url: url, formData: picData }, function(error, response, body) {
 			console.log('error on store image to presta:', error);
 			console.log('Response from presta:', response && response.statusCode);
+			console.log('Response headers :', response.headers);
 			console.log('body:', body);
 		});
 	}
