@@ -251,19 +251,11 @@ class PrestaApi {
 				});
 		}
 		console.log('IN API NA DELETE : GEEN IMAGE IN PRESTA');
-		const url = Env.get('PRESTA_PRODUCT_IMAGE_PATH') + id;
+		const url = Env.get('PRESTA_PRODUCT_IMAGE_PATH') + id + '/';
 		console.log('url is:' + url);
 		const localPicPath = Helpers.appRoot() + '/public/img-prd/img-prd-' + id + '/' + imageName;
 		console.log('Local image path is :' + localPicPath);
 		const picData = { image: fs.createReadStream(localPicPath) };
-		let readStream = fs.createReadStream(localPicPath);
-		readStream.on('error', (err) => {
-			console.log('ReadStream error :', err);
-		});
-		// Listen for data
-		readStream.on('data', (chunk) => {
-			console.log('Readstrema data :' + chunk);
-		});
 		console.log('picdata is :' + picData);
 		await request.post({ url: url, formData: picData }, function(error, response, body) {
 			console.log('error on store image to presta:', error);
