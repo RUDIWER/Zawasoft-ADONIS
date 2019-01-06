@@ -251,7 +251,7 @@ class PrestaApi {
 				});
 		}
 		console.log('IN API NA DELETE : GEEN IMAGE IN PRESTA');
-		const url = Env.get('PRESTA_PRODUCT_IMAGE_PATH') + id;
+		const url = Env.get('PRESTA_PRODUCT_IMAGE_PATH');
 		console.log('url is:' + url);
 		const localPicPath = Helpers.appRoot() + '/public/img-prd/img-prd-' + id + '/' + imageName;
 		console.log('Local image path is :' + localPicPath);
