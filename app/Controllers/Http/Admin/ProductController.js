@@ -279,7 +279,6 @@ class ProductController {
 				}
 			}
 			const productGroupsArray = (await ProductGroup.all()).toJSON();
-			return productGroupsArray;
 			var productGroupsArrayLength = productGroupsArray.length;
 			for (let i = 0; i < productGroupsArrayLength; i++) {
 				const productGroupId = productGroupsArray[i].id;
