@@ -21,8 +21,9 @@ const ps_Supplier = use('App/Models/ps_Supplier');
 const ps_SupplierLang = use('App/Models/ps_SupplierLang');
 const ps_SupplierShop = use('App/Models/ps_SupplierShop');
 const Supplier = use('App/Models/Supplier');
-const request = require('request');
 const fs = require('fs');
+const axios = require('axios');
+const FormData = require('form-data');
 const Helpers = use('Helpers');
 const Env = use('Env');
 
@@ -233,33 +234,41 @@ class PrestaApi {
 
 	async setProductPic(id, imageName) {
 		// Load picture to Prestashop server
-		console.log('begin');
 		const coverImage = (await ps_Image.query().where('id_product', id).where('cover', '=', '1').fetch()).toJSON();
-		console.log('na await coverimga 1');
 		// If cover image in prestashop for this product then delete it
 		if (coverImage.length > 0) {
 			const id_image = coverImage[0].id_image;
 			const url = Env.get('PRESTA_PRODUCT_IMAGE_PATH') + id + '/' + id_image;
-			await request
-				.delete(url)
-				.on('response', function(response) {
-					console.log('IN API : Delete gelukt : ' + response.statusCode); // 200
-				})
-				.on('error', function(err) {
-					console.log('IN API : Error on delete : ' + err);
-				});
+			try {
+				const response = await axios.delete(url);
+				console.log('IN API : Delete gelukt : ' + response.statusCode); // 200
+			} catch (err) {
+				console.log('IN API : Error on delete : ' + err);
+			}
 		}
 		const url = Env.get('PRESTA_PRODUCT_IMAGE_PATH') + id + '/';
 		const localPicPath = Helpers.appRoot() + '/public/img-prd/img-prd-' + id + '/' + imageName;
-		const picData = { image: fs.createReadStream(localPicPath) };
-		console.log('voor await request');
-		await request.post({ url: url, formData: picData }, function(error, response, body) {
-			console.log('error on store image to presta:', error);
-			console.log('Response from presta:', response && response.statusCode);
-			console.log('Response headers :', response.headers);
-			console.log('Promise gedaan ');
-		});
-		console.log('na Request laatste');
+		//const picData = { image: fs.createReadStream(localPicPath) };
+		let form = new FormData();
+		form.append('image', fs.createReadStream(localPicPath));
+		try {
+			await axios
+				.create({
+					headers: form.getHeaders()
+				})
+				.post(url, form)
+				.then((response) => {
+					console.log(response.status);
+				})
+				.catch((error) => {
+					if (error.response) {
+						console.log(error.response);
+					}
+					console.log(error.message);
+				});
+		} catch (err) {
+			console.log('IN API : Error on delete : ' + err);
+		}
 	}
 
 	async setSupplier(id) {
@@ -348,9 +357,18 @@ class PrestaApi {
 		try {
 			await ps_category.save();
 		} finally {
+			try {
+				const response = await axios.get('http://95.179.152.34/fixCategory.php');
+				console.log(response.statuscode);
+			} catch (error) {
+				console.error(error);
+			}
+
+			/*
 			await request('http://95.179.152.34/fixCategory.php', function(error) {
 				console.log(error);
 			});
+			*/
 			// 2) Create || modify PS_CATEGORY_GROUP
 			const ps_groups = (await ps_Group.all()).toJSON();
 			const groupsLength = ps_groups.length;
