@@ -295,7 +295,6 @@ class ProductController {
 						// if there is a record in the productproductGroups table -> is ok -> do nothing
 						// If there is no record create one !
 						if (!currentActiveGroup) {
-							console.log('er is reeds een acive in product group group');
 							// Make a new record in productproductGroups table
 							const productProductGroup = new ProductProductGroup();
 							productProductGroup.product_id = product.id;
@@ -318,6 +317,7 @@ class ProductController {
 									await productProductGroup.save();
 									// Search if parent has parent ?
 									const productGroup = await ProductGroup.find(productGroupParentId);
+									console.log('parent group is : ' + productGroupParentId);
 									productGroupParentId = productGroup.id_parent;
 								}
 							}
