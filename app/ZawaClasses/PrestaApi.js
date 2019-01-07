@@ -255,9 +255,14 @@ class PrestaApi {
 			console.log('Response from presta:', response && response.statusCode);
 			console.log('Response headers :', response.headers);
 		});
-		const currentImage = (await ps_Image.query().where('id_product', id).where('cover', '=', '1').fetch()).toJSON();
-		console.log(currentImage);
-		if (currentImage.length > 0) {
+		const currentImageData = (await ps_Image
+			.query()
+			.where('id_product', id)
+			.where('cover', '=', '1')
+			.fetch()).toJSON();
+		console.log('Image na opslaan : ' + currentImageData);
+		if (currentImageData.length > 0) {
+			currentImage = await ps_Image.find(currentImageData[0].id);
 			currentImage.cover = 1;
 			await currentImage.save();
 		}
