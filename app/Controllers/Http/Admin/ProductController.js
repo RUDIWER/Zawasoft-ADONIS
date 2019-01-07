@@ -279,7 +279,6 @@ class ProductController {
 				}
 			}
 			const productGroupsArray = (await ProductGroup.all()).toJSON();
-			return productGroupsArray;
 			var productGroupsArrayLength = productGroupsArray.length;
 			for (let i = 0; i < productGroupsArrayLength; i++) {
 				const productGroupId = productGroupsArray[i].id;
@@ -296,6 +295,8 @@ class ProductController {
 						// if there is a record in the productproductGroups table -> is ok -> do nothing
 						// If there is no record create one !
 						if (!currentActiveGroup) {
+							console.log('er is reeds een acive in product group group');
+							return currentActiveGroup;
 							// Make a new record in productproductGroups table
 							const productProductGroup = new ProductProductGroup();
 							productProductGroup.product_id = product.id;
