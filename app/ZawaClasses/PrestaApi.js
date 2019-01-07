@@ -233,7 +233,9 @@ class PrestaApi {
 
 	async setProductPic(id, imageName) {
 		// Load picture to Prestashop server
+		console.log('begin');
 		const coverImage = (await ps_Image.query().where('id_product', id).where('cover', '=', '1').fetch()).toJSON();
+		console.log('na await coverimga 1');
 		// If cover image in prestashop for this product then delete it
 		if (coverImage.length > 0) {
 			const id_image = coverImage[0].id_image;
@@ -250,23 +252,25 @@ class PrestaApi {
 		const url = Env.get('PRESTA_PRODUCT_IMAGE_PATH') + id + '/';
 		const localPicPath = Helpers.appRoot() + '/public/img-prd/img-prd-' + id + '/' + imageName;
 		const picData = { image: fs.createReadStream(localPicPath) };
-		await request.post({ url: url, formData: picData }, function(error, response, body) {
+		console.log('voor await request');
+		request.post({ url: url, formData: picData }, function(error, response, body) {
 			console.log('error on store image to presta:', error);
 			console.log('Response from presta:', response && response.statusCode);
 			console.log('Response headers :', response.headers);
 			console.log('Promise gedaan ');
+			const currentImageData = (await ps_Image
+				.query()
+				.where('id_product', id)
+				.where('cover', '=', '1')
+				.fetch()).toJSON();
+			console.log('Image na opslaan : ' + currentImageData);
+			if (currentImageData.length > 0) {
+				const currentImage = await ps_Image.find(currentImageData[0].id_image);
+				currentImage.cover = 1;
+				await currentImage.save();
+			}
 		});
-		const currentImageData = (await ps_Image
-			.query()
-			.where('id_product', id)
-			.where('cover', '=', '1')
-			.fetch()).toJSON();
-		console.log('Image na opslaan : ' + currentImageData);
-		if (currentImageData.length > 0) {
-			const currentImage = await ps_Image.find(currentImageData[0].id_image);
-			currentImage.cover = 1;
-			await currentImage.save();
-		}
+		
 	}
 
 	async setSupplier(id) {
