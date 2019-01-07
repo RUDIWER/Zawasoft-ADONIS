@@ -304,23 +304,32 @@ class ProductController {
 						}
 						// Check for parent Records and make them if needed
 						if (productGroupParentId) {
+							/*
 							const currentActiveParentGroup = await ProductProductGroup.query()
 								.where('product_id', '=', product.id)
 								.where('product_group_id', '=', productGroupParentId)
 								.first();
 							// create Parent records
+						
 							if (!currentActiveParentGroup) {
-								while (productGroupParentId) {
+							*/
+							while (productGroupParentId) {
+								const currentActiveParentGroup = await ProductProductGroup.query()
+									.where('product_id', '=', product.id)
+									.where('product_group_id', '=', productGroupParentId)
+									.first();
+								if (!currentActiveParentGroup) {
 									const productProductGroup = new ProductProductGroup();
 									productProductGroup.product_id = product.id;
 									productProductGroup.product_group_id = productGroupParentId;
 									await productProductGroup.save();
-									// Search if parent has parent ?
-									const productGroup = await ProductGroup.find(productGroupParentId);
-									console.log('parent group is : ' + productGroupParentId);
-									productGroupParentId = productGroup.id_parent;
 								}
+								// Search if parent has parent ?
+								const productGroup = await ProductGroup.find(productGroupParentId);
+								console.log('parent group is : ' + productGroupParentId);
+								productGroupParentId = productGroup.id_parent;
 							}
+							//	}
 						}
 					} else {
 						// If no record in Product form Tree check if there a record exist in PPG if Yes delete it !
