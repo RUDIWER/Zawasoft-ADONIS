@@ -21,7 +21,7 @@ const ps_Supplier = use('App/Models/ps_Supplier');
 const ps_SupplierLang = use('App/Models/ps_SupplierLang');
 const ps_SupplierShop = use('App/Models/ps_SupplierShop');
 const Supplier = use('App/Models/Supplier');
-const request = require('request');
+const request = require('request-promise-native');
 const fs = require('fs');
 const Helpers = use('Helpers');
 const Env = use('Env');
@@ -253,24 +253,13 @@ class PrestaApi {
 		const localPicPath = Helpers.appRoot() + '/public/img-prd/img-prd-' + id + '/' + imageName;
 		const picData = { image: fs.createReadStream(localPicPath) };
 		console.log('voor await request');
-		request.post({ url: url, formData: picData }, function(error, response, body) {
+		await request.post({ url: url, formData: picData }, function(error, response, body) {
 			console.log('error on store image to presta:', error);
 			console.log('Response from presta:', response && response.statusCode);
 			console.log('Response headers :', response.headers);
 			console.log('Promise gedaan ');
-			const currentImageData = (await ps_Image
-				.query()
-				.where('id_product', id)
-				.where('cover', '=', '1')
-				.fetch()).toJSON();
-			console.log('Image na opslaan : ' + currentImageData);
-			if (currentImageData.length > 0) {
-				const currentImage = await ps_Image.find(currentImageData[0].id_image);
-				currentImage.cover = 1;
-				await currentImage.save();
-			}
 		});
-		
+		console.log('na Request laatste');
 	}
 
 	async setSupplier(id) {
