@@ -254,6 +254,7 @@ class PrestaApi {
 			console.log('error on store image to presta:', error);
 			console.log('Response from presta:', response && response.statusCode);
 			console.log('Response headers :', response.headers);
+			console.log('Promise gedaan ');
 		});
 		const currentImageData = (await ps_Image
 			.query()
