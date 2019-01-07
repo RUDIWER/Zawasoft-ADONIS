@@ -1,8 +1,6 @@
 @layout('admin.layouts.app')
 
 @section('content')
-	<!-- <script src="/vendor/ckeditor5/translations/nl.js"></script>
-	<script src="/vendor/ckeditor5/ckeditor.js"></script> -->
 	<link rel="stylesheet" href="/vendor/jodit/build/jodit.min.css">
 	<script src="/vendor/jodit/build/jodit.min.js"></script>
 	<div class="row">  
@@ -92,7 +90,7 @@
 							</div> <!-- form-group -->
 							
 							<div class="form-group col-md-12">
-								<label class="control-label">Meta titel (enkel A-Z / a-z geen leestekens!)</label>
+								<label class="control-label">Meta titel (enkel A-Z / a-z geen leestekens! Max 70 kar.) </label>
 								<input type="text" 
 									pattern="[a-zA-Z0-9\s]+"
 									class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('meta_title')) }}"
@@ -114,7 +112,7 @@
 							</div> <!-- form-group -->
 							<br>
 							<div class="form-group col-md-12">
-								<label class="control-label">Meta Omschrijving (enkel A-Z / a-z geen leestekens!)</label>
+								<label class="control-label">Meta Omschrijving (enkel A-Z / a-z geen leestekens! Max. 160 Kar.)</label>
 								<input type="text" 
 									pattern="[a-zA-Z0-9\s]+"
 									class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('meta_description')) }}"
@@ -166,20 +164,6 @@
 
 
         });
-
-		// Config CK editor
-		/*
-		ClassicEditor
-		.create( document.querySelector( '#short_description' ),{
-			toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'insertTable','imageTextAlternative', 'undo', 'redo'],
-			language: 'nl'
-		})
-		.catch( error => {
-			console.error( error );
-		} );
-
-		*/
-
 		var editor = new Jodit('#short_description');
 		function slugify(str) {
 			str = str.replace(/^\s+|\s+$/g, ''); // trim

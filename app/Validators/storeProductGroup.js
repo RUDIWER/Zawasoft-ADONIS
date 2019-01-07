@@ -12,9 +12,9 @@ class storeProductGroup {
 		return {
 			name_nl: 'required|max:50',
 			slug: `required|unique:product_groups,slug,id,${groupId}`, // Backticks !!!
-			meta_title: 'max:128',
+			meta_title: 'max:70',
 			meta_keywords: 'max:255',
-			meta_description: 'max:255'
+			meta_description: 'max:160'
 		};
 	}
 

@@ -30,7 +30,7 @@
 
 <div class="form-row">
 	<div class="form-group  col-md-12">
-		<label class="control-label">Meta titel (Enkel A-Z / a-z Geen leestekens !)</label>
+		<label class="control-label">Meta titel (Enkel A-Z / a-z Geen leestekens! max 70 kar.) (Dit komt als titel in google zoekopdrachten)</label>
 		<input type="text" class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('meta_title_nl')) }}" 
 		name="meta_title_nl" id="meta_title_nl" 
 		value="{{ old('meta_title_nl', !product.meta_title_nl? '': product.meta_title_nl ) }}" placeholder="Meta titel...">
@@ -51,7 +51,7 @@
 </div>
 <div class="form-row">
 	<div class="form-group  col-md-12">
-		<label class="control-label">Meta beschrijving (Enkel A-Z / a-z Geen leestekens !) </label>
+		<label class="control-label">Meta beschrijving (Enkel A-Z / a-z Geen leestekens! Max 160 kar.) (Beschrijving in google zoektekst)</label>
 		<input type="text" class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('meta_descr_nl')) }}" 
 		name="meta_descr_nl" id="meta_descr_nl" 
 		value="{{ old('meta_descr_nl', !product.meta_descr_nl? '': product.meta_descr_nl ) }}" placeholder="Meta beschrijving..."/>
