@@ -256,6 +256,7 @@ class PrestaApi {
 			console.log('Response headers :', response.headers);
 		});
 		const currentImage = (await ps_Image.query().where('id_product', id).where('cover', '=', '1').fetch()).toJSON();
+		console.log(currentImage);
 		if (currentImage.length > 0) {
 			currentImage.cover = 1;
 			await currentImage.save();
