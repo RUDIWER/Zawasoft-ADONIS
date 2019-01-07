@@ -262,7 +262,7 @@ class PrestaApi {
 			.fetch()).toJSON();
 		console.log('Image na opslaan : ' + currentImageData);
 		if (currentImageData.length > 0) {
-			currentImage = await ps_Image.find(currentImageData[0].id_image);
+			const currentImage = await ps_Image.find(currentImageData[0].id_image);
 			currentImage.cover = 1;
 			await currentImage.save();
 		}
