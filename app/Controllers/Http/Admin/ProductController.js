@@ -296,7 +296,6 @@ class ProductController {
 						// If there is no record create one !
 						if (!currentActiveGroup) {
 							console.log('er is reeds een acive in product group group');
-							return currentActiveGroup;
 							// Make a new record in productproductGroups table
 							const productProductGroup = new ProductProductGroup();
 							productProductGroup.product_id = product.id;
