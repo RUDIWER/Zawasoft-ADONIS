@@ -254,6 +254,11 @@ class PrestaApi {
 			console.log('error on store image to presta:', error);
 			console.log('Response from presta:', response && response.statusCode);
 			console.log('Response headers :', response.headers);
+			const coverImage = (await ps_Image.query().where('id_product', id).where('cover', '=', '1').fetch()).toJSON();
+			if (coverImage.length > 0) {
+				coverImage.cover = 1;
+				await coverImage.save();
+			}
 		});
 	}
 

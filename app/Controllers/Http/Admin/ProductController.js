@@ -326,7 +326,6 @@ class ProductController {
 								}
 								// Search if parent has parent ?
 								const productGroup = await ProductGroup.find(productGroupParentId);
-								console.log('parent group is : ' + productGroupParentId);
 								productGroupParentId = productGroup.id_parent;
 							}
 							//	}
@@ -385,11 +384,9 @@ class ProductController {
 					await prestaApi.setProduct(product.id);
 					// If Image changed in Zawasoft kopie to PRESTASHOP
 					if (product_pic.clientName) {
-						console.log('IN CONTROLLER IMAGE GEWIJZIGD CALL PRESTA API !!!!!!!!!!');
 						await prestaApi.setProductPic(product.id, imageName);
 					} else {
 						// If not image NOT changed in Zawa -> check if image exist in zawa and not in Presta. If not -> create in presta
-						console.log('IN CONTROLLER IMAGE NIET GEWIJZIGD MAAR NIET IN PRESTA CALL API !!!!!!!!!!!!!!');
 						const ps_image = ps_Image
 							.query()
 							.where('id_product', product.id)
