@@ -13,10 +13,10 @@ class ProductGroupSchema extends Schema {
 			table.integer('nleft').unsigned().notNullable().defaultTo(0);
 			table.integer('nright').unsigned().notNullable().defaultTo(0);
 			table.string('name_nl', 50).notNullable();
-			table.string('slug_nl').unique().notNullable();
-			table.string('meta_descr_nl', 50);
+			table.string('slug_nl', 255).unique().notNullable();
+			table.string('meta_descr_nl', 255);
 			table.string('meta_keywords_nl', 255);
-			table.string('meta_title_nl', 50);
+			table.string('meta_title_nl', 128);
 			table.text('descr_nl', 400);
 			table.timestamps();
 		});
