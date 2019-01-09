@@ -235,6 +235,9 @@ class ProductController {
 		if (!productData.active) {
 			productData.active = '0';
 		}
+		if (!productData.on_sale) {
+			productData.on_sale = '0';
+		}
 		if (!productData.active_bol_be) {
 			productData.active_bol_be = '0';
 		}

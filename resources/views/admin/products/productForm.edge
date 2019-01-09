@@ -136,7 +136,6 @@
 
 			// Set checkboxes ACTIVE SHOPS
 			var czShopActive = $('#active').val();
-			console.log(czShopActive);
     		if(czShopActive){
         		$('#active').prop('checked', true);
     		}
@@ -150,6 +149,14 @@
     		if(bolNlActive){
         		$('#active_bol_nl').prop('checked', true);
     		}
+
+			// Set checkbox on_sale
+			var czOnSale = $('#on_sale').val();
+			console.log(czOnSale);
+    		if(czOnSale){
+        		$('#on_sale').prop('checked', true);
+    		}
+
 
 			// OnChange Active Shops
 			$("#active").change(function(){
@@ -170,6 +177,14 @@
 				$('#active_bol_nl').val('0');
 				if($('#active_bol_nl').is(':checked')){
 					$('#active_bol_nl').val('1');	
+				}
+			});
+
+			// OnChange On Sale
+			$("#on_sale").change(function(){
+				$('#on_sale').val('0');
+				if($('#on_sale').is(':checked')){
+					$('#on_sale').val('1');	
 				}
 			});
 

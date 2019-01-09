@@ -58,3 +58,14 @@
 		{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('meta_descr_nl'), hasErrorFor('meta_descr_nl')) }}
 	</div>   <!-- form-group -->
 </div>   <!-- row -->
+<div class="form-row">
+	<div class="form-group col-md-10">
+		<div class="checkbox">
+			<label> 
+				<input type="checkbox" id="on_sale" name="on_sale" 
+				value="{{ old('on_sale', !product.on_sale? '':product.on_sale ) }}">
+				In aanbieding plaatsen op webshop? 
+			</label>
+		</div>
+	</div>
+</div>

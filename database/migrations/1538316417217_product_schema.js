@@ -32,6 +32,7 @@ class ProductSchema extends Schema {
 			table.text('descr_short_en', 1000);
 			table.text('descr_long_en', 2000);
 			table.boolean('active').defaultTo(0);
+			table.boolean('on_sale').defaultTo(0);
 			table.boolean('active_bol_be').defaultTo(0);
 			table.boolean('active_bol_nl').defaultTo(0);
 			table.string('bol_be_delivery_time', 15);

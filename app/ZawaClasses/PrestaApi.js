@@ -50,7 +50,7 @@ class PrestaApi {
 		} else {
 			ps_product.id_tax_rules_group = 1;
 		}
-		ps_product.on_sale = 0;
+		ps_product.on_sale = zawaProduct.on_sale;
 		ps_product.online_only = 0;
 		ps_product.ean13 = zawaProduct.ean13;
 		ps_product.isbn = '';
@@ -61,7 +61,7 @@ class PrestaApi {
 		ps_product.low_stock_threshold = 0;
 		ps_product.low_stock_alert = 0;
 		ps_product.price = zawaProduct.sp_ex_vat_cz;
-		ps_product.wholesale_price = 0;
+		ps_product.wholesale_price = zawaProduct.pp_ex_vat_cz;
 		ps_product.unity = ' ';
 		ps_product.unit_price_ratio = 0;
 		ps_product.additional_shipping_cost = 0;
@@ -133,14 +133,14 @@ class PrestaApi {
 		} else {
 			ps_product_shop.id_tax_rules_group = 1;
 		}
-		ps_product_shop.on_sale = 0;
+		ps_product_shop.on_sale = zawaProduct.on_sale;
 		ps_product_shop.online_only = 0;
 		ps_product_shop.ecotax = 0;
 		ps_product_shop.minimal_quantity = 1;
 		ps_product_shop.low_stock_threshold = 0;
 		ps_product_shop.low_stock_alert = 0;
 		ps_product_shop.price = zawaProduct.sp_ex_vat_cz;
-		ps_product_shop.wholesale_price = 0;
+		ps_product_shop.wholesale_price = zawaProduct.pp_ex_vat_cz;
 		ps_product_shop.unity = ' ';
 		ps_product_shop.unit_price_ratio = 0;
 		ps_product_shop.additional_shipping_cost = 0;
