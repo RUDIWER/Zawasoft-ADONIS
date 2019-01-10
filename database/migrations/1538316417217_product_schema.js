@@ -22,7 +22,7 @@ class ProductSchema extends Schema {
 			table.string('meta_keywords_nl', 255);
 			table.string('meta_title_nl', 70);
 			table.text('descr_short_nl', 1000);
-			table.text('descr_long_nl', 2000);
+			table.text('descr_long_nl', 4000);
 			table.string('meta_descr_fr', 160);
 			table.string('meta_title_fr', 70);
 			table.text('descr_short_fr', 1000);
