@@ -194,6 +194,26 @@ Route.get('admin/sales/invoice/pdf/:id', 'Admin/Sales/InvoiceController.getPdf')
 	.middleware([ 'auth' ]);
 */
 
+// ZAWA ORDERS
+Route.get('admin/sales/open-orders/zawa/deals', 'Admin/Sales/ZwdOrderController.openOrders')
+	.as('admin-sales-open-orders-zawadeals')
+	.middleware([ 'auth' ]);
+Route.get('/admin/sales/open-orders/zawa/change-state/:id/:newStatus', 'Admin/Sales/ZwdOrderController.changeStatus')
+	.as('admin-sales-open-orders-zawa-change-status')
+	.middleware([ 'auth' ]);
+
+Route.get('/admin/sales/open-orders/zawa/del-order/:id/:status', 'Admin/Sales/ZwdOrderController.delOrder')
+	.as('admin-sales-open-orders-zawa-del-order')
+	.middleware([ 'auth' ]);
+
+Route.get('/admin/sales/open-orders/zawa/problem-order/:id/:status', 'Admin/Sales/ZwdOrderController.problemOrder')
+	.as('admin-sales-open-orders-zawa-problem-order')
+	.middleware([ 'auth' ]);
+
+Route.post('/admin/sales/orders/zawa/search', 'Admin/Sales/ZwdOrderController.getOrders')
+	.as('admin-sales-orders-zawa-search')
+	.middleware([ 'auth' ]);
+
 // BOL ORDERS
 Route.get('admin/sales/open-orders/bol/:country', 'Admin/Sales/BolOrderController.openOrders')
 	.as('admin-sales-open-orders-bol')

@@ -1,23 +1,19 @@
 @layout('admin.layouts.app')
 
 @section('content')
-	<div id="BolOrderApp">
+	<div id="ZwdOrderApp">
 		<div class="row">  
 			<div class="col-lg-12">
 				<div class="card card-primary">
 		<!-- TITLE BAR -->
 					<div class="card-header text-white bg-primary">
 						<b>	
-							@if(bolCountry == 'nl')
-								<i class="fas fa-futbol"></i> Orders Bol-NL
-							@elseif(bolCountry == 'be')
-								<i class="fas fa-futbol"></i> Orders Bol-BE
-							@endif
+							<i class="fas fa-futbol"></i> Orders ZAWAdeals
 						</b>
 					</div>
 		<!-- BUTTON BAR  -->
 					<div class="card-header">  
-						<form class="form-inline" action="/admin/sales/orders/bol/search/{{bolCountry}}" name="bolOrderSearchForm" id="bolOrderSearchForm" method="post" enctype="multipart/form-data">
+						<form class="form-inline" action="/admin/sales/orders/zwd/search" name="zwdOrderSearchForm" id="zwdOrderSearchForm" method="post" enctype="multipart/form-data">
 							{{ csrfField()}}
 							<b>     
 								<a href="{{ route('admin') }}">
@@ -37,7 +33,7 @@
 							<!-- TITLE BAR -->
 								<div class="card-header text-grey">
 									<b>	
-										Ordernr : {{order.id_order_bol}}&nbsp&nbsp&nbsp<b>Datum Order : {{order.date_time_order}}</b>
+										Ordernr : {{order.id_order}}&nbsp&nbsp&nbsp<b>Datum Order : {{order.date_time_order}}</b>
 									</b>
 									@if(!order.is_problem)
 										@if(order.current_status == 1 )
@@ -76,7 +72,7 @@
 											<div class="float-right">
 												<h5>
 													<i class="fas fa-exclamation-triangle" style="color:blue"></i>
-													Order is gefakuteerd ! 
+													Order is gefacuteerd ! 
 												</h5>
 											</div>
 										@elseif(order.current_status == 7)    
@@ -101,20 +97,18 @@
 								<div class="card-body">
 									<div class="form-row">		
 										<div class="form-group col-md-4">
-											<b>Leverings adres :</b> {{order.phone_delivery}}<br> 
+											<b>Leverings adres :</b><br> 
 											{{order.company_delivery}}<br>
 											{{order.customer_first_name_delivery}} {{order.customer_last_name_delivery}}<br>	 
 											{{order.street_delivery}} {{order.number_delivery}} {{order.bus_delivery}},<br>
 											{{order.postcode_delivery}} {{order.city_delivery}} {{order.country_delivery}}<br>
-											{{order.address_info_delivery}}<br>
-											{{order.address_extra_info_delivery}}<br>
+											{{order.phone_delivery}}<br>
+				
 											<b>facturatie adres :</b><br> 
 											{{order.company_invoice}}<br>
 											{{order.customer_first_name_invoice}} {{order.customer_last_name_invoice}}<br>	 
 											{{order.street_invoice}} {{order.number_invoice}} {{order.bus_invoice}},<br>
 											{{order.postcode_invoice}} {{order.city_invoice}} {{order.country_invoice}}<br>
-											{{order.address_info_invoice}}<br>
-											{{order.address_extra_info_invoice}}<br>
 										</div>
 										<div class="form-group col-md-8">
 											<table id="orderTable" class="dn table table-bordered table-hover table-sm" cellspacing="0" width="100%">
@@ -125,9 +119,7 @@
 														<th scope="col">Aantal</th>
 														<th scope="col">Eenh. Pr.</th>
 														<th scope="col">Totaal</th>
-														<th scope="col">eff. Bol Cost</th>
-														<th scope="col">Calc. Bol Cost</th>
-														<th scope="col">Max.Lev.Dat.</th>
+						
 													</tr>
 												</thead>
 												<tbody>
@@ -137,36 +129,34 @@
 															<td>{{row.product_name_nl}}</td>
 															<td>{{row.quantity}}</td>
 															<td>{{row.product_sp_in_vat}}</td>
-															<td>{{row.row_total_sp_in_vat}}</td>
-															<td>{{row.transaction_fee}}</td>
-															<td>{{row.calc_cost_bol}}</td>
-															<td>{{row.latest_delivery_date}}</td>
+															<td>{{row.row_total_sp_in_vat}}</td>					
 														</tr>
 													@endeach
 												</tbody>
 											</table>
 											<div class="form-row">	
 												<div class="form-group col-md-6">
-													Meer...
+													Aangerekend bedrag verzending ex. BTW : {{ order.shipping_amount_in_vat }}<br>
+													Aangerekend bedrag verzending incl. BTW : {{ order.shipping_amount_ex_vat }}<br>
+													Verzend kost ex. BTW : {{ order.shipping_cost_ex_vat }}<br>
 												</div>
 											</div>		
 										</div>
-									</div>
-									<a href="{{ route('admin-sales-open-orders-bol-del-order',{ id: order.id, status: order.current_status, country: bolCountry }) }}">
+									</div>		
+									<a href="{{ route('admin-sales-open-orders-zawa-del-order',{ id: order.id, status: order.current_status }) }}">
 										<button class="btn btn-danger">Annuleer Order</button>
+									</a>
 									@if(!order.is_problem)
 										</a>
-											<a href="{{ route('admin-sales-open-orders-bol-problem-order',{ id: order.id, status: order.current_status, country: bolCountry }) }}">
+											<a href="{{ route('admin-sales-open-orders-zawa-problem-order',{ id: order.id, status: order.current_status }) }}">
 											<button class="btn btn-default">Probleem melden!</button>
 										</a>
 									@else
 										</a>
-											<a href="{{ route('admin-sales-open-orders-bol-problem-order',{ id: order.id, status: order.current_status, country: bolCountry }) }}">
+											<a href="{{ route('admin-sales-open-orders-zawa-problem-order',{ id: order.id, status: order.current_status }) }}">
 											<button class="btn btn-default">Probleem opgelost!</button>
 										</a>
 									@endif
-
-
 								</div>
 							</div>
 						@else
@@ -187,11 +177,10 @@
 			$(".alert-success").alert('close');
 		});
 
-		var BolOrderApp = new Vue({
-			el: '#BolOrderApp',
+		var ZwdOrderApp = new Vue({
+			el: '#ZwdOrderApp',
 			data: {
 				viewSpinner: 0
-
 			},
 			methods: 
 			{
@@ -210,7 +199,7 @@
 				
 					$.ajax({
 						type: "get",
-						url: "/admin/sales/open-orders/bol/change-state/" + id_order + "/" + newStatus,
+						url: "/admin/sales/open-orders/zawa/change-state/" + id_order + "/" + newStatus,
 						error: function (xhr, ajaxOptions, thrownError, data) 
 						{
 							console.log(thrownError);

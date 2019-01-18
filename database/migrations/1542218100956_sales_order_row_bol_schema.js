@@ -7,7 +7,7 @@ class SalesOrderRowBolSchema extends Schema {
 		this.create('sales_order_rows_bol', (table) => {
 			table.increments();
 			table.integer('id_sales_order_bol').unsigned().notNullable();
-			table.string('id_country_bol').notNullable(); // Be or NL
+			table.string('id_country_bol').notNullable(); // 1=NL   2=BE
 			table.string('id_order_bol').notNullable(); // Bol reference from the order
 			table.string('id_order_bol_item').notNullable(); // Bol reference from the order
 			table.integer('id_product').unsigned().defaultTo(0);

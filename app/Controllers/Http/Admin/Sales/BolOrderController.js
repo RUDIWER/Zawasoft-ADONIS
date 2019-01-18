@@ -287,8 +287,8 @@ class BolOrderController {
 			await Mail.send('admin.sales.emails.bolOrderReceived', mailData, (message) => {
 				message
 					.to(order.email_invoice, order.customer_first_name_delivery)
-					.from(Env.get('MAIL_USERNAME'), 'Cool-Zawadi (via bol)')
-					.replyTo(Env.get('MAIL_REPLY_USERNAME'), 'Het Cool-Zawadi Team')
+					.from(Env.get('MAIL_USERNAME'), 'Cool-Zawadi bvba - ZAWAdeals.com (via bol)')
+					.replyTo(Env.get('MAIL_REPLY_USERNAME'), 'Het ZAWAdeals Team')
 					.subject('We hebben uw order via bol.com ontvangen en gaan meteen aan de slag!');
 			});
 		} else if (params.newStatus == '3') {
@@ -299,8 +299,8 @@ class BolOrderController {
 			await Mail.send('admin.sales.emails.bolOrderSend', mailData, (message) => {
 				message
 					.to(order.email_invoice, order.customer_first_name_delivery)
-					.from(Env.get('MAIL_USERNAME'), 'Cool-Zawadi (via bol)')
-					.replyTo(Env.get('MAIL_REPLY_USERNAME'), 'Het Cool-Zawadi Team')
+					.from(Env.get('MAIL_USERNAME'), 'Cool-Zawadi bvba - ZAWAdeals.com (via bol)')
+					.replyTo(Env.get('MAIL_REPLY_USERNAME'), 'Het ZAWAdeals Team')
 					.subject('Uw order via bol.com werd door ons verstuurd!');
 			});
 		} else if (params.newStatus == '4') {
@@ -311,9 +311,9 @@ class BolOrderController {
 			await Mail.send('admin.sales.emails.bolOrderArrived', mailData, (message) => {
 				message
 					.to(order.email_invoice, order.customer_first_name_delivery)
-					.from(Env.get('MAIL_USERNAME'), 'Cool-Zawadi (via bol)')
-					.replyTo(Env.get('MAIL_REPLY_USERNAME'), 'Het Cool-Zawadi Team')
-					.subject('Uw order via bol.com werd door ons verstuurd!');
+					.from(Env.get('MAIL_USERNAME'), 'Cool-Zawadi bvba - ZAWAdeals.com (via bol)')
+					.replyTo(Env.get('MAIL_REPLY_USERNAME'), 'Het ZAWAdeals Team')
+					.subject('Controle mail onvangst order via bol.com.');
 			});
 		} else if (params.newStatus == '5') {
 			// Change status to 'Gefactureerd'

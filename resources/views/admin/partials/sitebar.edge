@@ -78,6 +78,11 @@
 					<i class="nav-icon icon-logout"></i> Verkopen
 				</a>
 				<ul class="nav-dropdown-items">
+					<li class="nav-item float-right">
+						<a class="nav-link" href="{{route('admin-sales-open-orders-zawadeals')}}">
+							<i class="fas fa-futbol"></i>    Open orders ZWDeals
+						</a>
+					</li>	
 					<li class="nav-item float-right ">
 						<a class="nav-link" href="{{route('admin-sales-open-orders-bol', { country: 'be' })}}">
 							<i class="fas fa-futbol"></i>    Open orders Bol-BE
@@ -92,7 +97,7 @@
 						<a class="nav-link" href="{{route('admin-sales-invoices')}}">
 							<i class="fas fa-fw fa-file-invoice-dollar"></i>    Facturen
 						</a>
-					</li>
+					</li>					
 				</ul>
 			</li>
 			<li class="nav-item nav-dropdown">
