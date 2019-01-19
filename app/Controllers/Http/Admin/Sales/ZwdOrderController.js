@@ -145,7 +145,6 @@ class ZwdOrderController {
 			.where('current_status', '<', '5')
 			.orderBy('id', 'desc')
 			.fetch()).toJSON();
-		return orders;
 		return view.render('admin.sales.order.orderListZwd', { orders });
 	}
 
