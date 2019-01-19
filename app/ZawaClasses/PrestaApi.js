@@ -417,12 +417,10 @@ class PrestaApi {
 	}
 
 	async setOrderState(id, zawaState) {
-		console.log('In order state' + id + ' ' + zawaState);
 		const order = await ps_Order.find(id);
 		if (zawaState == 2) {
 			order.current_state = 3;
 		} else if (zawaState == 3) {
-			console.log('in 3');
 			order.current_state = 4;
 		} else if ((zawaState = 4)) {
 			order.current_state = 5;
@@ -431,7 +429,6 @@ class PrestaApi {
 		} else {
 			order.current_sate = 6;
 		}
-		console.log('Done');
 		await order.save();
 	}
 }
