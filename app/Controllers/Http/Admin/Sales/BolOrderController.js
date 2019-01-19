@@ -533,19 +533,19 @@ class BolOrderController {
 					}
 					invoiceRow.amazon_cost_ex_vat = 0;
 					await invoiceRow.save(trx);
-					// Change stock for products to invoice -x  //  boekhoudkundige voorraad -x
-					product.stock_accounting = product.stock_accounting - invoiceRow.quantity;
-					product.quantity_to_invoice = product.quantity_to_invoice - invoiceRow.quantity;
-					await product.save(trx);
-					// Change order status
-					order.current_status = params.newStatus;
-					await order.save(trx);
-					// Commit complete transaction
-					trx.commit();
-					// Update Invoice Number in Parameters
-					param.last_sales_invoice_nr += 1;
-					await param.save();
 				}
+				// Change stock for products to invoice -x  //  boekhoudkundige voorraad -x
+				product.stock_accounting = product.stock_accounting - invoiceRow.quantity;
+				product.quantity_to_invoice = product.quantity_to_invoice - invoiceRow.quantity;
+				await product.save(trx);
+				// Change order status
+				order.current_status = params.newStatus;
+				await order.save(trx);
+				// Commit complete transaction
+				trx.commit();
+				// Update Invoice Number in Parameters
+				param.last_sales_invoice_nr += 1;
+				await param.save();
 			} finally {
 				session.flash({
 					notification: {

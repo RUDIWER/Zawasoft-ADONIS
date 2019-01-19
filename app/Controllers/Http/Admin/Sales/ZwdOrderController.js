@@ -189,6 +189,9 @@ class ZwdOrderController {
 					.replyTo(Env.get('MAIL_REPLY_USERNAME'), 'Het ZAWAdeals Team')
 					.subject('We hebben uw order in goede orde ontvangen en gaan meteen aan de slag!');
 			});
+			// Change order status in PrestaShop
+			const prestaApi = new PrestaApi();
+			await prestaApi.setOrderState(order.id_order_zwd, 2);
 		} else if (params.newStatus == '3') {
 			// 1) Change order status to 'Verzonden'
 			order.current_status = params.newStatus;
@@ -201,6 +204,9 @@ class ZwdOrderController {
 					.replyTo(Env.get('MAIL_REPLY_USERNAME'), 'Het ZAWAdeals Team')
 					.subject('Uw order werd door ons verstuurd!');
 			});
+			// Change order status in PrestaShop
+			const prestaApi = new PrestaApi();
+			await prestaApi.setOrderState(order.id_order_zwd, 3);
 		} else if (params.newStatus == '4') {
 			// 1) Change order status to 'Afgeleverd'
 			order.current_status = params.newStatus;
@@ -213,6 +219,9 @@ class ZwdOrderController {
 					.replyTo(Env.get('MAIL_REPLY_USERNAME'), 'Het ZAWAdeals Team')
 					.subject('Controle mail ontvangst order ZAWAdeals!');
 			});
+			// Change order status in PrestaShop
+			const prestaApi = new PrestaApi();
+			await prestaApi.setOrderState(order.id_order_zwd, 4);
 		} else if (params.newStatus == '5') {
 			// Change status to 'Gefactureerd'
 			// 1) Create invoice
@@ -448,6 +457,9 @@ class ZwdOrderController {
 					}
 				});
 			}
+			// Change order status in PrestaShop
+			const prestaApi = new PrestaApi();
+			await prestaApi.setOrderState(order.id_order_zwd, 5);
 		}
 		return;
 	}
@@ -527,6 +539,9 @@ class ZwdOrderController {
 					'Het order werd geannuleerd en de voorraden werd aangepast en doorgestuurd naar De verschillende partners !'
 			}
 		});
+		// Change order status in PrestaShop
+		const prestaApi = new PrestaApi();
+		await prestaApi.setOrderState(order.id_order_zwd, 7);
 		return response.route('admin-sales-open-orders-bol', { country: country });
 	}
 }

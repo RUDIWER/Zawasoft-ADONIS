@@ -20,6 +20,7 @@ const ps_Image = use('App/Models/ps_Image');
 const ps_Supplier = use('App/Models/ps_Supplier');
 const ps_SupplierLang = use('App/Models/ps_SupplierLang');
 const ps_SupplierShop = use('App/Models/ps_SupplierShop');
+const ps_Order = use('App/Models/ps_Order');
 const Supplier = use('App/Models/Supplier');
 const fs = require('fs');
 const axios = require('axios');
@@ -413,6 +414,25 @@ class PrestaApi {
 			ps_category_shop.position = 0;
 			await ps_category_shop.save();
 		}
+	}
+
+	async setOrderState(id, zawaState) {
+		console.log('In order state' + id + ' ' + zawaState);
+		const order = await ps_Order.find(id);
+		if (zawaState == 2) {
+			order.current_state = 3;
+		} else if (zawaState == 3) {
+			console.log('in 3');
+			order.current_state = 4;
+		} else if ((zawaState = 4)) {
+			order.current_state = 5;
+		} else if ((zawaState = 5)) {
+			order.current_state = 14;
+		} else {
+			order.current_sate = 6;
+		}
+		console.log('Done');
+		await order.save();
 	}
 }
 
