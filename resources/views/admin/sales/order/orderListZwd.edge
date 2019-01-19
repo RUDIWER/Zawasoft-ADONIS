@@ -32,9 +32,12 @@
 							<div class="card card-primary">
 							<!-- TITLE BAR -->
 								<div class="card-header text-grey">
-									<b>	
-										Ordernr : {{order.id_order_zwd}}&nbsp&nbsp&nbsp<b>Datum Order : {{order.date_time_order}}</b><br>
-										Order Referentie : {{ order.reference }}<br>
+									<b>
+										Ordernr : {{order.id_order_zwd}}&nbsp&nbsp&nbspDatum Order : {{order.date_time_order}}<br>
+										Order referentie : {{ order.reference }}
+									</b>
+									@if(!order.is_problem)
+										@if(order.current_status == 1 )
 											<button class="btn btn-danger float-right" @click="setState({{order.id}}, {{order.current_status}})">
 												<span id="spinner-{{order.id}}" 
 													v-if="viewSpinner === {{order.id}}"
