@@ -7,6 +7,7 @@ class SalesOrderZwdSchema extends Schema {
 		this.create('sales_orders_zwd', (table) => {
 			table.increments();
 			table.string('id_order_zwd').notNullable();
+			table.string('reference').notNullable();
 			table.integer('current_status').notNullable();
 			table.string('id_country_zwd').notNullable();
 			table.string('date_time_order', 50).notNullable();

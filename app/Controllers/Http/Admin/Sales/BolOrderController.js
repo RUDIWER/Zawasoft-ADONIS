@@ -278,6 +278,10 @@ class BolOrderController {
 				// 3) Send new stock to bol nl
 				const bolApiNl = new BolApi(Env.get('BOL_NL_PUBLIC_KEY'), Env.get('BOL_NL_PRIVATE_KEY'));
 				await bolApiNl.setProductNl(product.id);
+
+				// 4) Send Stock To Prestashop
+				const prestaApi = new PrestaApi();
+				await prestaApi.setProductStock(product.id, product.stock_real);
 			}
 			// 4) Change order status
 			order.current_status = params.newStatus;
@@ -583,6 +587,10 @@ class BolOrderController {
 				const bolApiNl = new BolApi(Env.get('BOL_NL_PUBLIC_KEY'), Env.get('BOL_NL_PRIVATE_KEY'));
 				await bolApiNl.setProductNl(product.id);
 
+				// 4) Send Stock To Prestashop
+				const prestaApi = new PrestaApi();
+				await prestaApi.setProductStock(product.id, product.stock_real);
+
 				// Recalc Order row set quantity - salesprice - bol cost to NUL // Add return transport cost
 				const orderRow = await OrderItem.find(orderItem.id);
 				orderRow.quantity = 0;
@@ -605,7 +613,8 @@ class BolOrderController {
 		session.flash({
 			notification: {
 				type: 'success',
-				message: 'Het order werd geannuleerd en de voorraden werd aangepast en doorgestuurd naar Bol !'
+				message:
+					'Het order werd geannuleerd en de voorraden werd aangepast en doorgestuurd naar de verschillende partners !'
 			}
 		});
 		return response.route('admin-sales-open-orders-bol', { country: country });

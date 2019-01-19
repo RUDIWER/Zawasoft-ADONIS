@@ -217,18 +217,20 @@ class PrestaApi {
 			ps_stock_available.out_of_stock = 0;
 			await ps_stock_available.save();
 		}
-		// modify PS_PRODUCT_SHOP
-		let ps_product_shop = await ps_ProductShop.find(id);
-		if (ps_product_shop) {
-			ps_product_shop.active = 0;
-			await ps_product_shop.save();
-		}
-		// modify PS_PRODUCT
-		let ps_product = await ps_Product.find(id);
-		if (ps_product) {
-			ps_product.active = 0;
-			ps_product.quantity = quantity;
-			await ps_product.save();
+		if (quantity <= 0) {
+			// modify PS_PRODUCT_SHOP   SET PRODUCT INACTIVE
+			let ps_product_shop = await ps_ProductShop.find(id);
+			if (ps_product_shop) {
+				ps_product_shop.active = 0;
+				await ps_product_shop.save();
+			}
+			// modify PS_PRODUCT  SET PRODUCT INACTIVE
+			let ps_product = await ps_Product.find(id);
+			if (ps_product) {
+				ps_product.active = 0;
+				ps_product.quantity = quantity;
+				await ps_product.save();
+			}
 		}
 	}
 

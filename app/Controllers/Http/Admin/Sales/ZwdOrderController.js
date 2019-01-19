@@ -8,6 +8,8 @@ const Order = use('App/Models/SalesOrderZwd');
 const OrderItem = use('App/Models/SalesOrderRowZwd');
 const SalesInvoice = use('App/Models/SalesInvoice');
 const SalesInvoiceRow = use('App/Models/SalesInvoiceRow');
+const BolApi = use('App/ZawaClasses/BolApi.js');
+const PrestaApi = use('App/ZawaClasses/PrestaApi.js');
 const Env = use('Env');
 const Mail = use('Mail');
 
@@ -38,6 +40,7 @@ class ZwdOrderController {
 				}
 				const order = await new Order();
 				order.id_order_zwd = psOrderId;
+				order.reference = psOrder.reference;
 				order.current_status = 1;
 				if (psOrder.AddrDelivery.id_country == '3') {
 					order.id_country_zwd = '2';
@@ -142,6 +145,7 @@ class ZwdOrderController {
 			.where('current_status', '<', '5')
 			.orderBy('id', 'desc')
 			.fetch()).toJSON();
+		return orders;
 		return view.render('admin.sales.order.orderListZwd', { orders });
 	}
 
@@ -161,7 +165,7 @@ class ZwdOrderController {
 				product.stock_real = Number(product.stock_real) - Number(orderItem.quantity);
 				product.quantity_to_invoice = product.quantity_to_invoice + Number(orderItem.quantity);
 				await product.save();
-				/*	
+
 				// 2) Send new stock to bol be
 				const bolApiBe = new BolApi(Env.get('BOL_BE_PUBLIC_KEY'), Env.get('BOL_BE_PRIVATE_KEY'));
 				await bolApiBe.setProductBe(product.id);
@@ -169,7 +173,10 @@ class ZwdOrderController {
 				// 3) Send new stock to bol nl
 				const bolApiNl = new BolApi(Env.get('BOL_NL_PUBLIC_KEY'), Env.get('BOL_NL_PRIVATE_KEY'));
 				await bolApiNl.setProductNl(product.id);
-			*/
+
+				// 4) Send Stock To Prestashop
+				const prestaApi = new PrestaApi();
+				await prestaApi.setProductStock(product.id, product.stock_real);
 			}
 			// 4) Change order status
 			order.current_status = params.newStatus;
@@ -461,6 +468,67 @@ class ZwdOrderController {
 			}
 		});
 		return response.route('admin-sales-open-orders-zawadeals');
+	}
+
+	async delOrder({ params, session, response }) {
+		const status = params.status;
+		const id_order = params.id;
+		const param = await Param.find(1);
+		if (status == '1') {
+			// Order jsut comes in no handlings done just delete order ! STATUS =1
+			const order = await Order.find(id_order);
+			await order.delete();
+			await OrderItem.query().where('id_sales_order_bol', id_order).delete();
+		} else {
+			const trx = await Database.beginTransaction();
+			const order = await Order.find(id_order);
+			const orderItems = (await OrderItem.query().where('id_sales_order_bol', id_order).fetch()).toJSON();
+			for (let counter in orderItems) {
+				const orderItem = orderItems[counter];
+				const product = await Product.find(orderItem.id_product);
+				product.stock_real = Number(product.stock_real) + Number(orderItem.quantity);
+				product.quantity_to_invoice = product.quantity_to_invoice - Number(orderItem.quantity);
+				await product.save(trx);
+
+				// 2) Send new stock to bol be
+				const bolApiBe = new BolApi(Env.get('BOL_BE_PUBLIC_KEY'), Env.get('BOL_BE_PRIVATE_KEY'));
+				await bolApiBe.setProductBe(product.id);
+
+				// 3) Send new stock to bol nl
+				const bolApiNl = new BolApi(Env.get('BOL_NL_PUBLIC_KEY'), Env.get('BOL_NL_PRIVATE_KEY'));
+				await bolApiNl.setProductNl(product.id);
+
+				// 4) Send Stock To Prestashop
+				const prestaApi = new PrestaApi();
+				await prestaApi.setProductStock(product.id, product.stock_real);
+
+				// Recalc Order row set quantity - salesprice - bol cost to NUL // Add return transport cost
+				const orderRow = await OrderItem.find(orderItem.id);
+				orderRow.quantity = 0;
+				orderRow.row_total_sp_in_vat = 0;
+				orderRow.transaction_fee = 0;
+				if (country == 'be') {
+					orderRow.return_shipping_cost_ex_vat_bol = param.return_cost_ex_vat_bol_be;
+				} else {
+					orderRow.return_shipping_cost_ex_vat_bol = param.return_cost_ex_vat_bol_nl;
+				}
+				orderRow.cancel_request = 1;
+				await orderRow.save(trx);
+			}
+			//Set order status to 7 = Cancelled
+			order.current_status = 7;
+			await order.save(trx);
+			// Commit complete transaction
+			trx.commit();
+		}
+		session.flash({
+			notification: {
+				type: 'success',
+				message:
+					'Het order werd geannuleerd en de voorraden werd aangepast en doorgestuurd naar De verschillende partners !'
+			}
+		});
+		return response.route('admin-sales-open-orders-bol', { country: country });
 	}
 }
 module.exports = ZwdOrderController;
