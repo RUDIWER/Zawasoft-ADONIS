@@ -381,10 +381,8 @@ class ProductController {
 			// Set product in PRESTASHOP
 			if (Env.get('APP_PRESTA')) {
 				const productPath = product.product_pic;
-				if (productPath) {
-					const cutLength = (appRoot + '/img-prd/img-prd-' + product.id + '/').length;
-					const imageName = productPath.substring(cutLength);
-				}
+				const cutLength = (appRoot + '/img-prd/img-prd-' + product.id + '/').length;
+				const imageName = productPath.substring(cutLength);
 				if (product.active == 1) {
 					const prestaApi = new PrestaApi();
 					await prestaApi.setProduct(product.id);
