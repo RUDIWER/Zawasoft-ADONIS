@@ -15,7 +15,6 @@ const PrestaApi = use('App/ZawaClasses/PrestaApi');
 const Helpers = use('Helpers');
 const Database = use('Database');
 const fs = require('fs');
-const { google } = require('googleapis');
 
 //const request = require('request');
 
