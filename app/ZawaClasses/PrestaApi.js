@@ -5,6 +5,7 @@ const ProductGroup = use('App/Models/ProductGroup');
 const ProductProductGroup = use('App/Models/ProductProductGroup');
 const ps_Product = use('App/Models/ps_Product');
 const ps_ProductShop = use('App/Models/ps_ProductShop');
+const ps_SpecificPrice = use('App/Models/ps_SpecificPrice');
 const ps_ProductLang = use('App/Models/ps_ProductLang');
 const ps_StockAvailable = use('App/Models/ps_StockAvailable');
 const ps_Manufacturer = use('App/Models/ps_Manufacturer');
@@ -166,7 +167,6 @@ class PrestaApi {
 		// 4) Create || modify PS_STOCK_AVAILABLE
 		let ps_stock_available_data = (await ps_StockAvailable.query().where('id_product', id).fetch()).toJSON();
 		if (ps_stock_available_data.length > 0) {
-			console.log(ps_stock_available_data[0].id_stock_available);
 			var ps_stock_available = await ps_StockAvailable.find(ps_stock_available_data[0].id_stock_available);
 		}
 		if (!ps_stock_available) {
@@ -197,13 +197,73 @@ class PrestaApi {
 				await ps_category_product.save();
 			}
 		}
+		// 6 CREATE || MODIFY PS_specific_price  FOR DROPSHIP (4) & WHOLESALE (5) PRICES
+		// 1 GROOTHANDEL
+		let ps_specific_price_data_ws = (await ps_SpecificPrice
+			.query()
+			.where('id_product', id)
+			.where('id_group', '=', '5')
+			.fetch()).toJSON();
+		if (ps_specific_price_data_ws.length > 0) {
+			var ps_specific_price_ws = await ps_SpecificPrice.find(ps_specific_price_data_ws[0].id_specific_price);
+		}
+		if (!ps_specific_price_ws) {
+			ps_specific_price_ws = new ps_SpecificPrice();
+		}
+		ps_specific_price_ws.id_specific_price_rule = 0;
+		ps_specific_price_ws.id_cart = 0;
+		ps_specific_price_ws.id_product = zawaProduct.id;
+		ps_specific_price_ws.id_shop = 1;
+		ps_specific_price_ws.id_shop_group = 0;
+		ps_specific_price_ws.id_currency = 0;
+		ps_specific_price_ws.id_country = 0;
+		ps_specific_price_ws.id_group = 5;
+		ps_specific_price_ws.id_customer = 0;
+		ps_specific_price_ws.id_product_attribute = 0;
+		ps_specific_price_ws.price = zawaProduct.sp_ex_vat_wholesale;
+		ps_specific_price_ws.from_quantity = 1;
+		ps_specific_price_ws.reduction = 0;
+		ps_specific_price_ws.reduction_tax = 1;
+		ps_specific_price_ws.reduction_type = 'amount';
+		ps_specific_price_ws.from = '1900-01-01 00:00:00';
+		ps_specific_price_ws.to = '9999-01-01 00:00:00';
+		await ps_specific_price_ws.save();
+		// Dropshipping
+		let ps_specific_price_data_ds = (await ps_SpecificPrice
+			.query()
+			.where('id_product', id)
+			.where('id_group', '=', '4')
+			.fetch()).toJSON();
+		if (ps_specific_price_data_ds.length > 0) {
+			var ps_specific_price_ds = await ps_SpecificPrice.find(ps_specific_price_data_ds[0].id_specific_price);
+		}
+		if (!ps_specific_price_ds) {
+			ps_specific_price_ds = new ps_SpecificPrice();
+		}
+		ps_specific_price_ds.id_specific_price_rule = 0;
+		ps_specific_price_ds.id_cart = 0;
+		ps_specific_price_ds.id_product = zawaProduct.id;
+		ps_specific_price_ds.id_shop = 1;
+		ps_specific_price_ds.id_shop_group = 0;
+		ps_specific_price_ds.id_currency = 0;
+		ps_specific_price_ds.id_country = 0;
+		ps_specific_price_ds.id_group = 4;
+		ps_specific_price_ds.id_customer = 0;
+		ps_specific_price_ds.id_product_attribute = 0;
+		ps_specific_price_ds.price = zawaProduct.sp_ex_vat_dropshipping;
+		ps_specific_price_ds.from_quantity = 1;
+		ps_specific_price_ds.reduction = 0;
+		ps_specific_price_ds.reduction_tax = 1;
+		ps_specific_price_ds.reduction_type = 'amount';
+		ps_specific_price_ds.from = '1900-01-01 00:00:00';
+		ps_specific_price_ds.to = '9999-01-01 00:00:00';
+		await ps_specific_price_ds.save();
 	}
 
 	async setProductStock(id, quantity) {
 		// modify PS_STOCK_AVAILABLE
 		let ps_stock_available_data = (await ps_StockAvailable.query().where('id_product', id).fetch()).toJSON();
 		if (ps_stock_available_data.length > 0) {
-			console.log(ps_stock_available_data[0].id_stock_available);
 			var ps_stock_available = await ps_StockAvailable.find(ps_stock_available_data[0].id_stock_available);
 		}
 		if (ps_stock_available) {
