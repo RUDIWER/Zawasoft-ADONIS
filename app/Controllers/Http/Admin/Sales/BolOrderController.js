@@ -9,6 +9,7 @@ const SalesInvoice = use('App/Models/SalesInvoice');
 const SalesInvoiceRow = use('App/Models/SalesInvoiceRow');
 const Env = use('Env');
 const BolApi = use('App/ZawaClasses/BolApi.js');
+const PrestaApi = use('App/ZawaClasses/PrestaApi.js');
 const parseString = require('xml2js').parseString;
 const Database = use('Database');
 const Mail = use('Mail');
