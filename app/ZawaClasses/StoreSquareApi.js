@@ -1,6 +1,7 @@
 'use strict';
 const Product = use('App/Models/Product');
 const Brand = use('App/Models/ProductBrand');
+const Category = use('App/Models/StoreSquareCategory');
 const axios = require('axios');
 class StoreSquareApi {
 	constructor(key) {
@@ -82,13 +83,14 @@ class StoreSquareApi {
 	async setProduct(id) {
 		const product = await Product.find(id);
 		const brand = await Brand.find(product.id_brand);
+		const category = await Category.find(product.id_storesquare_category);
 		const uri = '/products';
 		const param = {
 			sku: product.id,
 			name: product.name_nl,
 			description: product.descr_short_nl + '<br>' + product.descr_long_nl,
 			stock: product.stock_real,
-			category: product.id_storesquare_category,
+			category: category.id_storesquare,
 			brand: brand.id_storesquare,
 			price: product.sp_in_vat_storesquare,
 			promotion: 0,
