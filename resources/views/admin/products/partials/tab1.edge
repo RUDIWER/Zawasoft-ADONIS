@@ -87,7 +87,7 @@
 					v-model="id_storesquare_category" 
 					placeholder="Selecteer..."  
 					name="id_storesquare_category" id="id_storesquare_category">
-						<option v-for="sq_option in sq_options" v-bind:value="sq_option.id_storesquare">@{{ sq_option.name_nl }} / @{{sq_option.cost_fix}}€ / @{{sq_option.cost_procent}}%
+						<option v-for="sq_option in sq_options" v-bind:value="sq_option.id">@{{ sq_option.name_nl }} / @{{sq_option.cost_fix}}€ / @{{sq_option.cost_procent}}%
 						</option>
 					</select>
 					{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('id_storesquare_category'), hasErrorFor('id_storesquare_category')) }}	
