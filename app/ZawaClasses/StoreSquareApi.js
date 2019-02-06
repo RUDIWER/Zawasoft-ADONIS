@@ -88,7 +88,13 @@ class StoreSquareApi {
 		const param = {
 			sku: product.id,
 			name: product.name_nl,
-			description: product.descr_short_nl + '<br>' + product.descr_long_nl,
+			description:
+				product.descr_short_nl +
+				'<br>' +
+				product.descr_long_nl +
+				'<br>' +
+				'<br>' +
+				'<p>Meer info zie : <a href="https://zawadeals.com">www.zawadeals.com</a></p>',
 			stock: product.stock_real,
 			category: category.id_storesquare,
 			brand: brand.id_storesquare,
