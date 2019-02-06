@@ -35,11 +35,21 @@
 					@endif
 						{{ csrfField() }}
 							<div class="form-row">
-								<div class="form-group col-md-2">
+								<div class="form-group col-md-3">
 									<label class="control-label">Merk ID</label><br>
 									@if(!isNew)
 										<input type="number" class="form-control form-control-sm" name="id" id="id" value="{{ brand.id }}" required readonly tabindex="-1"/>
 									@else
+										<input type="text" class="form-control form-control-sm" placeholder="Nog niet toegekend..." readonly tabindex="-1"/>
+									@endif
+								</div>
+								<div class="form-group col-md-3">
+									<label class="control-label">StoreSquare ID</label><br>
+									@if(!isNew && brand.id_storesquare)
+										<input type="number" class="form-control form-control-sm" name="id_storesquare" id="id_storesquare" value="{{ brand.id_storesquare }}" required readonly tabindex="-1"/>
+									@elseif(!brand.id_storesquare)
+										<input type="text" class="form-control form-control-sm" placeholder="Nog niet toegekend..." readonly tabindex="-1"/>
+									@else 
 										<input type="text" class="form-control form-control-sm" placeholder="Nog niet toegekend..." readonly tabindex="-1"/>
 									@endif
 								</div>

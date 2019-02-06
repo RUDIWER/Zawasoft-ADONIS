@@ -7,6 +7,7 @@
 		<input type="hidden" name="shipping_amount_ex_vat_cz_nl_in_param" id="shipping_amount_ex_vat_cz_nl_in_param" data-field-id="{{ param.shipping_amount_ex_vat_cz_nl }}" v-model.number="shipping_amount_ex_vat_cz_nl_in_param">	
 		<input type="hidden" name="min_order_amount_in_vat_free_shipping_in_param" id="min_order_amount_in_vat_free_shipping_in_param" data-field-id="{{ param.min_order_amount_in_vat_free_shipping }}" v-model.number="min_order_amount_in_vat_free_shipping_in_param">
 		<input type="hidden" name="id_bol_category_in_db" id="id_bol_category_in_db" data-field-id="{{ product.id_bol_category }}" v-model.number="id_bol_category_in_db">
+		<input type="hidden" name="id_storesquare_category_in_db" id="id_storesquare_category_in_db" data-field-id="{{ product.id_storesquare_category }}" v-model.number="id_storesquare_category_in_db">
 
 		<div class="col-md-6">
 			<div class="form-row">
@@ -76,6 +77,20 @@
 						</option>
 					</select>
 					{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('id_bol_category'), hasErrorFor('id_bol_category')) }}	
+				</div>
+			</div>
+<!-- Store square Categories -->
+			<div class="form-row">		
+				<div class="form-group col-md-12">
+					<label class="control-label">StoreSquare-Categorie</label>		
+					<select class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('id_storesquare_category')) }}"
+					v-model="id_storesquare_category" 
+					placeholder="Selecteer..."  
+					name="id_storesquare_category" id="id_storesquare_category">
+						<option v-for="sq_option in sq_options" v-bind:value="sq_option.id">@{{ sq_option.name_nl }} / @{{sq_option.cost_fix}}€ / @{{sq_option.cost_procent}}%
+						</option>
+					</select>
+					{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('id_storesquare_category'), hasErrorFor('id_storesquare_category')) }}	
 				</div>
 			</div>
 		</div> <!-- fcol -->
@@ -191,6 +206,41 @@
 				<div class="form-group col-md-12"> 
 					<label class="control-label">Winst Bedrag</label>
 					<input type="number" step="0.01" class="form-control form-control-sm" name="netto_profit_amount_bol_nl" id="netto_profit_amount_bol_nl" data-field-id="{{ product.netto_profit_amount_bol_nl? product.netto_profit_amount_bol_nl:0 }}" v-model.number="netto_profit_amount_bol_nl" tabindex="-1" readonly>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div class="form-row">
+				<div class="form-group col-md-12"> 
+					<h5>VKP Storesquare</h5>
+					<label class="control-label">Marge</label>
+					<input type="number" step="0.01" class="form-control form-control-sm" name="margin_factor_storesquare" id="margin_factor_storesquare" data-field-id="{{ product.margin_factor_storesquare? product.margin_factor_storesquare:1 }}" v-model.number="margin_factor_storesquare" tabindex="-1" readonly>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+				</div>
+				<div class="form-group col-md-12"> 
+					<label class="control-label">VKP. ex. BTW</label>
+					<input type="number" step="0.01" class="form-control form-control-sm" name="sp_ex_vat_storesquare" id="sp_ex_vat_storesquare" data-field-id="{{ product.sp_ex_vat_storesquare? product.sp_ex_vat_storesquare:0 }}" v-model.number="sp_ex_vat_storesquare" tabindex="-1" readonly>
+				</div>
+				<div class="form-group col-md-12"> 
+					<label class="control-label">VKP. incl BTW</label>
+					<input type="number" step="0.01" class="form-control form-control-sm input-required" required name="sp_in_vat_storesquare" id="sp_in_vat_storesquare" data-field-id="{{ old('sp_in_vat_storesquare', !product.sp_in_vat_storesquare? '0' : product.sp_in_vat_storesquare) }}" v-model.number.lazy="sp_in_vat_storesquare" required>
+				</div>
+				<div class="form-group col-md-12"> 
+					<label class="control-label">Verzending Storesquare</label>
+					<input type="number" step="0.01" class="form-control form-control-sm" name="shipping_cost_ex_vat_storesquare" id="shipping_cost_ex_vat_storesquare" data-field-id="{{ param.shipping_cost_ex_vat_storesquare }}" v-model.number="shipping_cost_ex_vat_storesquare" tabindex="-1" readonly>
+				</div>
+				<div class="form-group col-md-12"> 
+					<label class="control-label">Kosten Storesquare</label>
+					<input type="number" step="0.01" class="form-control form-control-sm" name="total_cost_ex_vat_storesquare" id="total_cost_ex_vat_storesquare" data-field-id="{{ product.total_cost_ex_vat_storesquare? product.total_cost_ex_vat_storesquare:0 }}" v-model.number="total_cost_ex_vat_storesquare" tabindex="-1" readonly>
+				</div>
+				<div class="form-group col-md-12"> 
+					<label class="control-label">Winst Bedrag</label>
+					<input type="number" step="0.01" class="form-control form-control-sm" name="netto_profit_amount_storesquare" id="netto_profit_amount_storesquare" data-field-id="{{ product.netto_profit_amount_storesquare? product.netto_profit_amount_storesquare:0 }}" v-model.number="netto_profit_amount_storesquare" tabindex="-1" readonly>
 				</div>
 			</div>
 		</div>

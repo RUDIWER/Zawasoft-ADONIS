@@ -3,6 +3,7 @@
 //const Database = use('Database');
 const Brand = use('App/Models/ProductBrand');
 const PrestaApi = use('App/ZawaClasses/PrestaApi');
+const StoreSquareApi = use('App/ZawaClasses/StoreSquareApi');
 const Env = use('Env');
 
 class ProductBrandController {
@@ -19,7 +20,6 @@ class ProductBrandController {
 			brand
 		});
 	}
-
 
 	async edit({ view, params }) {
 		const isNew = 0;
@@ -51,6 +51,26 @@ class ProductBrandController {
 				const prestaApi = new PrestaApi();
 				const result = await prestaApi.setBrand(brand.id);
 			}
+			if (Env.get('STORESQUARE_KEY')) {
+				const storeSquareApi = new StoreSquareApi(Env.get('STORESQUARE_KEY'));
+				const result = await storeSquareApi.getBrand(brand.id);
+				if (result.http_code == 404) {
+					console.log('MERK BESTAAT NIET IN STORESQUARE');
+					const newBrand = await storeSquareApi.addBrand(brand.id);
+					brand.id_storesquare = newBrand.id;
+					await brand.save();
+				} else {
+					console.log('MERK BESTAAT IN STORESQUARE');
+					brand.id_storesquare = result.id;
+					await brand.save();
+				}
+				session.flash({
+					notification: {
+						type: 'success',
+						message2: 'De merknaam werd opgeslagen in StoreSquare'
+					}
+				});
+			}
 			session.flash({
 				notification: {
 					type: 'success',
@@ -58,9 +78,8 @@ class ProductBrandController {
 				}
 			});
 			return response.route('admin-brand-edit', { id: brand.id });
-		}		
+		}
 	}
-
 }
 
 module.exports = ProductBrandController;

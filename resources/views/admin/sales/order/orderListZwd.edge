@@ -36,63 +36,68 @@
 										Ordernr : {{order.id_order_zwd}}&nbsp&nbsp&nbspDatum Order : {{order.date_time_order}}<br>
 										Order referentie : {{ order.reference }}
 									</b>
-									@if(!order.is_problem)
-										@if(order.current_status == 1 )
-											<button class="btn btn-danger float-right" @click="setState({{order.id}}, {{order.current_status}})">
-												<span id="spinner-{{order.id}}" 
-													v-if="viewSpinner === {{order.id}}"
-													class="spinner fas fa-spinner fa-spin">
-												</span>
-												Orderverwerking starten
-											</button>	
-										@elseif(order.current_status == 2)
-											<button class="btn btn-warning float-right" @click="setState({{order.id}}, {{order.current_status}})">
-												<span id="spinner-{{order.id}}" 
-													v-if="viewSpinner === {{order.id}}"
-													class="spinner fas fa-spinner fa-spin">
-												</span>
-												Verzending bevestigen
-											</button>
-										@elseif(order.current_status == 3)
-											<button class="btn btn-info float-right" @click="setState({{order.id}}, {{order.current_status}})">
-												<span id="spinner-{{order.id}}" 
-													v-if="viewSpinner === {{order.id}}"
-													class="spinner fas fa-spinner fa-spin">
-												</span>
-												Aflevering bevestigen
-											</button>
-										@elseif(order.current_status == 4)
-											<button class="btn btn-success float-right" @click="setState({{order.id}}, {{order.current_status}})">
-												<span id="spinner-{{order.id}}" 
-													v-if="viewSpinner === {{order.id}}"
-													class="spinner fas fa-spinner fa-spin">
-												</span>
-												Factuur maken
-											</button>
-										@elseif(order.current_status == 5)  
-											<div class="float-right">
-												<h5>
-													<i class="fas fa-exclamation-triangle" style="color:blue"></i>
-													Order is gefacuteerd ! 
-												</h5>
-											</div>
-										@elseif(order.current_status == 7)    
-											<div class="float-right">
-												<h5>
-													<i class="fas fa-exclamation-triangle" style="color:blue"></i>
-													Order werd geannuleerd ! 
-												</h5>
-											</div>
+									<div class="btn-group float-right" role="group" aria-label="order-buttons">
+										@if(!order.is_problem)
+											@if(order.current_status == 1 )
+												<button class="btn btn-danger float-right" @click="setState({{order.id}}, {{order.current_status}})">
+													<span id="spinner-{{order.id}}" 
+														v-if="viewSpinner === {{order.id}}"
+														class="spinner fas fa-spinner fa-spin">
+													</span>
+													Orderverwerking starten
+												</button>	
+											@elseif(order.current_status == 2)
+												<button class="btn btn-warning float-right" @click="setState({{order.id}}, {{order.current_status}})">
+													<span id="spinner-{{order.id}}" 
+														v-if="viewSpinner === {{order.id}}"
+														class="spinner fas fa-spinner fa-spin">
+													</span>
+													Verzending bevestigen
+												</button>
+											@elseif(order.current_status == 3)
+												<button class="btn btn-info float-right" @click="setState({{order.id}}, {{order.current_status}})">
+													<span id="spinner-{{order.id}}" 
+														v-if="viewSpinner === {{order.id}}"
+														class="spinner fas fa-spinner fa-spin">
+													</span>
+													Aflevering bevestigen
+												</button>
+											@elseif(order.current_status == 4)
+												<button class="btn btn-success float-right" @click="setState({{order.id}}, {{order.current_status}})">
+													<span id="spinner-{{order.id}}" 
+														v-if="viewSpinner === {{order.id}}"
+														class="spinner fas fa-spinner fa-spin">
+													</span>
+													Factuur maken
+												</button>
+											@elseif(order.current_status == 5)  
+												<div class="float-right">
+													<h5>
+														<i class="fas fa-exclamation-triangle" style="color:blue"></i>
+														Order is gefacuteerd ! 
+													</h5>
+												</div>
+											@elseif(order.current_status == 7)    
+												<div class="float-right">
+													<h5>
+														<i class="fas fa-exclamation-triangle" style="color:blue"></i>
+														Order werd geannuleerd ! 
+													</h5>
+												</div>
+											@endif
 										@endif
-									@endif
-									@if(order.is_problem)
-										<div class="float-right">
-											<h5>
-												<i class="fas fa-exclamation-triangle" style="color:red"></i>
-												Er is een probleemmelding voor dit order! 
-											</h5>
-										</div>
-									@endif
+										@if(order.is_problem)
+											<div class="float-right">
+												<h5>
+													<i class="fas fa-exclamation-triangle" style="color:red"></i>
+													Er is een probleemmelding voor dit order! 
+												</h5>
+											</div>
+										@endif	
+										<button class="btn float-right" @click="printOrder({{ order.id }})">
+											<i class="fas fa-fw fa-print"></i> Print order
+										</button>
+									</div>
 								</div>
 								{{ csrfField() }}
 								<div class="card-body">
@@ -172,6 +177,10 @@
 @endsection
 @section('scripts')	
 	<script src="/vendor/vue/vue.js"></script>
+	<script src="/vendor/dateFormat/dateFormat.js"></script>
+	<script src="/vendor/jspdf/jspdf.min.js"></script>
+	<script src="/vendor/jspdf/jspdf.plugin.autotable.min.js"></script>
+	<script src="/vendor/jspdf/jspdf.plugin.text-align.js"></script>
 	<script type="text/javascript" charset="utf-8">
 		//(RW) Slide UP  alert success messages
 		$(".alert-success").fadeTo(2000, 500).slideUp(500, function(){
@@ -186,7 +195,6 @@
 			methods: 
 			{
 				setState: function (id_order, status) {
-					console.log(id_order);
 					this.viewSpinner = id_order;
 					if (status === 1){
 						var newStatus = 2;
@@ -244,7 +252,113 @@
 						$('#productForm input[name=stockPlace5').val(data.stock_place_5);
 						$("#productPic").attr("src", data.picture)		
 					});
-				}		
+				},
+				printOrder: function(id_order){
+					$.ajax({
+						type: "get",
+						url: "/api/sales/zawa/order/" + id_order,
+						error: function (xhr, ajaxOptions, thrownError, data) 
+						{
+							console.log(thrownError);
+						}
+					})
+					.done(function(order){
+						var order = order[0]; 
+						var self = this;
+						var doc = new jsPDF('p', 'pt', 'A4');
+						source = '<div><img src="/admin-panel/img/brand/cz-logo-trends.png" width="200" height="60" alt="Cool Zawadi Logo"><br></div><div></div>'
+						margins = {
+							top: 30,
+							bottom: 30,
+							left: 30,
+							width: 500
+						};
+						doc.fromHTML(
+							source, 
+							margins.left, 
+							margins.top, {
+								"width" : margins.width
+							}, function (dispose) {
+								doc.text(30, 110, 'Order nr.' + order.reference);
+								doc.setFontSize(10);
+								doc.setFontType('bold');
+								doc.text(30, 130, 'Cool-Zawadi bvba - ZAWAdeals');
+								doc.text(30, 144, 'Maatschappelijke zetel:');
+								doc.setFontSize(8);
+								doc.setFontType('normal');
+								doc.text(30, 154, 'Woestenhof 6,');
+								doc.text(30, 164, '8954 Westouter (België');
+								doc.text(30, 174, 'Ondernemingsnummer: BE0525.673.088');
+								doc.text(30, 184, 'IBAN: BE02 0016 9415 7540');
+								doc.setFontSize(10);
+								doc.setFontType('bold');
+								doc.text(30, 198, 'Burelen & Magazijn:');
+								doc.setFontSize(8);
+								doc.setFontType('normal');
+								doc.text(30, 208, 'Koninginnestraat 24,');
+								doc.text(30, 218, '8930 Menen (België');
+								doc.text(30, 228, 'tel : 0470/44.31.32');
+								doc.text(30, 238, 'email : info@zawadeals.com');
+								doc.text(420, 40, 'Datum Order: ' + order.date_time_order);
+								doc.text(420,70, 'Tel. Klant: ' + order.phone_delivery);
+								doc.text(420,80, 'Email. Klant: ' + order.email_delivery);
+								doc.setFontSize(10);
+								doc.setFontType('bold');
+								doc.setFontSize(12);
+								doc.text(300,135, 'LEVERINGSADRES :');
+								doc.setFontSize(10);
+								doc.text(350, 144, order.company_delivery);
+								doc.text(350, 158, order.customer_first_name_delivery + ' ' + order.customer_last_name_delivery);
+								doc.setFontType('normal');
+								doc.text(350, 180, order.street_delivery + ' ' + order.number_delivery + ' ' + order.bus_delivery + ',');
+								doc.text(350, 194, order.postcode_delivery + ' ' + order.city_delivery + ' (' + order.country_delivery + ')');
+								doc.setFontType('bold');
+								doc.setFontSize(12);
+								doc.text(300,215, 'FACTURATIE ADRES :');
+								doc.setFontSize(10);
+								doc.text(350, 224, order.company_invoice);
+								doc.text(350, 238, order.customer_first_name_invoice + ' ' + order.customer_last_name_invoice);
+								doc.setFontType('normal');
+								doc.text(350, 252, order.street_invoice + ' ' + order.number_invoice + ' ' + order.bus_invoice + ',');
+								doc.text(350, 266, order.postcode_invoice + ' ' + order.city_invoice + ' (' + order.country_invoice + ')');
+								// AutoTable for Invoice rows
+								var rows = order.rows;	
+								var pdfRows = [];
+								for(var i = 0 ; i < rows.length; i++){
+									var row = rows[i];
+									var pdfRow = [(row.id_product), (row.product_name_nl).slice(0,30), (row.quantity),(row.product_sp_in_vat).toFixed(2), (row.row_total_sp_in_vat).toFixed(2),(row.vat_procent)];
+									pdfRows.push(pdfRow);
+								}
+												
+								var columns = ["Product Nr.", "Omschrijving", "Aantal", "Prijs/st. IncL BTW", "Totaalprijs incl. BTW ","Btw %" ];
+								doc.autoTable(columns, pdfRows, {
+									theme: 'grid',
+									headerStyles: {
+										fillColor: [211, 211, 211],
+										textColor: 0
+									},
+									columnStyles: {
+										0: {halign: 'right'},
+										2: {halign: 'right'},
+										3: {halign: 'right'},
+										4: {halign: 'right', fontStyle: 'bold'},
+										5: {halign: 'right'},
+										6: {halign: 'right'},
+										7: {halign: 'right', fontStyle: 'bold'},
+									},				
+									tableWidth: 550,
+									margin: {
+										top: 300,
+										left: 30
+									},
+								});
+								let finalY = doc.autoTable.previous.finalY; // The y position on the page
+								doc.save('order.pdf');		
+							}
+						);
+					});
+				}
+					
 			}  // End methods
 		})
 </script>

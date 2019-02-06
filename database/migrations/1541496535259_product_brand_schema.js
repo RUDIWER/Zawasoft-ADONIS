@@ -6,6 +6,7 @@ class ProductBrandSchema extends Schema {
 	up() {
 		this.create('product_brands', (table) => {
 			table.increments();
+			table.integer('id_storesquare').unsigned().nullable();
 			table.string('name_nl', 50).notNullable();
 			table.string('meta_title', 128);
 			table.text('short_description');

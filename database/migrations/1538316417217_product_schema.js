@@ -10,6 +10,7 @@ class ProductSchema extends Schema {
 			table.integer('id_supplier').unsigned().notNullable();
 			table.integer('id_stand_category').unsigned().nullable();
 			table.integer('id_bol_category').unsigned().notNullable();
+			table.integer('id_storesquare_category').unsigned().notNullable();
 			table.integer('id_brand').unsigned().nullable();
 			table.string('ean13', 20).unique().nullable();
 			table.string('name_nl', 80).notNullable();
@@ -35,6 +36,7 @@ class ProductSchema extends Schema {
 			table.boolean('on_sale').defaultTo(0);
 			table.boolean('active_bol_be').defaultTo(0);
 			table.boolean('active_bol_nl').defaultTo(0);
+			table.boolean('active_storesquare').defaultTo(0);
 			table.string('bol_be_delivery_time', 15);
 			table.string('bol_nl_delivery_time', 15);
 			table.decimal('cost_factor', 6, 2).defaultTo(0);
@@ -50,6 +52,8 @@ class ProductSchema extends Schema {
 			table.decimal('sp_in_vat_bol_be').defaultTo(0);
 			table.decimal('sp_ex_vat_bol_nl').defaultTo(0);
 			table.decimal('sp_in_vat_bol_nl').defaultTo(0);
+			table.decimal('sp_ex_vat_storesquare').defaultTo(0);
+			table.decimal('sp_in_vat_storesquare').defaultTo(0);
 			table.decimal('margin_factor_dropshipping', 8, 4).defaultTo(0);
 			table.decimal('margin_factor_wholesale', 8, 4).defaultTo(0);
 			table.decimal('margin_factor_cz_web_be', 8, 4).defaultTo(0);
@@ -57,16 +61,20 @@ class ProductSchema extends Schema {
 			table.decimal('margin_factor_cz_shop', 8, 4).defaultTo(0);
 			table.decimal('margin_factor_bol_be', 8, 4).defaultTo(0);
 			table.decimal('margin_factor_bol_nl', 8, 4).defaultTo(0);
+			table.decimal('margin_factor_storesquare', 8, 4).defaultTo(0);
 			table.decimal('shipping_cost_ex_vat_cz_be', 12, 2).defaultTo(0);
 			table.decimal('shipping_cost_ex_vat_cz_nl', 12, 2).defaultTo(0);
 			table.decimal('shipping_cost_ex_vat_bol_be', 12, 2).defaultTo(0);
 			table.decimal('shipping_cost_ex_vat_bol_nl', 12, 2).defaultTo(0);
+			table.decimal('shipping_cost_ex_vat_storesquare', 12, 2).defaultTo(0);
 			table.decimal('total_cost_ex_vat_bol_be', 12, 2).defaultTo(0);
 			table.decimal('total_cost_ex_vat_bol_nl', 12, 2).defaultTo(0);
+			table.decimal('total_cost_ex_vat_storesquare', 12, 2).defaultTo(0);
 			table.decimal('netto_profit_amount_cz_be', 12, 2).defaultTo(0);
 			table.decimal('netto_profit_amount_cz_nl', 12, 2).defaultTo(0);
 			table.decimal('netto_profit_amount_bol_be', 12, 2).defaultTo(0);
 			table.decimal('netto_profit_amount_bol_nl', 12, 2).defaultTo(0);
+			table.decimal('netto_profit_amount_storesquare', 12, 2).defaultTo(0);
 			table.decimal('stock_start', 12, 2).defaultTo(0);
 			table.decimal('quantity_to_invoice', 12, 2).defaultTo(0);
 			table.decimal('stock_real', 12, 2).defaultTo(0);

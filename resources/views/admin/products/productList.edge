@@ -48,6 +48,7 @@
 							<thead class="thead-default" style="width:100%">
 								<tr>
 									<th scope="col">Id</th>
+									<th scope="col">Id Lev.</th>
 									<th scope="col">EAN 13</th>
 									<th scope="col">Omschr.</th>
 									<th scope="col">Voorraad</th>
@@ -59,6 +60,7 @@
 								@each(product in products)
 									<tr>
 										<td>{{ product.id }}</td>
+										<td>{{ product.id_product_supplier }}</td>
 										<td>{{ product.ean13 }}</td>
 										<td>{{ product.name_nl }}</td>
 										<td>{{ product.stock_real }}</td>
@@ -84,9 +86,9 @@
 				responsive: true,
 				bSort : true,
 				fixedHeader: true,
-				order : [[ 0, "asc" ]],
+				order : [[ 0, "dec" ]],
 				columnDefs: [
-					{ className: "text-right", "targets": [0,3,4,5] },
+					{ className: "text-right", "targets": [0,1,4,5,6] },
 				],
 				paging : false,
 				language: {

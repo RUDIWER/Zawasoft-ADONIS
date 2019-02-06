@@ -170,6 +170,16 @@
 											{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('stand_cost_procent_bol'), hasErrorFor('stand_cost_procent_bol')) }} 
 											</div>
 										</div>
+										<br>
+										<h5>Kosten StoreSquare</h5>
+										<div class="form-row">
+											<div class="form-group col-md-6">
+												<label class="control-label">Verzend Kost StoreSquare ex. BTW</label>
+												<input type="number" step="0.01" class="form-control form-control-sm input-required {{ elIf('is-invalid',getErrorFor('shipping_cost_ex_vat_storesquare'), hasErrorFor('shipping_cost_ex_vat_storesquare'))}}" required name="shipping_cost_ex_vat_storesquare" id="shipping_cost_ex_vat_storesquare" 
+												value="{{ old('shipping_cost_ex_vat_storesquare', !param.shipping_cost_ex_vat_storesquare? '': param.shipping_cost_ex_vat_storesquare ) }}"/> 
+											{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('shipping_cost_ex_vat_storesquare'), hasErrorFor('shipping_cost_ex_vat_storesquare')) }} 	
+											</div>	
+										</div>
 									</div>
 								</div>
 							</div>

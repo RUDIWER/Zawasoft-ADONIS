@@ -56,6 +56,7 @@ class storeProduct {
 			slug_nl: `required|unique:products,slug_nl,id,${productId}`, // Backticks !!!
 			id_supplier: 'not_equals:0',
 			id_bol_category: 'required',
+			id_storesquare_category: 'required',
 			id_product_supplier: 'max:20',
 			ean13: `unique:products,ean13,id,${productId}|required_if:active_bol_be|required_if:active_bol_nl|max:20`
 		};

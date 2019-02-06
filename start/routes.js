@@ -238,5 +238,24 @@ Route.post('/admin/sales/orders/bol/search/:country', 'Admin/Sales/BolOrderContr
 	.as('admin-sales-orders-search')
 	.middleware([ 'auth' ]);
 
+// StoreSquare routes
+Route.get('admin/storesquare-categories', 'Admin/StoreSquare/StoreSquareCategoryController.index')
+	.as('admin-storesquare-categories')
+	.middleware([ 'auth' ]);
+Route.get('/admin/storesquare-category/create', 'Admin/StoreSquare/StoreSquareCategoryController.create')
+	.as('admin-storesquare-category-create')
+	.middleware([ 'auth' ]);
+Route.get('admin/storesquare-category/edit/:id', 'Admin/StoreSquare/StoreSquareCategoryController.edit')
+	.as('admin-storesquare-category-edit')
+	.middleware([ 'auth' ]);
+Route.post('/admin/storesquare-category/save/:id', 'Admin/StoreSquare/StoreSquareCategoryController.save')
+	.as('admin-storesquare-category-save')
+	.validator('storeStoreSquareCategory')
+	.middleware([ 'auth' ]);
+
 // TEST Routes
-//Route.get('admin/test', 'Admin/TestController.tree').as('admin-test').middleware([ 'auth' ]);
+Route.get('admin/test', 'Admin/TestController.getCategories').as('admin-test').middleware([ 'auth' ]);
+
+// API ROUTES ********************************************************************************
+//ZAWA API routes
+Route.get('/api/sales/zawa/order/:id', 'Admin/Api/Zawa/ZawaApiController.getOrder').middleware([ 'auth' ]);

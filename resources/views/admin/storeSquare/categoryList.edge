@@ -1,0 +1,92 @@
+@layout('admin.layouts.app')
+@section('styles')
+ 	<link rel="stylesheet" type="text/css" href="/vendor/datatables/custom.css"> 
+@endsection
+
+@section('content')
+	<div class="row">  
+		<div class="col-lg-12">
+			<div class="card card-primary">
+	<!-- TITLE BAR -->
+
+				<div class="card-header text-white bg-primary">
+					<b>	
+						<i class="fas fa-fw fa-gift"></i> StoreSquare Categorieën	
+					</b>
+				</div>
+	<!-- BUTTON BAR  -->
+				<div class="card-header">                      
+					<b>     
+						<a href="javascript:history.back()">
+							<i class="fas fa-fw fa-arrow-circle-left"></i>Terug	
+						</a>
+						<a class="float-right" href="/admin/storesquare-category/create">
+							<i class="fas fa-fw fa-plus-circle"></i>Categorie Toevoegen
+						</a>
+					</b>
+				</div>
+				<div class="card-body"> 
+					<div id="dataTableWrapper" style="width:100%" class="dataTableParentHidden">
+						<table id="storeSquareCategoryTable" class="dn table table-bordered table-hover nowrap" cellspacing="0" width="100%">
+							<thead class="thead-default" style="width:100%">
+								<tr>
+									<th scope="col">Id</th>
+									<th scope="col">Id StoreSquare</th>
+									<th scope="col">Omschr.</th>
+								</tr>
+							</thead>
+							<tbody>
+								@each(category in categories)
+									<tr>
+										<td>{{ category.id }}</td>
+										<td>{{ category.id_storesquare }}</td>
+										<td>{{ category.name_nl }}</td>
+									</tr>
+								@endeach
+							</tbody>
+						</table>
+					</div>	
+				</div>
+			</div>
+		</div>
+	</div>
+@endsection
+@section('scripts')
+    <script type="text/javascript" charset="utf-8">
+      	$(document).ready( function () {
+    // DataTables initialization         
+			var storeSquareCategoryTable = $('#storeSquareCategoryTable').DataTable({
+				dom :"<'myfilter'f><'mylength'l>t",
+				info: false,
+				responsive: true,
+				bSort : true,
+				fixedHeader: true,
+				order : [[ 0, "asc" ]],	
+				paging : false,
+				language: {
+					search: "",
+					searchPlaceholder: "Zoeken...",
+					zeroRecords: "Nog geen categorieën in deze tabel, druk op Plus teken om toe te voegen."
+				},
+				
+			});
+			$('#dataTableWrapper').removeClass('dataTableParentHidden');
+			$('div.dataTables_filter input').focus();
+	//(RW) Click on table row
+			$('#storeSquareCategoryTable').on('click', 'tr', function () {
+				var row = storeSquareCategoryTable.row(this).data();
+				var categoryId = row[0];
+				var path = "/admin/storesquare-category/edit/" + categoryId;
+				window.location.href = path;
+			});
+
+		});
+    </script>
+
+
+	
+			
+@endsection
+
+
+

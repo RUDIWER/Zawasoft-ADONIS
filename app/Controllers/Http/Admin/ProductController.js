@@ -9,9 +9,11 @@ const ProductBrand = use('App/Models/ProductBrand');
 const ProductProductGroup = use('App/Models/ProductProductGroup');
 const ps_Image = use('App/Models/ps_Image');
 const BolCategory = use('App/Models/BolCategory');
+const StoreSquareCategory = use('App/Models/StoreSquareCategory');
 const Env = use('Env');
 const BolApi = use('App/ZawaClasses/BolApi.js');
 const PrestaApi = use('App/ZawaClasses/PrestaApi');
+const StoreSquareApi = use('App/ZawaClasses/StoreSquareApi.js');
 const Helpers = use('Helpers');
 const Database = use('Database');
 const fs = require('fs');
@@ -65,6 +67,7 @@ class ProductController {
 		//loop over array and add field active
 		const productGroups = makeTree(productGroupsFlat, 0); // See function on bottom
 		const bolCategories = (await BolCategory.all()).toJSON();
+		const storeSquareCategories = (await StoreSquareCategory.all()).toJSON();
 		const standGroups = (await ProductGroup.query()
 			.where('id_parent', 2)
 			.with('childs')
@@ -85,6 +88,7 @@ class ProductController {
 			productGroups,
 			standGroups,
 			bolCategories,
+			storeSquareCategories,
 			stockPlace1,
 			stockPlace2,
 			stockPlace3,
@@ -104,6 +108,7 @@ class ProductController {
 		const array = (await ProductGroup.all()).toJSON();
 		const productGroups = makeTree(array, 0); // See functon on bottom
 		const bolCategories = (await BolCategory.all()).toJSON();
+		const storeSquareCategories = (await StoreSquareCategory.all()).toJSON();
 		const standGroups = (await ProductGroup.query()
 			.where('id_parent', 2)
 			.with('childs')
@@ -125,6 +130,7 @@ class ProductController {
 			standGroups,
 			brands,
 			bolCategories,
+			storeSquareCategories,
 			activeGroups,
 			stockPlace1,
 			stockPlace2,
@@ -176,6 +182,7 @@ class ProductController {
 			'shipping_cost_ex_vat_cz_nl_in_param',
 			'shipping_amount_ex_vat_cz_nl_in_param',
 			'id_bol_category_in_db',
+			'id_storesquare_category_in_db',
 			'group'
 		]);
 		// Optimize productData
@@ -205,6 +212,9 @@ class ProductController {
 		}
 		if (!productData.margin_factor_bol_nl) {
 			productData.margin_factor_bol_nl = '0';
+		}
+		if (!productData.margin_factor_storesquare) {
+			productData.margin_factor_storesquare = '0';
 		}
 		if (!productData.shipping_cost_ex_vat_bol_be) {
 			productData.shipping_cost_ex_vat_bol_be = '0';
@@ -245,6 +255,9 @@ class ProductController {
 		if (!productData.active_bol_nl) {
 			productData.active_bol_nl = '0';
 		}
+		if (!productData.active_storesquare) {
+			productData.active_storesquare = '0';
+		}
 		if (productData.id_stand_category == 0) {
 			productData.id_stand_category = '2';
 		}
@@ -260,6 +273,7 @@ class ProductController {
 			var product = await Product.find(params.id);
 			var oldBolBe = product.active_bol_be;
 			var oldBolNl = product.active_bol_nl;
+			var oldStoreSquare = product.active_storesquare;
 		}
 		try {
 			product.merge(productData);
@@ -455,6 +469,35 @@ class ProductController {
 							message3: 'Probleem bij transfer naar BOL - NL (ErrorCode : ' + result + ')'
 						}
 					});
+				}
+			}
+
+			// Set product info in Storesquare
+			if (Env.get('STORESQUARE_KEY')) {
+				console.log('STORESQUARE TOEVOEGEN !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+				const storeSquareApi = new StoreSquareApi(Env.get('STORESQUARE_KEY'));
+				if (product.active_storesquare == 1 && product.ean13 != '') {
+					var result = await storeSquareApi.setProduct(product.id);
+				} else if (product.active_storesquare == 0 && product.ean13 != '' && oldStoreSquare == 1) {
+					var result = await storeSquareApi.delProduct(product.id);
+				}
+				if (product.active_storesquare == 1 && result.status == '200') {
+					session.flash({
+						notification: {
+							type: 'success',
+							message4: 'Transfer naar StoreSquare was successvol'
+						}
+					});
+				} else if (product.active_storesquare == 1 && result.status == '400') {
+					if (product.ean13) {
+						session.flash({
+							alert: {
+								type: 'danger',
+								message:
+									'Probleem bij transfer naar StoreSquare(ErrorCode : ' + result.body.message + ')'
+							}
+						});
+					}
 				}
 			}
 
