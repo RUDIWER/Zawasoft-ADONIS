@@ -101,7 +101,6 @@ class StoreSquareApi {
 			price: product.sp_in_vat_storesquare,
 			promotion: 0,
 			ean: product.ean13,
-			images: [ product.pic ],
 			active: true
 		};
 		const result = await this.request('POST', uri, param);

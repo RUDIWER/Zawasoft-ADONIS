@@ -1,0 +1,265 @@
+@layout('admin.layouts.app')
+
+
+@section('content')
+<link href="/vendor/datatables/Responsive-2.2.1/css/responsive.bootstrap4.min.css" rel="stylesheet">
+
+	<div class="row">  
+		<div class="col-lg-12">
+			<div class="card card-primary">
+	<!-- TITLE BAR  -->
+				<div class="card-header text-white bg-primary">
+					<b>	
+						<i class="nav-icon icon-user-follow"></i> Prospect toevoegen / wijzigen   		
+					</b>
+				</div>
+	<!-- BUTTON BAR  -->
+				<div class="card-header">                      
+					<b>     
+						<a href="{{ route('admin-prospects') }}">
+							<i class="fas fa-fw fa-arrow-circle-left"></i> Terug	
+						</a>
+						&nbsp
+						<a class="float-right" href="javascript:{}" onclick="document.getElementById('prospectForm').submit(); return false;">
+							<i class="fas fa-fw fa-check-circle"></i> Opslaan
+						</a> 
+					</b>
+				</div>
+				<div class="card-body"> 
+				@include('partials.notifications')
+				@if(isNew)
+					<form action="/admin/prospect/save/0" name="prospectForm" id="prospectForm" method="post">
+				@else
+					<form action="/admin/prospect/save/{{ prospect.id }}" name="prospectForm" id="prospectForm" method="post">
+				@endif
+					{{ csrfField() }}
+					<div class="form-row">
+						<div class="form-group col-md-2">
+							<label class="control-label">Prospect ID</label><br>
+							@if(!isNew)
+								<input type="number" class="form-control form-control-sm" name="id" id="id" value="{{ prospect.id }}" required readonly tabindex="-1"/>
+							@else
+								<input type="text" class="form-control form-control-sm" placeholder="Nog niet toegekend..." readonly tabindex="-1"/>
+							@endif
+						</div>
+					
+						<div class="ml-auto form-group col-md-2">	
+							<label class="control-label">Creatie Datum</label>
+							<input type="text" class="form-control form-control-sm float-right" name="created_at" id="created_at" 
+							value="{{ old('created_at', !prospect.created_at? 'Nog niet toegekend...':prospect.created_at) }}" readonly tabindex="-1"/>
+								
+						</div>
+						<div class="form-group col-md-2">
+							<label class="control-label">Laatste wijziging</label>
+							<input type="text" class="form-control form-control-sm float-right" name="updated_at" id="updated_at" 
+							value="{{ old('updated_at', !prospect.updated_at? 'Nog niet toegekend...':prospect.updated_at) }}" readonly tabindex="-1"/>
+						</div>
+					</div>
+					<hr>
+			<!-- Left Column -->
+					<div class="row">
+						<div class="col-md-8">  
+							<div class="form-row">		
+								<div class="form-group col-md-2">
+									<label class="control-label">Titel</label>
+									<select 
+									class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('id_title')) }}" 
+									title="Kies een aanspreektitel..." name="id_title" id="id_title">
+										<option value="0" selected="selected disabled">Selecteer...</option>
+										@each(title in titles)
+											@if(title.id == prospect.id_title || title.id == old('id_title') )
+												<option value="{{ title.id }}" selected="selected">{{ title.title }}</option>
+											@else
+												<option value="{{ title.id }}">{{ title.title }}</option> 
+											@endif
+										@endeach 
+									</select>
+									{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('id_title'), hasErrorFor('id_title')) }}
+								</div>
+								<div class="form-group col-md-5">
+									<label class="control-label">Voornaam</label>
+									<input type="text" 
+									class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('first_name')) }}"
+									required name="first_name" id="first_name"
+									value="{{ old('first_name', !prospect.first_name? '':prospect.first_name ) }}"/>
+									{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('first_name'), hasErrorFor('first_name')) }}
+								</div> <!-- form-group -->	
+
+								<div class="form-group col-md-5">
+									<label class="control-label">Familienaam</label>
+									<input type="text" class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('last_name')) }}" 
+									required name="last_name" id="last_name"
+									value="{{ old('last_name', !prospect.last_name? '':prospect.last_name ) }}"/>
+									{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('last_name'), hasErrorFor('last_name')) }}
+								</div> <!-- form-group -->
+								<div class="form-group col-md-12">
+									<label class="control-label">Bedrijfsnaam</label>
+									<input type="text" class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('company')) }}" 
+									name="company" id="company"
+									value="{{ old('company', !prospect.company? '':prospect.company) }}"/>
+									{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('company'), hasErrorFor('company')) }}
+								</div> <!-- form-group -->
+								
+								<div class="form-group col-md-12">
+									<label class="control-label">E mail adres</label>
+									<input type="email" class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('email')) }}" 
+									required name="email" id="email"
+									value="{{ old('email', !prospect.email? '': prospect.email) }}"/>
+									{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('email'), hasErrorFor('email')) }}
+								</div> <!-- form-group -->
+								
+								<div class="form-group col-md-12">
+									<label class="control-label">Website</label>
+									<input type="text" class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('website')) }}" 
+									name="website" id="website"
+									value="{{ old('website', !prospect.website? '':prospect.website) }}"/>
+									{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('website'), hasErrorFor('website')) }}
+								</div> <!-- form-group -->
+								<div class="form-group col-md-6">
+									<label class="control-label">Tel 1</label>
+									<input type="text" class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('phone')) }}" 
+									name="phone" id="phone"
+									value="{{ old('phone', !prospect.phone? '':prospect.phone) }}"/>
+									{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('phone'), hasErrorFor('phone')) }}
+								</div> <!-- form-group -->
+								<div class="form-group col-md-6">
+									<label class="control-label">Mobiel</label>
+									<input type="text" class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('mobile')) }}" 
+									name="mobile" id="mobile"
+									value="{{ old('mobile', !prospect.mobile? '': prospect.mobile) }}"/>
+									{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('mobile'), hasErrorFor('mobile')) }}
+								</div> <!-- form-group -->
+							</div> <!-- form-row -->
+						</div>
+					<!-- Right Column -->
+						<div class="col-md-4"> 
+							<div class="form-row">	
+								<div class="ml-auto form-group col-md-8">
+									<label class="control-label">Geboortedatum</label>
+									<input type="date" 
+									class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('birthday')) }}"
+									name="birthday" id="birthday"
+									value="{{ old('birthday', !prospect.birthday? '': prospect.birthday ) }}"/>
+									{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('birthday'), hasErrorFor('birthday')) }}
+								</div> <!-- form-group -->	
+							</div>
+							
+							<div class="form-row">		
+								<div class="ml-auto form-group col-md-8 float-right">
+									<label class="control-label">Type</label>
+									<select 
+									class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('id_type')) }}" 
+									title="Kies een aanspreektitel..." name="id_type" id="id_type">
+										<option value="0" selected="selected disabled">Selecteer...</option>
+										@each(type in types)
+											@if(type.id == prospect.id_type || type.id == old('id_type') )
+												<option value="{{ type.id }}" selected="selected">{{ type.title }}</option>
+											@else
+												<option value="{{ type.id }}">{{ type.title }}</option> 
+											@endif
+										@endeach 
+									</select>
+									{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('id_type'), hasErrorFor('id_type')) }}
+								</div>
+							</div> <!-- form-row -->
+							<div class="form-row">		
+								<div class="ml-auto form-group col-md-8 float-right">
+									<label class="control-label">Taal</label>
+									<select 
+									class="form-control form-control-sm input-required {{ elIf('is-invalid','', hasErrorFor('id_lang')) }}" 
+									title="Kies een aanspreektitel..." name="id_lang" id="id_lang">
+										<option value="0" selected="selected disabled">Selecteer...</option>
+										@each(language in languages)
+											@if(language.id == prospect.id_lang || language.id == old('id_lang') )
+												<option value="{{ language.id }}" selected="selected">{{ language.title }}</option>
+											@else
+												<option value="{{ language.id }}">{{ language.title }}</option> 
+											@endif
+										@endeach 
+									</select>
+									{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('id_lang'), hasErrorFor('id_lang')) }}
+								</div>
+							</div> <!-- form-row -->
+						</div>
+					</div>
+					<hr>
+	<!-- ADDRESSS-->
+					<div class="form-row">	
+						<div class="ml-auto form-group col-md-8">
+							<label class="control-label">Straat</label>
+							<input type="text" 
+							class="form-control form-control-sm  {{ elIf('is-invalid','', hasErrorFor('street')) }}"
+							name="street" id="street"
+							value="{{ old('street', !prospect.street? '': prospect.street ) }}"/>
+							{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('street'), hasErrorFor('street')) }}
+						</div> <!-- form-group -->	
+						<div class="ml-auto form-group col-md-2">
+							<label class="control-label">Huisnr.</label>
+							<input type="text" 
+							class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('number')) }}"
+							name="number" id="number"
+							value="{{ old('number', !prospect.number? '': prospect.number ) }}"/>
+							{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('number'), hasErrorFor('number')) }}
+						</div> <!-- form-group -->	
+										
+						<div class="ml-auto form-group col-md-2">
+							<label class="control-label">Bus</label>
+							<input type="text" 
+							class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('bus')) }}"
+							name="bus" id="bus"
+							value="{{ old('bus', !prospect.bus? '': prospect.bus ) }}"/>
+							{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('bus'), hasErrorFor('bus')) }}
+						</div> <!-- form-group -->
+					</div>
+					<div class="form-row">
+						<div class="ml-auto form-group col-md-2">
+							<label class="control-label">Postcode</label>
+							<input type="text" 
+							class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('postcode')) }}"
+							name="postcode" id="postcode"
+							value="{{ old('postcode', !prospect.postcode? '': prospect.postcode ) }}"/>
+							{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('postcode'), hasErrorFor('postcode')) }}
+						</div> <!-- form-group -->
+						<div class="ml-auto form-group col-md-4">
+							<label class="control-label">Gemeente</label>
+							<input type="text" 
+							class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('city')) }}"
+							name="city" id="city"
+							value="{{ old('city', !prospect.city? '': prospect.city ) }}"/>
+							{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('city'), hasErrorFor('city')) }}
+						</div> <!-- form-group -->
+						<div class="ml-auto form-group col-md-3">
+							<label class="control-label">Provincie</label>
+							<input type="text" 
+							class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('state')) }}"
+							name="state" id="state"
+							value="{{ old('state', !prospect.state? '': prospect.state ) }}"/>
+							{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('state'), hasErrorFor('state')) }}
+						</div> <!-- form-group -->
+						<div class="ml-auto form-group col-md-3">
+							<label class="control-label">Land</label>
+							<input type="text" 
+							class="form-control form-control-sm {{ elIf('is-invalid','', hasErrorFor('country')) }}"
+							name="country" id="country"
+							value="{{ old('country', !prospect.country? '': prospect.country ) }}"/>
+							{{ elIf('<div class="invalid-feedback">$self</div>', getErrorFor('country'), hasErrorFor('country')) }}
+						</div> <!-- form-group -->	
+					</div> <!-- form row -->
+				</form>
+			</div>
+		</div>
+	</div>
+	@include('admin.customers.partials.addressModal')	
+	@include('admin.partials.confirmModal')	
+@endsection
+
+@section('scripts')
+	<script>
+		
+	//(RW) Slide UP  alert success messages
+		$(".alert-success").fadeTo(2000, 500).slideUp(500, function(){
+			$(".alert-success").alert('close');
+		});
+	</script>
+@endsection
+

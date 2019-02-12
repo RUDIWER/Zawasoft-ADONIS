@@ -121,13 +121,27 @@ Route.get('admin/old-products/del/:id', 'Admin/OldProductController.delete')
 	.as('admin-old-product-copy')
 	.middleware([ 'auth' ]);
 
+// PROSPECTEN
+Route.get('admin/prospects', 'Admin/ProspectController.index').as('admin-prospects').middleware([ 'auth' ]);
+Route.get('admin/prospects/create', 'Admin/ProspectController.create')
+	.as('admin-prospect-create')
+	.middleware([ 'auth' ]);
+Route.get('admin/prospect/edit/:id', 'Admin/ProspectController.edit').as('admin-prospect-edit').middleware([ 'auth' ]);
+Route.post('/admin/prospect/save/:id', 'Admin/ProspectController.save')
+	.as('admin-prospect-save')
+	.validator('storeProspect')
+	.middleware([ 'auth' ]);
+
+Route.get('admin/prospects/sync/customers', 'Admin/ProspectController.syncCustomers')
+	.as('admin-prospects-sync-customers')
+	.middleware([ 'auth' ]);
+
 // CUSTOMERS
 Route.get('admin/customers', 'Admin/CustomerController.index').as('admin-customers').middleware([ 'auth' ]);
 Route.get('admin/customer/edit/:id', 'Admin/CustomerController.edit').as('admin-customer-edit').middleware([ 'auth' ]);
 Route.get('admin/customer/create', 'Admin/CustomerController.create')
 	.as('admin-customer-create')
 	.middleware([ 'auth' ]);
-// Save NEW CUSTOMER (Validation with address fields)
 Route.post('/admin/customer/save/new/:id', 'Admin/CustomerController.save')
 	.as('admin-customer-save')
 	.validator('storeCustomerAddress')
