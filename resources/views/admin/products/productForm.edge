@@ -414,9 +414,9 @@
 				},
 				total_cost_ex_vat_storesquare: function(){
 					fixCostExVatStoreSquare = (Number(this.storesquare_category.cost_fix));
-					console.log(fixCostExVatStoreSquare);
+					console.log('Fix cost storesquare' + fixCostExVatStoreSquare);
 					procentCostExVatStoreSquare = (Number(this.storesquare_category.cost_procent / 100) * this.sp_ex_vat_storesquare);
-					console.log(procentCostExVatStoreSquare);
+					console.log('Procent cost storesquare' + procentCostExVatStoreSquare);
 					return (Math.round((fixCostExVatStoreSquare + procentCostExVatStoreSquare)*100)/100);
 				},
 				netto_profit_amount_bol_nl: function(){
